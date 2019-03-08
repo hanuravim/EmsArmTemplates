@@ -1,0 +1,138 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "value": "ems"
+        },
+        "SupportEmail": {
+            "value": "ravi.mishra@ge.com"
+        },
+        "shortLocation": {
+            "value": "scu"
+        },
+        "Environment_Category": {
+            "value": "dev"
+        },
+        "Tenant": {
+            "value": "ten"
+        },
+        "Role": {
+            "value": "api"
+        },
+        "Custom": {
+            "value": "cust"
+        },
+        "keyVault_Name": {
+            "value": "ems-dev-kvt-srd-scu-001"
+        },
+        "keyVault_ResourceGroup": {
+            "value": "GAV-EMS-DEV-SRD-SCU-01"
+        },
+        "applicationGateway_Size": {
+            "value": "Standard_Medium"
+        },
+        "applicationGateway_InstanceCount": {
+            "value": 2
+        },
+        "applicationGateway_frontendPort": {
+            "value": 80
+        },
+        "applicationGateway_backendPort": {
+            "value": 80
+        },
+        "applicationGateway_backendIPAddresses": {
+            "value": [
+                {
+                    "IpAddress": "10.0.0.4"
+                },
+                {
+                    "IpAddress": "10.0.0.5"
+                }
+            ]
+        },
+        "applicationGateway_cookieBasedAffinity": {
+            "value": "Disabled"
+        },
+        "subnet_Names": {
+            "value": {
+                "appgateway": "appgateway",
+                "manager": "manager",
+                "worker": "worker",
+                "webapi": "webapi",
+                "vpn": "vpn",
+                "sql": "sql",
+                "jumpbox": "jumpbox",
+                "sftp": "sftp",
+                "wasabi": "wasabi",
+                "tableau": "tableau",
+                "redis": "redis",
+                "loganalytics": "loganalytics",
+                "ad": "ad"
+            }
+        },
+        "subnet_addressPrefixes": {
+            "value": {
+                "vnet": "10.4.0.0/16",
+                "appgateway": "10.4.0.0/24",
+                "manager": "10.4.1.0/24",
+                "worker": "10.4.2.0/24",
+                "webapi": "10.4.3.0/24",
+                "vpn": "10.4.4.0/24",
+                "sql": "10.4.5.0/24",
+                "jumpbox": "10.4.6.0/24",
+                "sftp": "10.4.7.0/24",
+                "wasabi": "10.4.8.0/24",
+                "tableau": "10.4.9.0/24",
+                "redis": "10.4.10.0/24",
+                "loganalytics": "10.4.11.0/24",
+                "ad": "10.4.12.0/24"
+            }
+        },
+        "emsManagerILB_IP": {
+            "value": "10.4.1.5"
+        },
+        "webapiILB_IP": {
+            "value": "10.4.3.5"
+        },
+        "sqlILB_IP": {
+            "value": "10.4.5.5"
+        },
+        "jumpboxILB_IP": {
+            "value": "10.4.6.5"
+        },
+        "adILB_IP": {
+            "value": "10.4.12.5"
+        },
+        "AvailabilitySet": {
+            "value": "Yes"
+        },
+        "dc_virtualMachineSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "domainController_IPs": {
+            "value": [
+                "10.4.12.6",
+                "10.4.12.7"
+            ]
+        },
+        "domainName": {
+            "value": "testems.com"
+        },
+        "secretname_DomainAdminUserName": {
+            "value": "DomainAdminUser"
+        },
+        "secretname_DomainAdminPassword": {
+            "value": "DomainAdminPassword"
+        },
+        "secretname_spnAppID": {
+            "value": "DeploymentServicePrincipalId"
+        },
+        "secretname_spnAppSecret": {
+            "value": "DeploymentServicePrincipalPassword"
+        },
+        "artifacts_baseUri": {
+            "value": "https://raw.githubusercontent.com/hanuravim"
+        }
+    }
+}
