@@ -205,41 +205,40 @@
         "CharactersForvmName": 2,
         "resource_Location": "south central us",
         "StorageAccountType": "Standard_LRS",
-        "networkSecurityGroup_Count": 13,
         "resourceNames": {
             "vnetResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-01'))]",
             "automationAccountResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-02'))]",
             "loganalyticsResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-03'))]",
             "availabilitySet": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "StorageAccount": "[tolower(concat(parameters('ApplicationName'),parameters('Environment_Category'),'stg',parameters('Tenant'),'str','00'))]",
-            "virtualNetwork": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
+            "virtualNetwork": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-00'))]",
             "loganalyticsWorkspace": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "automationAccount": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "applicationGateway": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "networkSecurityGroup": "[tolower(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
-            "loadbalancer": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation')))]",
+            "loadbalancer": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
             "networkinterface": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "virtualmachine": "[toupper(concat(take(parameters('ApplicationName'),variables('CharactersForvmName')),first(parameters('Environment_Category')),first(parameters('Role')),parameters('Custom'),'00'))]",
-            "osDisk": "[tolower(concat('gav',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','','','osd','-','dsk','-',parameters('Role'),'00'))]",
-            "dataDisk": "[tolower(concat('gav',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'00'))]"
+            "osDisk": "[tolower(concat('gav',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','','','osd','-','dsk','-',parameters('Role'),'-00'))]",
+            "dataDisk": "[tolower(concat('gav',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'-00'))]"
         },
         "TemplateURLs": {
-            "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/networkSecurityGroup.json')]",
+            "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
             "loganalyticsWorkspace": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/LogAnalyticsWorkspace.json')]",
-            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/virtualNetwork.json')]",
-            "automationAccount": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/automationAccount.json')]",
-            "domainControllers": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/domainControllers.json')]",
-            "CreateADForest": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/CreateADForest.json')]",
-            "configureADBDC": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/configureADBDC.json')]",
-            "adPDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/DSC/master/CreateADPDC.ps1.zip')]",
-            "adBDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/DSC/master/ConfigureADBDC.ps1.zip')]",
+            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]",
+            "automationAccount": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AutomationAccount/linkedTemplate/automationAccount.json')]",
+            "domainControllers": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/domainControllers.json')]",
+            "CreateADForest": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/CreateADForest.json')]",
+            "configureADBDC": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/configureADBDC.json')]",
+            "adPDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/CreateADPDC.ps1.zip')]",
+            "adBDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/ConfigureADBDC.ps1.zip')]",
             "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
             "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
             "AzureRM_Profile_Module_URL": "[concat('https://www.powershellgallery.com/api/v2/package/', 'AzureRM.Profile')]",
             "AzureRM_Network_Module_URL": "[concat('https://www.powershellgallery.com/api/v2/package/', 'AzureRM.Network')]",
-            "setVNET_DNS": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/vnetDNS_Trigger.json')]",
-            "ad_RunbookURL": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/vnetDNS_runbook.ps1')]",
-            "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/vnetDNS_Trigger.ps1')]"
+            "setVNET_DNS": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.json')]",
+            "ad_RunbookURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_runbook.ps1')]",
+            "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.ps1')]"
         }
     },
     "resources": [
@@ -298,7 +297,7 @@
                 },
                 "parameters": {
                     "nsg_count": {
-                        "value": "[variables('networkSecurityGroup_Count')]"
+                        "value": 13
                     },
                     "nsgName": {
                         "value": "[variables('resourceNames').networkSecurityGroup]"
@@ -353,7 +352,7 @@
                         "value": "[variables('resourceNames').vnetResourceGroup]"
                     },
                     "virtualnetworkname": {
-                        "value": "[variables('resourceNames').virtualNetwork]"
+                        "value": "[concat(variables('resourceNames').virtualNetwork,'1')]"
                     },
                     "pdc_networkInterfaceIP": {
                         "value": "[parameters('domainController_IPs')[0]]"
@@ -417,7 +416,7 @@
                         "value": "[variables('resourceNames').networkSecurityGroup]"
                     },
                     "applicationGatewayName": {
-                        "value": "[variables('resourceNames').applicationGateway]"
+                        "value": "[concat(variables('resourceNames').applicationGateway,'1')]"
                     },
                     "applicationGatewaySize": {
                         "value": "[parameters('applicationGateway_Size')]"
@@ -487,7 +486,7 @@
                         "value": "[parameters('subnet_Names').ad]"
                     },
                     "adILB_Name": {
-                        "value": "[variables('resourceNames').loadbalancer]"
+                        "value": "[concat(variables('resourceNames').loadbalancer,'5')]"
                     },
                     "adILB_IP": {
                         "value": "[parameters('adILB_IP')]"
@@ -502,7 +501,7 @@
                         "value": "[variables('resourceNames').vnetResourceGroup]"
                     },
                     "virtualNetwork": {
-                        "value": "[variables('resourceNames').virtualNetwork]"
+                        "value": "[concat(variables('resourceNames').virtualNetwork,'1')]"
                     },
                     "networkInterfaceName": {
                         "value": "[variables('resourceNames').networkinterface]"
@@ -511,7 +510,7 @@
                         "value": "[parameters('AvailabilitySet')]"
                     },
                     "availabilitySetName": {
-                        "value": "[variables('resourceNames').availabilitySet]"
+                        "value": "[concat(variables('resourceNames').availabilitySet,'1')]"
                     },
                     "virtualMachineSize": {
                         "value": "[parameters('dc_virtualMachineSize')]"
