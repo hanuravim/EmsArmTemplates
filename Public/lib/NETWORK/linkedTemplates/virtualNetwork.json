@@ -258,7 +258,7 @@
                         "name": "appGatewayIpConfig",
                         "properties": {
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('virtualNetworkName'),copyindex(1)), parameters('subnet_Names').appgateway)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('subnet_Names').appgateway)]"
                             }
                         }
                     }
@@ -268,7 +268,7 @@
                         "name": "appGatewayFrontendIP",
                         "properties": {
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('virtualNetworkName'),copyindex(1)), parameters('subnet_Names').appgateway)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('subnet_Names').appgateway)]"
                             }
                         }
                     }
@@ -377,7 +377,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('virtualNetworkName'),copyindex(1)), parameters('subnet_Names').webapi)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('subnet_Names').webapi)]"
                             },
                             "privateIPAddress": "[parameters('webapiILB_IP')]"
                         }
@@ -403,7 +403,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('virtualNetworkName'),copyindex(1)), parameters('subnet_Names').sql)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('subnet_Names').sql)]"
                             },
                             "privateIPAddress": "[parameters('sqlILB_IP')]"
                         }
@@ -429,7 +429,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('virtualNetworkName'),copyindex(1)), parameters('subnet_Names').jumpbox)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('subnet_Names').jumpbox)]"
                             },
                             "privateIPAddress": "[parameters('jumpboxILB_IP')]"
                         }
