@@ -103,6 +103,12 @@
                 "name": "nicLoop",
                 "count": "[parameters('numberofSQLVM')]"
             },
+            "tags": {
+                "ApplicationName": "EMS",
+                "uai": "[parameters('uai')]",
+                "SupportEmail": "[parameters('SupportEmail')]",
+                "env": "[parameters('Environment_Category')]"
+            },
             "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
