@@ -61,21 +61,12 @@
         },
         "sqlCustom_ScriptFilePath": {
             "type": "string"
-        },
-        "uai": {
-            "type": "string"
-        },
-        "SupportEmail": {
-            "type": "string"
-        },
-        "Environment_Category": {
-            "type": "string"
         }
     },
     "variables": {},
     "resources": [
         {
-            "name": "[concat(parameters('StorageAccountName'), copyIndex(1))]",
+            "name": "[parameters('StorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourcegroup().location]",
             "apiVersion": "2018-07-01",
@@ -87,12 +78,7 @@
             "sku": {
                 "name": "[parameters('StorageAccountType')]"
             },
-            "tags": {
-                "ApplicationName": "EMS",
-                "uai": "[parameters('uai')]",
-                "SupportEmail": "[parameters('SupportEmail')]",
-                "env": "[parameters('Environment_Category')]"
-            }
+            "tags": {}
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
@@ -132,12 +118,6 @@
             "dependsOn": [
                 "nicLoop"
             ],
-            "tags": {
-                "ApplicationName": "EMS",
-                "uai": "[parameters('uai')]",
-                "SupportEmail": "[parameters('SupportEmail')]",
-                "env": "[parameters('Environment_Category')]"
-            },
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
