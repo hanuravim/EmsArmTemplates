@@ -69,17 +69,13 @@
             "tags": {}
         },
         {
-            "name": "[concat(parameters('virtualMachineName'),copyindex(1))]",
+            "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
             ],
-            "copy": {
-                "name": "vmloop",
-                "count": 1
-            },
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
@@ -101,7 +97,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkinterfaceName'), copyIndex(3)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkinterfaceName')))]"
                         }
                     ]
                 },
