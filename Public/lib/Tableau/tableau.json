@@ -20,7 +20,7 @@
         "virtualMachineName": {
             "type": "string"
         },
-        "osDiskType": {
+        "storageAccountType": {
             "type": "string"
         },
         "virtualMachineSize": {
@@ -88,7 +88,7 @@
                     "osDisk": {
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "[parameters('osDiskType')]"
+                            "storageAccountType": "[parameters('storageAccountType')]"
                         }
                     },
                     "imageReference": {
