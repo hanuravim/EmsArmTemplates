@@ -14,7 +14,7 @@
         "networkInterfaceName": {
             "type": "string"
         },
-        "networkSecurityGroupId": {
+        "networkSecurityGroupName": {
             "type": "string"
         },
         "virtualMachineName": {
@@ -39,7 +39,7 @@
             "name": "[parameters('networkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
-            "location": "SouthCentralUS",
+            "location": "[resourceGroup().location]",
             "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
@@ -54,7 +54,7 @@
                     }
                 ],
                 "networkSecurityGroup": {
-                    "id": "[parameters('networkSecurityGroupId')]"
+                    "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
             },
             "tags": {}
@@ -63,7 +63,7 @@
             "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
-            "location": "SouthCentralUS",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
             ],
