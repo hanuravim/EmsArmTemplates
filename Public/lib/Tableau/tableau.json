@@ -113,9 +113,14 @@
                 }
             },
             "plan": {
-                "name": "bring-your-own-license",
-                "publisher": "tableau",
-                "product": "tableau-server"
+                "Publisher": "tableau",
+                "Product": "tableau-server",
+                "Plan": "bring-your-own-license",
+                "LicenseTextLink": "https: //storelegalterms.blob.core.windows.net/legalterms/3E5ED_legalterms_TABLEAU%253a24TABLEAU%253a2DSERVER%253a24BRING%253a2DYOUR%253a2DOWN%253a2DLICENSE%253a24PUVB6URRE43KZFXXPVJDG5I64BRKQUG2XS25WICRFLOYE5OR4CYJHW5K3LIBLX2CQAB7AKSF36YVAT2C4UHATF46FPYTUFD73JWIKXA.txt",
+                "PrivacyPolicyLink ": "http://www.tableau.com/privacy",
+                "Signature ": "VB7ZCBZFEENY6QNIM55Y3K275XTXARRQH4WFDXVH4NV3LWZ63THCRGL7KSAMB7CYM4FKV3MK43UHP4CQ2WKGYDVIMRNUXN76AI3BSFA",
+                "Accepted ": "True",
+                "Signdate ": "3/10/2019 9: 11: 04 PM"
             },
             "tags": {
                 "ApplicationName": "EMS",
