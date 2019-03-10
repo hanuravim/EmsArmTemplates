@@ -39,7 +39,7 @@
             "name": "[parameters('networkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
-            "location": "[resourceGroup().location]",
+            "location": "SouthCentralUS",
             "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
@@ -63,7 +63,7 @@
             "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
-            "location": "[resourceGroup().location]",
+            "location": "SouthCentralUS",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
             ],
