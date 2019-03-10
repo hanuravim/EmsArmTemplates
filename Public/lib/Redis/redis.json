@@ -57,31 +57,7 @@
                     "name": "[parameters('redisCacheSKU')]"
                 }
             },
-            "resources": [
-                {
-                    "apiVersion": "2017-05-01-preview",
-                    "type": "Microsoft.Cache/redis/providers/diagnosticsettings",
-                    "name": "[concat(parameters('redisCacheName'), '/Microsoft.Insights/', parameters('redisCacheName'))]",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[concat('Microsoft.Cache/Redis/', parameters('redisCacheName'))]"
-                    ],
-                    "properties": {
-                        "storageAccountId": "[parameters('existingDiagnosticsStorageAccountId')]",
-                        "logs": [],
-                        "metrics": [
-                            {
-                                "timeGrain": "AllMetrics",
-                                "enabled": "[parameters('diagnosticsEnabled')]",
-                                "retentionPolicy": {
-                                    "days": 90,
-                                    "enabled": "[parameters('diagnosticsEnabled')]"
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
+            "resources": []
         }
     ]
 }
