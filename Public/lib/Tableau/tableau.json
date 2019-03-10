@@ -95,8 +95,7 @@
                         "publisher": "tableau",
                         "offer": "tableau-server",
                         "sku": "bring-your-own-license",
-                        "version": "10.3.1",
-                        "accepted": true
+                        "version": "10.3.1"
                     }
                 },
                 "networkProfile": {
