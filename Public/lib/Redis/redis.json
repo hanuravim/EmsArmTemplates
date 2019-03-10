@@ -1,18 +1,36 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "redisCacheName": {
             "type": "string"
         },
         "redisCacheSKU": {
-            "type": "string"
+            "type": "string",
+            "allowedValues": [
+                "Basic",
+                "Standard",
+                "Premium"
+            ]
         },
         "redisCacheFamily": {
-            "type": "string"
+            "type": "string",
+            "allowedValues": [
+                "C",
+                "P"
+            ]
         },
         "redisCacheCapacity": {
-            "type": "int"
+            "type": "int",
+            "allowedValues": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ]
         },
         "enableNonSslPort": {
             "type": "bool"
@@ -20,16 +38,7 @@
         "diagnosticsEnabled": {
             "type": "bool"
         },
-        "diagnosticStorageAccountName": {
-            "type": "string"
-        },
-        "uai": {
-            "type": "string"
-        },
-        "SupportEmail": {
-            "type": "string"
-        },
-        "Environment_Category": {
+        "existingDiagnosticsStorageAccountId": {
             "type": "string"
         }
     },
@@ -39,12 +48,6 @@
             "name": "[parameters('redisCacheName')]",
             "type": "Microsoft.Cache/Redis",
             "location": "[resourceGroup().location]",
-            "tags": {
-                "ApplicationName": "EMS",
-                "uai": "[parameters('uai')]",
-                "SupportEmail": "[parameters('SupportEmail')]",
-                "env": "[parameters('Environment_Category')]"
-            },
             "properties": {
                 "enableNonSslPort": "[parameters('enableNonSslPort')]",
                 "sku": {
@@ -59,17 +62,11 @@
                     "type": "Microsoft.Cache/redis/providers/diagnosticsettings",
                     "name": "[concat(parameters('redisCacheName'), '/Microsoft.Insights/', parameters('redisCacheName'))]",
                     "location": "[resourceGroup().location]",
-                    "tags": {
-                        "ApplicationName": "EMS",
-                        "uai": "[parameters('uai')]",
-                        "SupportEmail": "[parameters('SupportEmail')]",
-                        "env": "[parameters('Environment_Category')]"
-                    },
                     "dependsOn": [
                         "[concat('Microsoft.Cache/Redis/', parameters('redisCacheName'))]"
                     ],
                     "properties": {
-                        "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('diagnosticStorageAccountName'))]",
+                        "storageAccountId": "[parameters('existingDiagnosticsStorageAccountId')]",
                         "logs": [],
                         "metrics": [
                             {
