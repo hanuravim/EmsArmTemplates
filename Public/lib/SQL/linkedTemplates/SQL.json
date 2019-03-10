@@ -61,6 +61,15 @@
         },
         "sqlCustom_ScriptFilePath": {
             "type": "string"
+        },
+        "uai": {
+            "type": "string"
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "Environment_Category": {
+            "type": "string"
         }
     },
     "variables": {},
@@ -78,7 +87,12 @@
             "sku": {
                 "name": "[parameters('StorageAccountType')]"
             },
-            "tags": {}
+            "tags": {
+                "ApplicationName": "EMS",
+                "uai": "[parameters('uai')]",
+                "SupportEmail": "[parameters('SupportEmail')]",
+                "env": "[parameters('Environment_Category')]"
+            }
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
