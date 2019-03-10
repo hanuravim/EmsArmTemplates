@@ -103,12 +103,6 @@
                 "name": "nicLoop",
                 "count": "[parameters('numberofSQLVM')]"
             },
-            "tags": {
-                "ApplicationName": "EMS",
-                "uai": "[parameters('uai')]",
-                "SupportEmail": "[parameters('SupportEmail')]",
-                "env": "[parameters('Environment_Category')]"
-            },
             "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
@@ -134,6 +128,12 @@
             "copy": {
                 "name": "virtualMachineLoop",
                 "count": "[parameters('numberofSQLVM')]"
+            },
+            "tags": {
+                "ApplicationName": "EMS",
+                "uai": "[parameters('uai')]",
+                "SupportEmail": "[parameters('SupportEmail')]",
+                "env": "[parameters('Environment_Category')]"
             },
             "dependsOn": [
                 "nicLoop"
