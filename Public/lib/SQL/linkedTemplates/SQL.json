@@ -66,21 +66,6 @@
     "variables": {},
     "resources": [
         {
-            "name": "[concat(parameters('StorageAccountName'), copyIndex(1))]",
-            "type": "Microsoft.Storage/storageAccounts",
-            "location": "[resourcegroup().location]",
-            "apiVersion": "2018-07-01",
-            "copy": {
-                "name": "storageLoop",
-                "count": 1
-            },
-            "properties": {},
-            "sku": {
-                "name": "[parameters('StorageAccountType')]"
-            },
-            "tags": {}
-        },
-        {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(parameters('networkinterfaceName'), copyIndex(1))]",
             "apiVersion": "2018-05-01",
