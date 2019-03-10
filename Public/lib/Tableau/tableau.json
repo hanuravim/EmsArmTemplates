@@ -31,6 +31,15 @@
         },
         "adminPassword": {
             "type": "string"
+        },
+        "uai": {
+            "type": "string"
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "Environment_Category": {
+            "type": "string"
         }
     },
     "variables": {},
@@ -107,7 +116,12 @@
                 "publisher": "tableau",
                 "product": "tableau-server"
             },
-            "tags": {}
+            "tags": {
+                "ApplicationName": "EMS",
+                "uai": "[parameters('uai')]",
+                "SupportEmail": "[parameters('SupportEmail')]",
+                "env": "[parameters('Environment_Category')]"
+            }
         }
     ],
     "outputs": {
