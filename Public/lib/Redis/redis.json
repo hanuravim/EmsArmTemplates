@@ -42,6 +42,7 @@
             "type": "string"
         }
     },
+    "variables": {},
     "resources": [
         {
             "apiVersion": "2015-08-01",
