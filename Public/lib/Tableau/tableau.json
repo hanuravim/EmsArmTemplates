@@ -2,16 +2,19 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "vnetResourceGroup": {
+            "type": "string"
+        },
+        "virtualNetwork": {
+            "type": "string"
+        },
+        "tableau_subnetRef": {
+            "type": "string"
+        },
         "networkInterfaceName": {
             "type": "string"
         },
         "networkSecurityGroupId": {
-            "type": "string"
-        },
-        "subnetName": {
-            "type": "string"
-        },
-        "virtualNetworkId": {
             "type": "string"
         },
         "virtualMachineName": {
@@ -30,11 +33,7 @@
             "type": "securestring"
         }
     },
-    "variables": {
-        "nsgId": "[parameters('networkSecurityGroupId')]",
-        "vnetId": "[parameters('virtualNetworkId')]",
-        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
-    },
+    "variables": {},
     "resources": [
         {
             "name": "[parameters('networkInterfaceName')]",
@@ -48,14 +47,14 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[variables('subnetRef')]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('tableau_subnetRef'))]"
                             },
                             "privateIPAllocationMethod": "Dynamic"
                         }
                     }
                 ],
                 "networkSecurityGroup": {
-                    "id": "[variables('nsgId')]"
+                    "id": "[parameters('networkSecurityGroupId')]"
                 }
             },
             "tags": {}
@@ -74,7 +73,7 @@
                 },
                 "storageProfile": {
                     "osDisk": {
-                        "createOption": "fromImage",
+                        "createOption": "FromImage",
                         "managedDisk": {
                             "storageAccountType": "[parameters('osDiskType')]"
                         }
@@ -89,7 +88,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkinterfaceName'), copyIndex(1)))]"
                         }
                     ]
                 },
