@@ -81,6 +81,10 @@
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
             "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "nicLoop",
+                "count": "[parameters('jumpBoxCount')]"
+            },
             "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
