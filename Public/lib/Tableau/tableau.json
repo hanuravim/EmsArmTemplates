@@ -90,7 +90,7 @@
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
             "copy": {
-                "name": "virtualMachineLoop",
+                "name": "tableauloop",
                 "count": 1
             },
             "dependsOn": [
@@ -101,34 +101,36 @@
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
                 "storageProfile": {
-                    "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
-                    "caching": "ReadWrite",
-                    "createOption": "FromImage",
-                    "managedDisk": {
-                        "storageAccountType": "[parameters('StorageAccountType')]"
+                    "osDisk": {
+                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('StorageAccountType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "tableau",
+                        "offer": "tableau-server",
+                        "sku": "bring-your-own-license",
+                        "version": "10.3.1"
                     }
                 },
-                "imageReference": {
-                    "publisher": "tableau",
-                    "offer": "tableau-server",
-                    "sku": "bring-your-own-license",
-                    "version": "10.3.1"
-                }
-            },
-            "networkProfile": {
-                "networkInterfaces": [
-                    {
-                        "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
+                    "adminUsername": "[parameters('DomainAdminUserName')]",
+                    "adminPassword": "[parameters('DomainAdminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVmAgent": true
                     }
-                ]
-            },
-            "osProfile": {
-                "computerName": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
-                "adminUsername": "[parameters('DomainAdminUserName')]",
-                "adminPassword": "[parameters('DomainAdminPassword')]",
-                "windowsConfiguration": {
-                    "enableAutomaticUpdates": true,
-                    "provisionVmAgent": true
                 }
             },
             "plan": {
