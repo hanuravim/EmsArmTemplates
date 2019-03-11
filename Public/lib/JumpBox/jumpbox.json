@@ -11,7 +11,7 @@
         "virtualNetwork": {
             "type": "string"
         },
-        "tableau_subnetRef": {
+        "jumpbox_subnetRef": {
             "type": "string"
         },
         "networkInterfaceName": {
@@ -76,7 +76,7 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('tableau_subnetRef'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('jumpbox_subnetRef'))]"
                             },
                             "privateIPAllocationMethod": "Dynamic"
                         }
