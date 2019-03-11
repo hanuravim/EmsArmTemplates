@@ -148,11 +148,6 @@
                     }
                 }
             },
-            "plan": {
-                "name": "bring-your-own-license",
-                "publisher": "tableau",
-                "product": "tableau-server"
-            },
             "tags": {
                 "ApplicationName": "EMS",
                 "uai": "[parameters('uai')]",
