@@ -2,6 +2,9 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "jumpBoxCount": {
+            "type": "int"
+        },
         "availabilitySetName": {
             "type": "string"
         },
@@ -98,10 +101,14 @@
             "tags": {}
         },
         {
-            "name": "[parameters('virtualMachineName')]",
+            "name": "[concat(parameters('virtualMachineName'),copyindex(5))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "jumpboxloop",
+                "count": "[parameters('jumpBoxCount')]"
+            },
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
             ],
@@ -159,7 +166,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(3))]"
+                        "[parameters('virtualMachineName')]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -184,7 +191,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(3))]"
+                        "[parameters('virtualMachineName')]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.EnterpriseCloud.Monitoring",
