@@ -58,6 +58,9 @@
         },
         "omsWorkspaceName": {
             "type": "string"
+        },
+        "jumpboxCustom_ScriptFilePath": {
+            "type": "string"
         }
     },
     "variables": {
@@ -164,6 +167,28 @@
                 "env": "[parameters('Environment_Category')]"
             },
             "resources": [
+                {
+                    "type": "extensions",
+                    "name": "customscripts",
+                    "apiVersion": "2015-06-15",
+                    "location": "[resourcegroup().location]",
+                    "dependson": [
+                        "[concat(parameters('virtualmachineName'), copyIndex(4))]",
+                        "logAnalytics"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.9",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[parameters('jumpboxCustom_ScriptFilePath')]"
+                            ],
+                            "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
+                        }
+                    }
+                },
                 {
                     "type": "extensions",
                     "name": "domainJoin",
