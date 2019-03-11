@@ -26,6 +26,9 @@
         "virtualMachineName": {
             "type": "string"
         },
+        "osDiskName": {
+            "type": "string"
+        },
         "storageAccountType": {
             "type": "string"
         },
@@ -123,9 +126,11 @@
                 },
                 "storageProfile": {
                     "osDisk": {
+                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "[parameters('storageAccountType')]"
+                            "storageAccountType": "[parameters('StorageAccountType')]"
                         }
                     },
                     "imageReference": {
