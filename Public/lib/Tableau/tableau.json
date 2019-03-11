@@ -57,7 +57,7 @@
     "variables": {},
     "resources": [
         {
-            "name": "[concat(parameters('networkinterfaceName'), copyIndex(1))]",
+            "name": "[concat(parameters('networkinterfaceName'), copyIndex(3))]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
             "location": "[resourceGroup().location]",
@@ -85,7 +85,7 @@
             "tags": {}
         },
         {
-            "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
+            "name": "[concat(parameters('virtualmachineName'), copyIndex(3))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
@@ -94,7 +94,7 @@
                 "count": 1
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(3)))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -102,7 +102,7 @@
                 },
                 "storageProfile": {
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "name": "[concat(parameters('osDiskName'), copyIndex(3))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -119,12 +119,12 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(3)))]"
                         }
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
+                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(3))]",
                     "adminUsername": "[parameters('DomainAdminUserName')]",
                     "adminPassword": "[parameters('DomainAdminPassword')]",
                     "windowsConfiguration": {
@@ -151,7 +151,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(1))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(3))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -176,7 +176,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(1))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(3))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.EnterpriseCloud.Monitoring",
