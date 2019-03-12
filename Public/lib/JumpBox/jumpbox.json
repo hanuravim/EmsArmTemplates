@@ -173,8 +173,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(6))]",
-                        "logAnalytics"
+                        "[concat(parameters('virtualmachineName'), copyIndex(6))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -195,7 +194,8 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(6))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(6))]",
+                        "customscripts"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -220,7 +220,8 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(6))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(6))]",
+                        "domainJoin"
                     ],
                     "properties": {
                         "publisher": "Microsoft.EnterpriseCloud.Monitoring",
