@@ -83,7 +83,7 @@
             }
         },
         {
-            "name": "[concat(parameters('networkInterfaceName'), copyindex(4))]",
+            "name": "[concat(parameters('networkInterfaceName'), copyindex(6))]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
             "location": "[resourceGroup().location]",
@@ -111,7 +111,7 @@
             "tags": {}
         },
         {
-            "name": "[concat(parameters('virtualmachineName'), copyIndex(4))]",
+            "name": "[concat(parameters('virtualmachineName'), copyIndex(6))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
@@ -120,7 +120,7 @@
                 "count": "[parameters('jumpBoxCount')]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(4)))]"
+                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(6)))]"
             ],
             "properties": {
                 "availabilitySet": "[variables('availabilitySetId')]",
@@ -129,7 +129,7 @@
                 },
                 "storageProfile": {
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(4))]",
+                        "name": "[concat(parameters('osDiskName'), copyIndex(6))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -146,12 +146,12 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(4)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(6)))]"
                         }
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(4))]",
+                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(6))]",
                     "adminUsername": "[parameters('DomainAdminUserName')]",
                     "adminPassword": "[parameters('DomainAdminPassword')]",
                     "windowsConfiguration": {
@@ -173,7 +173,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(4))]",
+                        "[concat(parameters('virtualmachineName'), copyIndex(6))]",
                         "logAnalytics"
                     ],
                     "properties": {
@@ -195,7 +195,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(4))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(6))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -220,7 +220,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(4))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(6))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.EnterpriseCloud.Monitoring",
