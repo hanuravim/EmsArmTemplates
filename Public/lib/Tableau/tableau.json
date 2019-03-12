@@ -60,7 +60,7 @@
     "variables": {},
     "resources": [
         {
-            "name": "[concat(parameters('networkinterfaceName'), copyIndex(3))]",
+            "name": "[concat(parameters('networkinterfaceName'), copyIndex(5))]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
             "location": "[resourceGroup().location]",
@@ -88,7 +88,7 @@
             "tags": {}
         },
         {
-            "name": "[concat(parameters('virtualmachineName'), copyIndex(3))]",
+            "name": "[concat(parameters('virtualmachineName'), copyIndex(5))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
@@ -97,7 +97,7 @@
                 "count": 1
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(3)))]"
+                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(5)))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -105,7 +105,7 @@
                 },
                 "storageProfile": {
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(3))]",
+                        "name": "[concat(parameters('osDiskName'), copyIndex(5))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -122,12 +122,12 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(3)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(5)))]"
                         }
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(3))]",
+                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(5))]",
                     "adminUsername": "[parameters('DomainAdminUserName')]",
                     "adminPassword": "[parameters('DomainAdminPassword')]",
                     "windowsConfiguration": {
@@ -154,7 +154,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(3))]",
+                        "[concat(parameters('virtualmachineName'), copyIndex(5))]",
                         "logAnalytics"
                     ],
                     "properties": {
@@ -176,7 +176,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(3))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(5))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -201,7 +201,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(3))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(5))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.EnterpriseCloud.Monitoring",
