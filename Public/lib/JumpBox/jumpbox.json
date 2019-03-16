@@ -2,7 +2,7 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "jumpBoxCount": {
+        "vmCount": {
             "type": "int"
         },
         "availabilitySetName": {
@@ -18,6 +18,9 @@
             "type": "string"
         },
         "networkInterfaceName": {
+            "type": "string"
+        },
+        "jumpbox_IP": {
             "type": "string"
         },
         "networkSecurityGroupName": {
@@ -83,13 +86,13 @@
             }
         },
         {
-            "name": "[concat(parameters('networkInterfaceName'), copyindex(6))]",
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2018-10-01",
-            "location": "[resourceGroup().location]",
+            "name": "[concat(parameters('networkinterfaceName'), copyIndex(3))]",
+            "apiVersion": "2018-05-01",
+            "location": "[resourcegroup().location]",
             "copy": {
                 "name": "nicLoop",
-                "count": "[parameters('jumpBoxCount')]"
+                "count": "[parameters('vmCount')]"
             },
             "dependsOn": [],
             "properties": {
@@ -97,18 +100,16 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
+                            "privateIpAddress": "[concat(parameters('jumpbox_IP')[copyindex()])]",
+                            "privateIpAddressVersion": "IPv4",
+                            "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('jumpbox_subnetRef'))]"
-                            },
-                            "privateIPAllocationMethod": "Dynamic"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('jumpbox_SubnetRef'))]"
+                            }
                         }
                     }
-                ],
-                "networkSecurityGroup": {
-                    "id": "[resourceId(parameters('vnetResourceGroup'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
-                }
-            },
-            "tags": {}
+                ]
+            }
         },
         {
             "name": "[concat(parameters('virtualmachineName'), copyIndex(6))]",
@@ -117,7 +118,7 @@
             "location": "[resourceGroup().location]",
             "copy": {
                 "name": "jumpboxloop",
-                "count": "[parameters('jumpBoxCount')]"
+                "count": "[parameters('vmCount')]"
             },
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(6)))]"
