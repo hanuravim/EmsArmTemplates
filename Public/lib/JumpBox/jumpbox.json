@@ -87,7 +87,7 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('networkinterfaceName'), copyIndex(3))]",
+            "name": "[concat(parameters('networkinterfaceName'), copyIndex(6))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "copy": {
