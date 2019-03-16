@@ -17,6 +17,9 @@
         "networkInterfaceName": {
             "type": "string"
         },
+        "wasabi_IP": {
+            "type": "string"
+        },
         "networkSecurityGroupName": {
             "type": "string"
         },
@@ -63,13 +66,13 @@
     "variables": {},
     "resources": [
         {
-            "name": "[concat(parameters('networkInterfaceName'), copyindex(9))]",
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2018-10-01",
-            "location": "[resourceGroup().location]",
+            "name": "[concat(parameters('networkinterfaceName'), copyIndex(3))]",
+            "apiVersion": "2018-05-01",
+            "location": "[resourcegroup().location]",
             "copy": {
                 "name": "nicLoop",
-                "count": "[parameters('vmCount')]"
+                "count": 1
             },
             "dependsOn": [],
             "properties": {
@@ -77,18 +80,16 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
+                            "privateIpAddress": "[parameters('wasabi_IP')]",
+                            "privateIpAddressVersion": "IPv4",
+                            "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('wasabi_subnetRef'))]"
-                            },
-                            "privateIPAllocationMethod": "Dynamic"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('wasabi_SubnetRef'))]"
+                            }
                         }
                     }
-                ],
-                "networkSecurityGroup": {
-                    "id": "[resourceId(parameters('vnetResourceGroup'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
-                }
-            },
-            "tags": {}
+                ]
+            }
         },
         {
             "name": "[concat(parameters('virtualmachineName'), copyIndex(9))]",
