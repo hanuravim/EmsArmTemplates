@@ -11,6 +11,9 @@
         "tableau_subnetRef": {
             "type": "string"
         },
+        "tableau_IP": {
+            "type": "string"
+        },
         "networkInterfaceName": {
             "type": "string"
         },
@@ -60,10 +63,10 @@
     "variables": {},
     "resources": [
         {
-            "name": "[concat(parameters('networkinterfaceName'), copyIndex(5))]",
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2018-10-01",
-            "location": "[resourceGroup().location]",
+            "name": "[concat(parameters('networkinterfaceName'), copyIndex(5))]",
+            "apiVersion": "2018-05-01",
+            "location": "[resourcegroup().location]",
             "copy": {
                 "name": "nicLoop",
                 "count": 1
@@ -74,18 +77,16 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
+                            "privateIpAddress": "[parameters('tableau_IP')]",
+                            "privateIpAddressVersion": "IPv4",
+                            "privateIPAllocationMethod": "Static",
                             "subnet": {
                                 "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('tableau_subnetRef'))]"
-                            },
-                            "privateIPAllocationMethod": "Dynamic"
+                            }
                         }
                     }
-                ],
-                "networkSecurityGroup": {
-                    "id": "[resourceId(parameters('vnetResourceGroup'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
-                }
-            },
-            "tags": {}
+                ]
+            }
         },
         {
             "name": "[concat(parameters('virtualmachineName'), copyIndex(5))]",
