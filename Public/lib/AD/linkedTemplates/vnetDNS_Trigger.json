@@ -42,6 +42,7 @@
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "properties": {
+                "mode": "Complete",
                 "publisher": "Microsoft.Compute",
                 "type": "CustomScriptExtension",
                 "typeHandlerVersion": "1.9",
