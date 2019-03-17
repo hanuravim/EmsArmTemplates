@@ -21,7 +21,7 @@
             "type": "string"
         },
         "subnet_Names": {
-            "type": "string"
+            "type": "object"
         },
         "sql_SubnetRef": {
             "type": "string"
