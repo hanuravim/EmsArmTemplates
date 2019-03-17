@@ -129,6 +129,9 @@
             "type": "object",
             "defaultValue": ""
         },
+        "vnet_addressPrefix": {
+            "type": "object"
+        },
         "subnet_addressPrefixes": {
             "type": "object",
             "defaultValue": ""
@@ -152,6 +155,18 @@
         "adILB_IP": {
             "type": "string",
             "defaultValue": ""
+        },
+        "wasabi_virtualMachineIP": {
+            "type": "string"
+        },
+        "sftp_virtualMachineIP": {
+            "type": "string"
+        },
+        "jumpbox_virtualMachineIP": {
+            "type": "array"
+        },
+        "tableau_virtualMachineIP": {
+            "type": "string"
         },
         "sql_virtualMachineSize": {
             "type": "string"
@@ -230,10 +245,10 @@
             "automationAccountResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-03'))]",
             "loganalyticsResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-04'))]",
             "availabilitySet": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "StorageAccount": "[tolower(concat(parameters('ApplicationName'),parameters('Environment_Category'),'stg',parameters('Tenant'),'str','0001'))]",
-            "redisCache": "[tolower(concat(parameters('ApplicationName'),parameters('Environment_Category'),'stg',parameters('Tenant'),'red','001'))]",
+            "StorageAccount": "[tolower(concat(parameters('ApplicationName'),parameters('Environment_Category'),'stg',parameters('Tenant'),'str','00'))]",
+            "redisCache": "[tolower(concat(parameters('ApplicationName'),parameters('Environment_Category'),'stg',parameters('Tenant'),'red','002'))]",
             "virtualNetwork": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-00'))]",
-            "loganalyticsWorkspace": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-000'))]",
+            "loganalyticsWorkspace": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "automationAccount": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "applicationGateway": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "networkSecurityGroup": "[tolower(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
@@ -266,7 +281,11 @@
             "tableau": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/Tableau/tableau.json')]",
             "jumpbox": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/JumpBox/jumpbox.json')]",
             "jumpboxCustom_ScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/JumpBox/customScripts.ps1')]",
-            "tableauCustom_ScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/Tableau/customScripts.ps1')]"
+            "tableauCustom_ScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/Tableau/customScripts.ps1')]",
+            "SFTP": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/sftp.json')]",
+            "sftpCustom_ScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/customScripts.ps1')]",
+            "WASABI": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/WASABI/wasabi.json')]",
+            "wasabiCustom_ScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/WASABI/customScripts.ps1')]"
         }
     },
     "resources": [
@@ -338,7 +357,7 @@
                 },
                 "parameters": {
                     "nsg_count": {
-                        "value": 13
+                        "value": 10
                     },
                     "nsgName": {
                         "value": "[variables('resourceNames').networkSecurityGroup]"
@@ -450,44 +469,14 @@
                     "subnet_Names": {
                         "value": "[parameters('subnet_Names')]"
                     },
-                    "address_Prefixes": {
+                    "vnet_addressPrefix": {
+                        "value": "[parameters('vnet_addressPrefix')]"
+                    },
+                    "subnet_addressPrefixes": {
                         "value": "[parameters('subnet_addressPrefixes')]"
                     },
                     "nsgName": {
                         "value": "[variables('resourceNames').networkSecurityGroup]"
-                    },
-                    "applicationGatewayName": {
-                        "value": "[concat(variables('resourceNames').applicationGateway,'1')]"
-                    },
-                    "applicationGatewaySize": {
-                        "value": "[parameters('applicationGateway_Size')]"
-                    },
-                    "applicationGatewayInstanceCount": {
-                        "value": "[parameters('applicationGateway_InstanceCount')]"
-                    },
-                    "frontendPort": {
-                        "value": "[parameters('applicationGateway_frontendPort')]"
-                    },
-                    "backendPort": {
-                        "value": "[parameters('applicationGateway_backendPort')]"
-                    },
-                    "backendIPAddresses": {
-                        "value": "[parameters('applicationGateway_backendIPAddresses')]"
-                    },
-                    "cookieBasedAffinity": {
-                        "value": "[parameters('applicationGateway_cookieBasedAffinity')]"
-                    },
-                    "emsManagerILB_Name": {
-                        "value": "[concat(variables('resourceNames').loadbalancer,'1')]"
-                    },
-                    "emsManagerILB_IP": {
-                        "value": "[parameters('emsManagerILB_IP')]"
-                    },
-                    "webapiILB_Name": {
-                        "value": "[concat(variables('resourceNames').loadbalancer,'2')]"
-                    },
-                    "webapiILB_IP": {
-                        "value": "[parameters('webapiILB_IP')]"
                     },
                     "sqlILB_Name": {
                         "value": "[concat(variables('resourceNames').loadbalancer,'3')]"
@@ -524,7 +513,7 @@
                         "value": 2
                     },
                     "ad_SubnetRef": {
-                        "value": "[parameters('subnet_Names').ad]"
+                        "value": "[parameters('subnet_Names').domain]"
                     },
                     "adILB_Name": {
                         "value": "[concat(variables('resourceNames').loadbalancer,'5')]"
@@ -795,7 +784,7 @@
                         "value": "[variables('resourceNames').virtualmachine]"
                     },
                     "sql_SubnetRef": {
-                        "value": "[parameters('subnet_Names').sql]"
+                        "value": "[parameters('subnet_Names').commondb]"
                     },
                     "vnetResourceGroup": {
                         "value": "[variables('resourceNames').vnetResourceGroup]"
@@ -892,11 +881,14 @@
                     "networkInterfaceName": {
                         "value": "[variables('resourceNames').networkinterface]"
                     },
+                    "tableau_IP": {
+                        "value": "[parameters('tableau_virtualMachineIP')]"
+                    },
                     "networkSecurityGroupName": {
                         "value": "[concat(variables('resourceNames').networkSecurityGroup,'9')]"
                     },
                     "tableau_subnetRef": {
-                        "value": "[parameters('subnet_Names').tableau]"
+                        "value": "[parameters('subnet_Names').commondb]"
                     },
                     "virtualMachineName": {
                         "value": "[variables('resourceNames').virtualmachine]"
@@ -966,7 +958,7 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "jumpBoxCount": {
+                    "vmCount": {
                         "value": 2
                     },
                     "availabilitySetName": {
@@ -981,11 +973,14 @@
                     "networkInterfaceName": {
                         "value": "[variables('resourceNames').networkinterface]"
                     },
+                    "jumpbox_IP": {
+                        "value": "[parameters('jumpbox_virtualMachineIP')]"
+                    },
                     "networkSecurityGroupName": {
                         "value": "[concat(variables('resourceNames').networkSecurityGroup,'11')]"
                     },
                     "jumpbox_subnetRef": {
-                        "value": "[parameters('subnet_Names').jumpbox]"
+                        "value": "[parameters('subnet_Names').external]"
                     },
                     "virtualMachineName": {
                         "value": "[variables('resourceNames').virtualmachine]"
@@ -1074,6 +1069,184 @@
                     },
                     "existingDiagnosticsStorageAccountId": {
                         "value": "[resourceId('Microsoft.Storage/storageAccounts',variables('resourceNames').StorageAccount)]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "SFTP",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]",
+                "setVNET_DNS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TemplateURLs').SFTP]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmCount": {
+                        "value": 1
+                    },
+                    "vnetResourceGroup": {
+                        "value": "[variables('resourceNames').vnetResourceGroup]"
+                    },
+                    "virtualNetwork": {
+                        "value": "[concat(variables('resourceNames').virtualNetwork,'1')]"
+                    },
+                    "sftp_subnetRef": {
+                        "value": "[parameters('subnet_Names').sftp]"
+                    },
+                    "networkInterfaceName": {
+                        "value": "[variables('resourceNames').networkinterface]"
+                    },
+                    "sftp_IP": {
+                        "value": "[parameters('sftp_virtualMachineIP')]"
+                    },
+                    "networkSecurityGroupName": {
+                        "value": "[concat(variables('resourceNames').networkSecurityGroup,'11')]"
+                    },
+                    "virtualMachineName": {
+                        "value": "[variables('resourceNames').virtualmachine]"
+                    },
+                    "osDiskName": {
+                        "value": "[variables('resourceNames').osDisk]"
+                    },
+                    "storageAccountType": {
+                        "value": "[variables('storageAccountType')]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('jumpbox_virtualMachineSize')]"
+                    },
+                    "uai": {
+                        "value": "[variables('uai')]"
+                    },
+                    "SupportEmail": {
+                        "value": "[parameters('SupportEmail')]"
+                    },
+                    "Environment_Category": {
+                        "value": "[parameters('Environment_Category')]"
+                    },
+                    "domainName": {
+                        "value": "[parameters('domainName')]"
+                    },
+                    "DomainAdminUserName": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
+                        }
+                    },
+                    "DomainAdminPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminPassword')]"
+                        }
+                    },
+                    "omsWorkspaceResourceGroup": {
+                        "value": "[variables('resourceNames').loganalyticsResourceGroup]"
+                    },
+                    "omsWorkspaceName": {
+                        "value": "[concat(variables('resourceNames').loganalyticsWorkspace,'1')]"
+                    },
+                    "sftpCustom_ScriptFilePath": {
+                        "value": "[variables('TemplateURLs').sftpCustom_ScriptFilePath]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "WASABI",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]",
+                "setVNET_DNS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TemplateURLs').WASABI]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmCount": {
+                        "value": 1
+                    },
+                    "vnetResourceGroup": {
+                        "value": "[variables('resourceNames').vnetResourceGroup]"
+                    },
+                    "virtualNetwork": {
+                        "value": "[concat(variables('resourceNames').virtualNetwork,'1')]"
+                    },
+                    "wasabi_subnetRef": {
+                        "value": "[parameters('subnet_Names').wasabi]"
+                    },
+                    "networkInterfaceName": {
+                        "value": "[variables('resourceNames').networkinterface]"
+                    },
+                    "wasabi_IP": {
+                        "value": "[parameters('wasabi_virtualMachineIP')]"
+                    },
+                    "networkSecurityGroupName": {
+                        "value": "[concat(variables('resourceNames').networkSecurityGroup,'11')]"
+                    },
+                    "virtualMachineName": {
+                        "value": "[variables('resourceNames').virtualmachine]"
+                    },
+                    "osDiskName": {
+                        "value": "[variables('resourceNames').osDisk]"
+                    },
+                    "storageAccountType": {
+                        "value": "[variables('storageAccountType')]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('jumpbox_virtualMachineSize')]"
+                    },
+                    "uai": {
+                        "value": "[variables('uai')]"
+                    },
+                    "SupportEmail": {
+                        "value": "[parameters('SupportEmail')]"
+                    },
+                    "Environment_Category": {
+                        "value": "[parameters('Environment_Category')]"
+                    },
+                    "domainName": {
+                        "value": "[parameters('domainName')]"
+                    },
+                    "DomainAdminUserName": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
+                        }
+                    },
+                    "DomainAdminPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminPassword')]"
+                        }
+                    },
+                    "omsWorkspaceResourceGroup": {
+                        "value": "[variables('resourceNames').loganalyticsResourceGroup]"
+                    },
+                    "omsWorkspaceName": {
+                        "value": "[concat(variables('resourceNames').loganalyticsWorkspace,'1')]"
+                    },
+                    "wasabiCustom_ScriptFilePath": {
+                        "value": "[variables('TemplateURLs').wasabiCustom_ScriptFilePath]"
                     }
                 }
             }
