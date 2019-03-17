@@ -32,10 +32,16 @@
     },
     "variables": {
         "virtualNetworkName": "[concat(parameters('virtualNetworkName'),'1')]",
-        "commondb": "[concat(parameters('nsgName'),'1')]",
-        "GatewaySubnet": "[concat(parameters('nsgName'),'2')]",
-        "domain": "[concat(parameters('nsgName'),'3')]",
-        "external": "[concat(parameters('nsgName'),'4')]"
+        "external": "[concat(parameters('nsgName'),'2')]",
+        "GatewaySubnet": "[concat(parameters('nsgName'),'3')]",
+        "domain": "[concat(parameters('nsgName'),'4')]",
+        "emsManager": "[concat(parameters('nsgName'),'5')]",
+        "workers": "[concat(parameters('nsgName'),'6')]",
+        "webapi": "[concat(parameters('nsgName'),'7')]",
+        "commondb": "[concat(parameters('nsgName'),'8')]",
+        "tableau": "[concat(parameters('nsgName'),'9')]",
+        "sftp": "[concat(parameters('nsgName'),'10')]",
+        "wasabi": "[concat(parameters('nsgName'),'11')]"
     },
     "resources": [
         {
@@ -53,12 +59,13 @@
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('subnet_Names').commondb]",
+                        "name": "[parameters('subnet_Names').external]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').commondb]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').external]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('commondb'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('external'))]"
                             },
+                            "serviceEndpoints": [],
                             "delegations": []
                         }
                     },
@@ -85,13 +92,72 @@
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').external]",
+                        "name": "[parameters('subnet_Names').emsManager]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').external]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').emsManager]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('external'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('emsManager'))]"
                             },
-                            "serviceEndpoints": [],
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').workers]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').workers]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('workers'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').webapi]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').webapi]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('webapi'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').commondb]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').commondb]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('commondb'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').tableau]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').tableau]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('tableau'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').sftp]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').sftp]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('sftp'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').wasabi]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').wasabi]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('wasabi'))]"
+                            },
                             "delegations": []
                         }
                     }
