@@ -5,10 +5,22 @@
         "numberofSQLVM": {
             "type": "int"
         },
+        "sqlILB_Name": {
+            "type": "string"
+        },
+        "sqlILB_IP": {
+            "type": "string"
+        },
         "sql_virtualMachineIP": {
             "type": "array"
         },
         "virtualmachineName": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "subnet_Names": {
             "type": "string"
         },
         "sql_SubnetRef": {
@@ -115,6 +127,30 @@
                             "subnet": {
                                 "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('sql_SubnetRef'))]"
                             }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[parameters('sqlILB_Name')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnet_Names').commondb)]"
+                            },
+                            "privateIPAddress": "[parameters('sqlILB_IP')]"
                         }
                     }
                 ]
