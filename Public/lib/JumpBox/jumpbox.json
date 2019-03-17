@@ -5,13 +5,22 @@
         "vmCount": {
             "type": "int"
         },
+        "jumpboxILB_Name": {
+            "type": "string"
+        },
+        "jumpboxILB_IP": {
+            "type": "string"
+        },
         "availabilitySetName": {
             "type": "string"
         },
         "vnetResourceGroup": {
             "type": "string"
         },
-        "virtualNetwork": {
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "subnet_Names": {
             "type": "string"
         },
         "jumpbox_subnetRef": {
@@ -104,8 +113,32 @@
                             "privateIpAddressVersion": "IPv4",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetwork'),'/subnets/',parameters('jumpbox_SubnetRef'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('jumpbox_SubnetRef'))]"
                             }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[parameters('jumpboxILB_Name')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnet_Names').external)]"
+                            },
+                            "privateIPAddress": "[parameters('jumpboxILB_IP')]"
                         }
                     }
                 ]
