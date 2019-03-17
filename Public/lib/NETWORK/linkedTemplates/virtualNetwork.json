@@ -32,16 +32,16 @@
     },
     "variables": {
         "virtualNetworkName": "[concat(parameters('virtualNetworkName'),'1')]",
-        "external": "[concat(parameters('nsgName'),'2')]",
-        "GatewaySubnet": "[concat(parameters('nsgName'),'3')]",
-        "domain": "[concat(parameters('nsgName'),'4')]",
-        "emsManager": "[concat(parameters('nsgName'),'5')]",
-        "workers": "[concat(parameters('nsgName'),'6')]",
-        "webapi": "[concat(parameters('nsgName'),'7')]",
-        "commondb": "[concat(parameters('nsgName'),'8')]",
-        "tableau": "[concat(parameters('nsgName'),'9')]",
-        "sftp": "[concat(parameters('nsgName'),'10')]",
-        "wasabi": "[concat(parameters('nsgName'),'11')]"
+        "external": "[concat(parameters('nsgName'),'1')]",
+        "GatewaySubnet": "[concat(parameters('nsgName'),'2')]",
+        "domain": "[concat(parameters('nsgName'),'3')]",
+        "emsManager": "[concat(parameters('nsgName'),'4')]",
+        "workers": "[concat(parameters('nsgName'),'5')]",
+        "webapi": "[concat(parameters('nsgName'),'6')]",
+        "commondb": "[concat(parameters('nsgName'),'7')]",
+        "tableau": "[concat(parameters('nsgName'),'8')]",
+        "sftp": "[concat(parameters('nsgName'),'9')]",
+        "wasabi": "[concat(parameters('nsgName'),'10')]"
     },
     "resources": [
         {
