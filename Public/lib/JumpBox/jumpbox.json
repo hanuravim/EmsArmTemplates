@@ -136,7 +136,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnet_Names').external)]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('subnet_Names').external)]"
                             },
                             "privateIPAddress": "[parameters('jumpboxILB_IP')]"
                         }
