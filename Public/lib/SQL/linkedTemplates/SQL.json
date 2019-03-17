@@ -145,7 +145,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnet_Names').commondb)]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('sql_SubnetRef'))]"
                             },
                             "privateIPAddress": "[parameters('sqlILB_IP')]"
                         }
