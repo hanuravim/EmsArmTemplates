@@ -1,4 +1,4 @@
-Install-WindowsFeature –Name Remote-Desktop-Services, RDS-RD-Server
+Install-WindowsFeature -Name 'RDS-Gateway' -IncludeAllSubFeature
 Get-WindowsFeature -Name Web-* | Install-WindowsFeature
 Install-WindowsFeature –Name GPMC
 Get-WindowsFeature -Name RSAT-* | Install-WindowsFeature
