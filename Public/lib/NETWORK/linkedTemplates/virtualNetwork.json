@@ -16,6 +16,30 @@
         },
         "nsgName": {
             "type": "string"
+        },
+        "virtualmachineName": {
+            "type": "string"
+        },
+        "vnetDNSTrigger_ScriptFilePath": {
+            "type": "string"
+        },
+        "CustomScriptFileName": {
+            "type": "string"
+        },
+        "appsecret": {
+            "type": "string"
+        },
+        "applicationId": {
+            "type": "string"
+        },
+        "tenantId": {
+            "type": "string"
+        },
+        "automationAccountResourceGroup": {
+            "type": "string"
+        },
+        "automationAccount": {
+            "type": "string"
         }
     },
     "variables": {
@@ -155,6 +179,28 @@
                 "enableVmProtection": false
             },
             "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('virtualmachineName'),copyindex(2),'/webhook')]",
+            "copy": {
+                "name": "webhookloop",
+                "count": 1
+            },
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[parameters('vnetDNSTrigger_ScriptFilePath')]"
+                    ],
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ',parameters('CustomScriptFileName'), ' -appsecret ', parameters('appsecret'), ' -applicationId ', parameters('applicationId'), ' -tenantId ', parameters('tenantId'), ' -automationAccountResourceGroup ', parameters('automationAccountResourceGroup'), ' -automationAccount ', parameters('automationAccount'))]"
+                }
+            }
         }
     ]
 }
