@@ -20,9 +20,6 @@
         "virtualNetworkName": {
             "type": "string"
         },
-        "subnet_Names": {
-            "type": "object"
-        },
         "sql_SubnetRef": {
             "type": "string"
         },
