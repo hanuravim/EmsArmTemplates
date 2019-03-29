@@ -80,7 +80,7 @@
         "CharactersForvmName": 2,
         "CharactersForStorageName": 1,
         "resource_Location": "eastus",
-        "StorageAccountType": "Standard_LRS",
+        "StorageAccountType": "Standard_ZRS",
         "Container1Name": "emsData",
         "resourceNames": {
             "customerResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-','01'))]",
