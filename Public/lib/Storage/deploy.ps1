@@ -1,5 +1,5 @@
 # Deploy the Resource Group & Storage Account
-$deploy = New-AzureRmDeployment -Name Test1 -Location eastus -TemplateParameterFile .\deploy_Customer_parameters.json -TemplateFile .\deploy_Customer.json -Verbose
+$deploy = New-AzureRmDeployment -Name StorageAccount -Location eastus -TemplateParameterFile .\deploy_Customer_parameters.json -TemplateFile .\deploy_Customer.json -Verbose
 
 # Retrieve the Storage Account details
 $resourceGroup = $deploy.Outputs.Values.value[0]
