@@ -1,0 +1,89 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nsgCount": {
+            "value": 1
+        },
+        "nicCount": {
+            "value": 1
+        },
+        "vmCount": {
+            "value": 1
+        },
+        "ResourceGroupLocation": {
+            "value": "centralus"
+        },
+        "shortLocation": {
+            "value": "cu"
+        },
+        "Application_Acronym": {
+            "value": "EMS"
+        },
+        "Tier_Name": {
+            "value": "TR"
+        },
+        "Environment_Category": {
+            "value": "dev"
+        },
+        "Tenant": {
+            "value": "SRD"
+        },
+        "Custom": {
+            "value": "EFOQA"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "fa-dr-poc"
+        },
+        "virtualNetworkName": {
+            "value": "DREFOQAPOC"
+        },
+        "subnet1Name": {
+            "value": "default"
+        },
+        "AvailabilitySet": {
+            "value": "No"
+        },
+        "privateIpAddress": {
+            "value": [
+                "10.5.0.31"
+            ]
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "numberOfDataDisks": {
+            "value": 1
+        },
+        "DataDiskSize": {
+            "value": 1024
+        },
+        "omsWorkspaceResourceGroup": {
+            "value": "fa-dr-poc"
+        },
+        "omsWorkspaceName": {
+            "value": "fa-log-analytics"
+        },
+        "keyVaultResourceGroupName": {
+            "value": "fa-dr-poc"
+        },
+        "keyvaultName": {
+            "value": "fa-dr-poc-vault"
+        },
+        "adminUsername": {
+            "value": "localadmin"
+        },
+        "domainName": {
+            "value": "drefoqa.com"
+        },
+        "secret_DomainUserName": {
+            "value": "DomainUser"
+        },
+        "secret_DomainPassword": {
+            "value": "DomainPassword"
+        },
+        "baseUri": {
+            "value": "https://raw.githubusercontent.com/hanuravim"
+        }
+    }
+}
