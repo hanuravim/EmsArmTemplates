@@ -2,88 +2,76 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "nsgCount": {
-            "value": 1
+        "ApplicationName": {
+            "value": ""
         },
-        "nicCount": {
-            "value": 1
-        },
-        "vmCount": {
-            "value": 1
-        },
-        "ResourceGroupLocation": {
-            "value": "centralus"
+        "SupportEmail": {
+            "value": ""
         },
         "shortLocation": {
-            "value": "cu"
-        },
-        "Application_Acronym": {
-            "value": "EMS"
+            "value": ""
         },
         "Tier_Name": {
-            "value": "TR"
+            "value": ""
         },
         "Environment_Category": {
-            "value": "dev"
+            "value": ""
         },
         "Tenant": {
-            "value": "SRD"
+            "value": ""
         },
         "Custom": {
-            "value": "EFOQA"
+            "value": ""
         },
         "virtualNetworkResourceGroup": {
-            "value": "fa-dr-poc"
+            "value": ""
         },
         "virtualNetworkName": {
-            "value": "DREFOQAPOC"
+            "value": ""
         },
-        "subnet1Name": {
-            "value": "default"
-        },
-        "AvailabilitySet": {
-            "value": "No"
+        "subnetName": {
+            "value": ""
         },
         "privateIpAddress": {
             "value": [
-                "10.5.0.31"
+                ""
             ]
         },
         "virtualMachineSize": {
-            "value": "Standard_DS2_v2"
+            "value": ""
         },
         "numberOfDataDisks": {
-            "value": 1
+            "value": 
         },
         "DataDiskSize": {
-            "value": 1024
+            "value": 
         },
         "omsWorkspaceResourceGroup": {
-            "value": "fa-dr-poc"
+            "value": ""
         },
         "omsWorkspaceName": {
-            "value": "fa-log-analytics"
+            "value": ""
         },
         "keyVaultResourceGroupName": {
-            "value": "fa-dr-poc"
+            "value": ""
         },
         "keyvaultName": {
-            "value": "fa-dr-poc-vault"
+            "value": ""
         },
         "adminUsername": {
-            "value": "localadmin"
+            "value": ""
         },
         "domainName": {
-            "value": "drefoqa.com"
+            "value": ""
         },
         "secret_DomainUserName": {
-            "value": "DomainUser"
+            "value": ""
         },
         "secret_DomainPassword": {
-            "value": "DomainPassword"
+            "value": ""
         },
         "baseUri": {
-            "value": "https://raw.githubusercontent.com/hanuravim"
+            "value": ""
         }
     }
 }
