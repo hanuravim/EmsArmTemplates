@@ -20,7 +20,7 @@
         "jumpboxILB_IP": {
             "type": "string"
         },
-        "firewallILB_IP": {
+        "RDPILB_IP": {
             "type": "string"
         },
         "subnet_Names": {
@@ -200,7 +200,7 @@
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').AzureFirewallSubnet)]"
                             },
-                            "privateIPAddress": "[parameters('firewallILB_IP')]"
+                            "privateIPAddress": "[parameters('RDPILB_IP')]"
                         }
                     }
                 ]
