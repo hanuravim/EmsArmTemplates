@@ -2,60 +2,17 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "ApplicationName": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars e.g. nxt (Next Net), ems"
-            },
-            "defaultValue": ""
-        },
-        "SupportEmail": {
+        "virtualNetwork": {
             "type": "string"
-        },
-        "shortLocation": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars. E.g. East US - EU, West US - WU, East US 2 - EU2"
-            },
-            "defaultValue": ""
-        },
-        "Environment_Category": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 char. E.g.  DEV, QA, UAT and PRD"
-            },
-            "defaultValue": ""
-        },
-        "Tenant": {
-            "type": "string",
-            "maxLength": 5,
-            "metadata": {
-                "description": "3 char. E.g.  SRD"
-            },
-            "defaultValue": ""
-        },
-        "Role": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
-            }
-        },
-        "Custom": {
-            "type": "string",
-            "maxLength": 8,
-            "metadata": {
-                "description": "(Product Specific) Space. 8 chars (OPTIONAL)"
-            }
         },
         "vnet_addressPrefix": {
             "type": "object"
         },
         "domain_addressPrefix": {
             "type": "object"
+        },
+        "loadbalancer": {
+            "type": "string"
         },
         "adILB_IP": {
             "type": "string"
@@ -72,14 +29,13 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
-        "artifacts_baseUri": {
+        "networkSecurityGroup": {
             "type": "string"
         }
     },
     "resources": [
         {
             "type": "Microsoft.Network/virtualNetworks",
-            "resourcegroup": "[parameters('vnetResourceGroup')]",
             "name": "[parameters('virtualNetwork')]",
             "apiVersion": "2018-10-01",
             "location": "[resourceGroup().location]",
