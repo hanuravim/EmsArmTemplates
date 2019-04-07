@@ -5,6 +5,12 @@
         "vmCount": {
             "type": "int"
         },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "Environment_Category": {
+            "type": "string"
+        },
         "availabilitySetName": {
             "type": "string"
         },
@@ -122,6 +128,12 @@
             "dependsOn": [
                 "nicLoop"
             ],
+            "tags": {
+                "ApplicationName": "EMS",
+                "uai": "uai2008973",
+                "SupportEmail": "[parameters('SupportEmail')]",
+                "env": "[parameters('Environment_Category')]"
+            },
             "properties": {
                 "availabilitySet": "[if(equals(variables('AvailabilitySet'), 'Yes'), variables('availabilitySetId'), json('null'))]",
                 "hardwareProfile": {
