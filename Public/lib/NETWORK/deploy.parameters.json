@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "value": ""
+        },
+        "SupportEmail": {
+            "value": ""
+        },
+        "shortLocation": {
+            "value": ""
+        },
+        "Environment_Category": {
+            "value": ""
+        },
+        "Tenant": {
+            "value": ""
+        },
+        "Custom": {
+            "value": ""
+        },
+        "Role": {
+            "value": ""
+        },
+        "vnet_addressPrefix": {
+            "value": {
+                "addr1": "",
+                "addr2": ""
+            }
+        },
+        "domain_addressPrefix": {
+            "value": {
+                "addr1": "",
+                "addr2": ""
+            }
+        },
+        "subnet_Names": {
+            "value": {
+                "external": "",
+                "vpnSubnet": "",
+                "domain": "",
+                "commondb": "",
+                "sftp": "",
+                "wasabi": "",
+                "tableau": "",
+                "RDP": ""
+            }
+        },
+        "subnet_addressPrefixes": {
+            "value": {
+                "external": "",
+                "vpnSubnet": "",
+                "commondb": "",
+                "sftp": "",
+                "wasabi": "",
+                "tableau": "",
+                "RDP": ""
+            }
+        },
+        "adILB_IP": {
+            "value": ""
+        },
+        "jumpboxILB_IP": {
+            "value": ""
+        },
+        "RDPILB_IP": {
+            "value": ""
+        },
+        "artifacts_baseUri": {
+            "value": ""
+        }
+    }
+}
