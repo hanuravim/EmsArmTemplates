@@ -8,12 +8,6 @@
         "ad_vmCount": {
             "type": "int"
         },
-        "adILB_Name": {
-            "type": "string"
-        },
-        "adILB_IP": {
-            "type": "string"
-        },
         "virtualmachineName": {
             "type": "string"
         },
@@ -100,30 +94,6 @@
             },
             "sku": {
                 "name": "Aligned"
-            }
-        },
-        {
-            "apiVersion": "2018-08-01",
-            "name": "[parameters('adILB_Name')]",
-            "type": "Microsoft.Network/loadBalancers",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Basic"
-            },
-            "dependsOn": [],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "LoadBalancerFrontEnd",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('ad_SubnetRef'))]"
-                            },
-                            "privateIPAddress": "[parameters('adILB_IP')]"
-                        }
-                    }
-                ]
             }
         },
         {
