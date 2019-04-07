@@ -120,6 +120,16 @@
                             },
                             "delegations": []
                         }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').RDP]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').RDP]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'7'))]"
+                            },
+                            "delegations": []
+                        }
                     }
                 ],
                 "virtualNetworkPeerings": [],
