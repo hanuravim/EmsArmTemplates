@@ -6,6 +6,13 @@ Param (
 [String]$automationAccountResourceGroup,
 [String]$automationAccount
 )
+
+$appsecret,
+$applicationId,
+$tenantId,
+$automationAccountResourceGroup,
+$automationAccount
+
 #DISABLE WINDOWS DEFENDER
 Set-MpPreference -DisableRealtimeMonitoring $true
 
