@@ -2,13 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "AvailabilitySet": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
         "availabilitySetName": {
             "type": "string"
         },
@@ -89,13 +82,14 @@
         }
     },
     "variables": {
+        "AvailabilitySet": "Yes",
         "availabilitySetId": {
             "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
         }
     },
     "resources": [
         {
-            "condition": "[equals(parameters('AvailabilitySet'), 'Yes')]",
+            "condition": "[equals(variables('AvailabilitySet'), 'Yes')]",
             "type": "Microsoft.Compute/availabilitySets",
             "apiVersion": "2017-03-30",
             "name": "[parameters('availabilitySetName')]",
@@ -181,7 +175,7 @@
                 "nicLoop"
             ],
             "properties": {
-                "availabilitySet": "[if(equals(parameters('AvailabilitySet'), 'Yes'), variables('availabilitySetId'), json('null'))]",
+                "availabilitySet": "[if(equals(variables('AvailabilitySet'), 'Yes'), variables('availabilitySetId'), json('null'))]",
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
