@@ -198,7 +198,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').AzureFirewallSubnet)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').RDP)]"
                             },
                             "privateIPAddress": "[parameters('RDPILB_IP')]"
                         }
