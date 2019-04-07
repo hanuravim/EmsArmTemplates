@@ -1,40 +1,86 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualNetworkName": {
+        "ApplicationName": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. nxt (Next Net), ems"
+            },
+            "defaultValue": ""
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "shortLocation": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars. E.g. East US - EU, West US - WU, East US 2 - EU2"
+            },
+            "defaultValue": ""
+        },
+        "Environment_Category": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  DEV, QA, UAT and PRD"
+            },
+            "defaultValue": ""
+        },
+        "Tenant": {
+            "type": "string",
+            "maxLength": 5,
+            "metadata": {
+                "description": "3 char. E.g.  SRD"
+            },
+            "defaultValue": ""
+        },
+        "Role": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
+            }
+        },
+        "Custom": {
+            "type": "string",
+            "maxLength": 8,
+            "metadata": {
+                "description": "(Product Specific) Space. 8 chars (OPTIONAL)"
+            }
+        },
+        "vnet_addressPrefix": {
+            "type": "object"
+        },
+        "domain_addressPrefix": {
+            "type": "object"
+        },
+        "adILB_IP": {
+            "type": "string"
+        },
+        "jumpboxILB_IP": {
+            "type": "string"
+        },
+        "firewallILB_IP": {
             "type": "string"
         },
         "subnet_Names": {
             "type": "object"
         },
-        "vnet_addressPrefix": {
-            "type": "object"
-        },
         "subnet_addressPrefixes": {
             "type": "object"
         },
-        "nsgName": {
+        "artifacts_baseUri": {
             "type": "string"
         }
-    },
-    "variables": {
-        "virtualNetworkName": "[concat(parameters('virtualNetworkName'),'1')]",
-        "external": "[concat(parameters('nsgName'),'1')]",
-        "GatewaySubnet": "[concat(parameters('nsgName'),'2')]",
-        "domain": "[concat(parameters('nsgName'),'3')]",
-        "emsManager": "[concat(parameters('nsgName'),'4')]",
-        "workers": "[concat(parameters('nsgName'),'5')]",
-        "webapi": "[concat(parameters('nsgName'),'6')]",
-        "commondb": "[concat(parameters('nsgName'),'7')]",
-        "tableau": "[concat(parameters('nsgName'),'8')]",
-        "sftp": "[concat(parameters('nsgName'),'9')]",
-        "wasabi": "[concat(parameters('nsgName'),'10')]"
     },
     "resources": [
         {
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[variables('virtualNetworkName')]",
+            "resourcegroup": "[parameters('vnetResourceGroup')]",
+            "name": "[parameters('virtualNetwork')]",
             "apiVersion": "2018-10-01",
             "location": "[resourceGroup().location]",
             "scale": null,
@@ -51,18 +97,18 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').external]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('external'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'1'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').GatewaySubnet]",
+                        "name": "[parameters('subnet_Names').vpnSubnet]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').GatewaySubnet]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').vpnSubnet]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('GatewaySubnet'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'2'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
@@ -71,41 +117,11 @@
                     {
                         "name": "[parameters('subnet_Names').domain]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').domain]",
+                            "addressPrefix": "[parameters('domain_addressPrefix').addr1]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('domain'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'3'))]"
                             },
                             "serviceEndpoints": [],
-                            "delegations": []
-                        }
-                    },
-                    {
-                        "name": "[parameters('subnet_Names').emsManager]",
-                        "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').emsManager]",
-                            "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('emsManager'))]"
-                            },
-                            "delegations": []
-                        }
-                    },
-                    {
-                        "name": "[parameters('subnet_Names').workers]",
-                        "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').workers]",
-                            "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('workers'))]"
-                            },
-                            "delegations": []
-                        }
-                    },
-                    {
-                        "name": "[parameters('subnet_Names').webapi]",
-                        "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').webapi]",
-                            "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('webapi'))]"
-                            },
                             "delegations": []
                         }
                     },
@@ -114,7 +130,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').commondb]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('commondb'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'4'))]"
                             },
                             "delegations": []
                         }
@@ -124,7 +140,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').tableau]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('tableau'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'5'))]"
                             },
                             "delegations": []
                         }
@@ -134,7 +150,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').sftp]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('sftp'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'6'))]"
                             },
                             "delegations": []
                         }
@@ -144,7 +160,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').wasabi]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', variables('wasabi'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'7'))]"
                             },
                             "delegations": []
                         }
@@ -155,6 +171,84 @@
                 "enableVmProtection": false
             },
             "dependsOn": []
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'1')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [
+                "[parameters('virtualNetwork')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').domain)]"
+                            },
+                            "privateIPAddress": "[parameters('adILB_IP')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'2')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [
+                "[parameters('virtualNetwork')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').external)]"
+                            },
+                            "privateIPAddress": "[parameters('jumpboxILB_IP')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'3')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [
+                "[parameters('virtualNetwork')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').AzureFirewallSubnet)]"
+                            },
+                            "privateIPAddress": "[parameters('firewallILB_IP')]"
+                        }
+                    }
+                ]
+            }
         }
     ]
 }
