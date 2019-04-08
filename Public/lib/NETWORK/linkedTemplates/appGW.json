@@ -6,7 +6,7 @@
             "type": "string"
         },
         "subnet_Names": {
-            "type": "string"
+            "type": "object"
         },
         "applicationGatewayName": {
             "type": "string"
