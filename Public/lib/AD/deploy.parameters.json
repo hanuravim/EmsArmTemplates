@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "value": ""
+        },
+        "SupportEmail": {
+            "value": ""
+        },
+        "shortLocation": {
+            "value": ""
+        },
+        "Environment_Category": {
+            "value": ""
+        },
+        "Tenant": {
+            "value": ""
+        },
+        "Custom": {
+            "value": ""
+        },
+        "Role": {
+            "value": ""
+        },
+        "subnet_Names": {
+            "value": {
+                "domain": ""
+            }
+        },
+        "domainController_IPs": {
+            "value": [
+                "",
+                ""
+            ]
+        },
+        "dc_virtualMachineSize": {
+            "value": ""
+        },
+        "keyVault_Name": {
+            "value": ""
+        },
+        "keyVault_ResourceGroup": {
+            "value": ""
+        },
+        "domainName": {
+            "value": ""
+        },
+        "secretname_DomainAdminUserName": {
+            "value": ""
+        },
+        "secretname_DomainAdminPassword": {
+            "value": ""
+        },
+        "secretname_ApplicationID": {
+            "value": ""
+        },
+        "secretname_AppSecret": {
+            "value": ""
+        },
+        "artifacts_baseUri": {
+            "value": ""
+        }
+    }
+}
