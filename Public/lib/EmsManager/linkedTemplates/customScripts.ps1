@@ -43,3 +43,4 @@ $Share = (Get-AzureStorageShare -Context $StorageContext)
 $CombinedPath = (Join-Path $UNCPath -ChildPath $AzureFileShareName)
 $UserName = "/u:" +$StorageAccount.StorageAccountName
 net use Z: $CombinedPath $UserName $SAKey
+Restart-Computer -Force
