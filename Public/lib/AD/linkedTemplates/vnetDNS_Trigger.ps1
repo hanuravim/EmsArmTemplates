@@ -6,6 +6,7 @@ Param (
 [String]$automationAccountResourceGroup,
 [String]$automationAccount
 )
+
 #DISABLE WINDOWS DEFENDER
 Set-MpPreference -DisableRealtimeMonitoring $true
 
@@ -18,6 +19,7 @@ $secpasswd = ConvertTo-SecureString $appsecret -AsPlainText -Force
 ($creds = New-Object System.Management.Automation.PSCredential ($applicationId, $secpasswd))
 Connect-AzureRmAccount -ServicePrincipal -Credential $creds -TenantId $tenantId
 
-Start-AzureRmAutomationRunbook -Name 'vnetDNS_runbook' -ResourceGroupName $automationAccountResourceGroup  -AutomationAccountName $automationAccount
+$Runbook = Get-AzureRmAutomationRunbook -ResourceGroupName $automationAccountResourceGroup -AutomationAccountName $automationAccount
+Start-AzureRmAutomationRunbook -Name $Runbook.Name -ResourceGroupName $automationAccountResourceGroup  -AutomationAccountName $automationAccount
 Start-Sleep 60
 Restart-Computer -Force
