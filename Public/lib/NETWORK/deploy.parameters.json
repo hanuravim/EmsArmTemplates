@@ -3,90 +3,90 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ApplicationName": {
-            "value": "ems"
+            "value": ""
         },
         "SupportEmail": {
-            "value": "ravi.mishra@ge.com"
+            "value": ""
         },
         "shortLocation": {
-            "value": "scu"
+            "value": ""
         },
         "Environment_Category": {
-            "value": "dev"
+            "value": ""
         },
         "Tenant": {
-            "value": "ten"
+            "value": ""
         },
         "Custom": {
-            "value": "cust"
+            "value": ""
         },
         "Role": {
-            "value": "rol"
+            "value": ""
         },
         "vnet_addressPrefix": {
             "value": {
-                "addr1": "172.21.11.0/25",
-                "addr2": "10.0.0.0/8"
+                "addr1": "",
+                "addr2": ""
             }
         },
         "domain_addressPrefix": {
             "value": {
-                "addr1": "10.0.1.0/24",
-                "addr2": "10.8.0.0/24"
+                "addr1": "",
+                "addr2": ""
             }
         },
         "subnet_Names": {
             "value": {
-                "external": "external",
-                "vpnSubnet": "vpn",
-                "domain": "domain",
-                "commondb": "commondb",
-                "sftp": "sftp",
-                "wasabi": "wasabi",
-                "tableau": "tableau",
-                "RDP": "RDP"
+                "external": "",
+                "vpnSubnet": "",
+                "domain": "",
+                "commondb": "",
+                "sftp": "",
+                "wasabi": "",
+                "tableau": "",
+                "RDP": ""
             }
         },
         "subnet_addressPrefixes": {
             "value": {
-                "external": "172.21.11.0/26",
-                "vpnSubnet": "172.21.11.64/28",
-                "commondb": "10.0.2.0/24",
-                "sftp": "10.0.3.0/24",
-                "wasabi": "10.0.4.0/24",
-                "tableau": "10.0.5.0/24",
-                "RDP": "10.0.8.0/24"
+                "external": "",
+                "vpnSubnet": "",
+                "commondb": "",
+                "sftp": "",
+                "wasabi": "",
+                "tableau": "",
+                "RDP": ""
             }
         },
         "adILB_IP": {
-            "value": "10.0.1.5"
+            "value": ""
         },
         "domainController_IPs": {
             "value": [
-                "10.0.1.6",
-                "10.0.1.7"
+                "",
+                ""
             ]
         },
         "jumpboxILB_IP": {
-            "value": "172.21.11.5"
+            "value": ""
         },
         "RDPILB_IP": {
-            "value": "10.0.8.5"
+            "value": ""
         },
         "keyVaultResourceGroupName": {
-            "value": "GAV-EMS-DEV-SRD-SCU-01"
+            "value": ""
         },
         "keyvaultName": {
-            "value": "ems-dev-kvt-srd-scu-001"
+            "value": ""
         },
         "secretname_ApplicationID": {
-            "value": "DeploymentServicePrincipalId"
+            "value": ""
         },
         "secretname_AppSecret": {
-            "value": "DeploymentServicePrincipalPassword"
+            "value": ""
         },
         "artifacts_baseUri": {
-            "value": "https://raw.githubusercontent.com/hanuravim"
+            "value": ""
         }
     }
 }
