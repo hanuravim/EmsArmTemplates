@@ -7,6 +7,12 @@ Param (
 [String]$automationAccount
 )
 
+$appsecret,
+$applicationId,
+$tenantId,
+$automationAccountResourceGroup,
+$automationAccount
+
 #DISABLE WINDOWS DEFENDER
 Set-MpPreference -DisableRealtimeMonitoring $true
 
@@ -18,6 +24,8 @@ Import-Module AzureRM
 $secpasswd = ConvertTo-SecureString $appsecret -AsPlainText -Force
 ($creds = New-Object System.Management.Automation.PSCredential ($applicationId, $secpasswd))
 Connect-AzureRmAccount -ServicePrincipal -Credential $creds -TenantId $tenantId
+
+
 
 $Runbook = Get-AzureRmAutomationRunbook -ResourceGroupName $automationAccountResourceGroup -AutomationAccountName $automationAccount
 Start-AzureRmAutomationRunbook -Name $Runbook.Name -ResourceGroupName $automationAccountResourceGroup  -AutomationAccountName $automationAccount
