@@ -2,7 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "applicationGatewaySubnetRef": {
+        "virtualNetwork": {
+            "type": "string"
+        },
+        "subnet_Names": {
             "type": "string"
         },
         "applicationGatewayName": {
@@ -46,7 +49,7 @@
                         "name": "appGatewayIpConfig",
                         "properties": {
                             "subnet": {
-                                "id": "[parameters('applicationGatewaySubnetRef')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').domain)]"
                             }
                         }
                     }
@@ -56,7 +59,7 @@
                         "name": "appGatewayFrontendIP",
                         "properties": {
                             "subnet": {
-                                "id": "[parameters('applicationGatewaySubnetRef')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').domain)]"
                             }
                         }
                     }
