@@ -21,7 +21,7 @@
             "type": "int"
         },
         "appGW_subnetName": {
-            "type": "object"
+            "type": "string"
         },
         "appGW_publicIpAddressName": {
             "type": "string"
