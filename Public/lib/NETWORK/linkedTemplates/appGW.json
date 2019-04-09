@@ -27,7 +27,7 @@
             "type": "string"
         },
         "appGW_backendIPAddresses": {
-            "type": "array"
+            "type": "string"
         },
         "appGW_allocationMethod": {
             "type": "string"
@@ -147,7 +147,7 @@
                         "properties": {
                             "BackendAddresses": [
                                 {
-                                    "ipAddress": "[concat(parameters('appGW_backendIPAddresses')[copyindex()])]"
+                                    "ipAddress": "[parameters('appGW_backendIPAddresses')]"
                                 }
                             ]
                         }
