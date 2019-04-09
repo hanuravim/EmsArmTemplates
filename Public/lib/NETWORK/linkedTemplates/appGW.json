@@ -67,9 +67,13 @@
     "resources": [
         {
             "type": "Microsoft.Network/applicationGateways",
-            "name": "[parameters('appGW_Name')]",
+            "name": "[concat(parameters('appGW_Name'), copyIndex(1))]",
             "apiVersion": "2018-08-01",
             "location": "[resourcegroup().location]",
+            "copy": {
+                "name": "appGWLoop",
+                "count": 1
+            },
             "tags": {
                 "ApplicationName": "[parameters('ApplicationName')]",
                 "uai": "[parameters('uai')]",
@@ -143,7 +147,7 @@
                         "properties": {
                             "BackendAddresses": [
                                 {
-                                    "ipAddress": "[parameters('appGW_backendIPAddresses')]"
+                                    "ipAddress": "[concat(parameters('appGW_backendIPAddresses')[copyindex())]"
                                 }
                             ]
                         }
