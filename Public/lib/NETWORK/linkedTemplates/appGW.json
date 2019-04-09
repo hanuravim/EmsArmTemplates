@@ -147,7 +147,7 @@
                         "properties": {
                             "BackendAddresses": [
                                 {
-                                    "ipAddress": "[concat(parameters('appGW_backendIPAddresses')[copyindex())]"
+                                    "ipAddress": "[concat(parameters('appGW_backendIPAddresses')[copyindex()])]"
                                 }
                             ]
                         }
