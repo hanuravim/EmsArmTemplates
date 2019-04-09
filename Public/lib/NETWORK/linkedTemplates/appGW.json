@@ -67,7 +67,7 @@
     "resources": [
         {
             "type": "Microsoft.Network/applicationGateways",
-            "name": "[concat(parameters('appGW_Name'), copyIndex(1))]",
+            "name": "[concat(parameters('appGW_Name'),copyIndex(1))]",
             "apiVersion": "2018-08-01",
             "location": "[resourcegroup().location]",
             "copy": {
