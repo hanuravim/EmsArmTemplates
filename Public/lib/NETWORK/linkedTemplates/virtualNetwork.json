@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "virtualNetwork": {
@@ -16,6 +16,9 @@
         },
         "adILB_IP": {
             "type": "string"
+        },
+        "domainController_IPs": {
+            "type": "array"
         },
         "jumpboxILB_IP": {
             "type": "string"
@@ -35,17 +38,19 @@
     },
     "resources": [
         {
-            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2015-05-01-preview",
             "name": "[parameters('virtualNetwork')]",
-            "apiVersion": "2018-10-01",
+            "type": "Microsoft.Network/virtualNetworks",
             "location": "[resourceGroup().location]",
-            "scale": null,
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
                         "[parameters('vnet_addressPrefix').addr1]",
                         "[parameters('vnet_addressPrefix').addr2]"
                     ]
+                },
+                "dhcpOptions": {
+                    "dnsServers": "10.0.1.6"
                 },
                 "subnets": [
                     {
@@ -127,6 +132,16 @@
                             "addressPrefix": "[parameters('subnet_addressPrefixes').RDP]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'7'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').appGW]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').appGW]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'8'))]"
                             },
                             "delegations": []
                         }
