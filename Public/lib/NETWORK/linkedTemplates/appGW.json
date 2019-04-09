@@ -2,67 +2,72 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "applicationGatewayName": {
+        "virtualNetwork": {
             "type": "string"
         },
-        "domainNameLabel": {
+        "appGW_Name": {
             "type": "string"
         },
-        "applicationGatewaytier": {
+        "appGW_domainNameLabel": {
             "type": "string"
         },
-        "applicationGatewayskuSize": {
+        "appGW_tier": {
             "type": "string"
         },
-        "applicationGatewaycapacity": {
+        "appGW_Size": {
+            "type": "string"
+        },
+        "appGW_capacity": {
             "type": "int"
         },
-        "apgwsubnetName": {
+        "appGW_subnetName": {
+            "type": "object"
+        },
+        "appGW_publicIpAddressName": {
             "type": "string"
         },
-        "applicationGatewaypublicIpAddressName": {
+        "appGW_backendIPAddresses": {
+            "type": "object"
+        },
+        "appGW_allocationMethod": {
             "type": "string"
         },
-        "applicationGatewayallocationMethod": {
-            "type": "string"
-        },
-        "applicationGatewayidleTimeoutInMinutes": {
+        "appGW_idleTimeoutInMinutes": {
             "type": "int"
         },
-        "VnetName": {
+        "appGW-certData": {
             "type": "string"
         },
-        "certPassword": {
-            "type": "securestring"
+        "appGW_certPassword": {
+            "type": "string"
         },
         "ApplicationName": {
-            "type": "securestring"
+            "type": "string"
         },
         "uai": {
-            "type": "securestring"
+            "type": "string"
         },
         "SupportEmail": {
-            "type": "securestring"
+            "type": "string"
         },
         "env": {
-            "type": "securestring"
+            "type": "string"
         },
         "preserve": {
-            "type": "securestring"
+            "type": "bool"
         }
     },
     "variables": {
-        "vnetId": "[resourceId(resourcegroup().name,'Microsoft.Network/virtualNetworks', parameters('VnetName'))]",
-        "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('applicationGatewaypublicIpAddressName'))]",
-        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('apgwsubnetName'))]",
-        "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]",
-        "probeid": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/applicationGateways/',parameters('applicationGatewayName'),'/probes/nginx-probe')]",
-        "certData": "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"
+        "vnetId": "[resourceId(resourcegroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetwork'))]",
+        "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('appGW_publicIpAddressName'))]",
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('appGW_subnetName'))]",
+        "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways', parameters('appGW_Name'))]",
+        "probeid": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/applicationGateways/',parameters('appGW_Name'),'/probes/nginx-probe')]"
     },
     "resources": [
         {
             "type": "Microsoft.Network/applicationGateways",
-            "name": "[parameters('applicationGatewayName')]",
+            "name": "[parameters('appGW_Name')]",
             "apiVersion": "2018-08-01",
             "location": "[resourcegroup().location]",
             "tags": {
@@ -74,16 +79,16 @@
             },
             "properties": {
                 "sku": {
-                    "name": "[parameters('applicationGatewayskuSize')]",
-                    "tier": "[parameters('applicationGatewaytier')]",
-                    "capacity": "[parameters('applicationGatewaycapacity')]"
+                    "name": "[parameters('appGW_Size')]",
+                    "tier": "[parameters('appGW_tier')]",
+                    "capacity": "[parameters('appGW_capacity')]"
                 },
                 "sslCertificates": [
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "data": "[variables('certData')]",
-                            "password": "[parameters('certPassword')]"
+                            "data": "[parameters('appGW-certData')]",
+                            "password": "[parameters('appGW_certPassword')]"
                         }
                     }
                 ],
@@ -103,7 +108,7 @@
                         "type": "Microsoft.Network/applicationGateways/frontendIPConfigurations",
                         "properties": {
                             "PublicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('applicationGatewaypublicIpAddressName'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('appGW_publicIpAddressName'))]"
                             }
                         }
                     },
@@ -138,7 +143,7 @@
                         "properties": {
                             "BackendAddresses": [
                                 {
-                                    "ipAddress": "10.240.1.10"
+                                    "ipAddress": "[parameters('appGW_backendIPAddresses')]"
                                 }
                             ]
                         }
@@ -198,7 +203,7 @@
                         "properties": {
                             "redirectType": "Permanent",
                             "targetListener": {
-                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName')), '/httpListeners/appGatewayHttpsListener')]"
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('appGW_Name')), '/httpListeners/appGatewayHttpsListener')]"
                             },
                             "includePath": true,
                             "includeQueryString": true
@@ -211,10 +216,10 @@
                         "properties": {
                             "ruleType": "Basic",
                             "httpListener": {
-                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName')), '/httpListeners/appGatewayHttpListener')]"
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('appGW_Name')), '/httpListeners/appGatewayHttpListener')]"
                             },
                             "redirectConfiguration": {
-                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName')), '/redirectConfigurations/FrontEnd-HTTP2HTTPS')]"
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('appGW_Name')), '/redirectConfigurations/FrontEnd-HTTP2HTTPS')]"
                             }
                         }
                     },
@@ -286,7 +291,7 @@
                 "enableHttp2": false
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/publicIPAddresses/', parameters('applicationGatewaypublicIpAddressName'))]"
+                "[concat('Microsoft.Network/publicIPAddresses/', parameters('appGW_publicIpAddressName'))]"
             ]
         },
         {
@@ -295,15 +300,15 @@
                 "name": "Basic",
                 "tier": "Regional"
             },
-            "name": "[parameters('applicationGatewaypublicIpAddressName')]",
+            "name": "[parameters('appGW_publicIpAddressName')]",
             "apiVersion": "2018-08-01",
             "location": "[resourcegroup().location]",
             "properties": {
-                "publicIPAllocationMethod": "[parameters('applicationGatewayallocationMethod')]",
-                "idleTimeoutInMinutes": "[parameters('applicationGatewayidleTimeoutInMinutes')]",
+                "publicIPAllocationMethod": "[parameters('appGW_allocationMethod')]",
+                "idleTimeoutInMinutes": "[parameters('appGW_idleTimeoutInMinutes')]",
                 "dnsSettings": {
-                    "domainNameLabel": "[parameters('domainNameLabel')]",
-                    "fqdn": "[concat(parameters('domainNameLabel'),'.northeurope.cloudapp.azure.com')]"
+                    "domainNameLabel": "[parameters('appGW_domainNameLabel')]",
+                    "fqdn": "[concat(parameters('appGW_domainNameLabel'),'.northeurope.cloudapp.azure.com')]"
                 }
             }
         }
