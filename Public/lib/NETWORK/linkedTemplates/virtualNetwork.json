@@ -17,9 +17,6 @@
         "adILB_IP": {
             "type": "string"
         },
-        "domainController_IPs": {
-            "type": "array"
-        },
         "jumpboxILB_IP": {
             "type": "string"
         },
@@ -48,9 +45,6 @@
                         "[parameters('vnet_addressPrefix').addr1]",
                         "[parameters('vnet_addressPrefix').addr2]"
                     ]
-                },
-                "dhcpOptions": {
-                    "dnsServers": "10.0.1.6"
                 },
                 "subnets": [
                     {
