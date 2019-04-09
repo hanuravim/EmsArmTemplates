@@ -27,7 +27,7 @@
             "type": "string"
         },
         "appGW_backendIPAddresses": {
-            "type": "object"
+            "type": "array"
         },
         "appGW_allocationMethod": {
             "type": "string"
