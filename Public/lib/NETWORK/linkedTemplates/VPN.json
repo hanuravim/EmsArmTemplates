@@ -30,9 +30,6 @@
         "vpnSubnetName": {
             "type": "string"
         },
-        "vpnSubnetAddressPrefix": {
-            "type": "string"
-        },
         "vpnPublicIpAddressName": {
             "type": "string"
         }
