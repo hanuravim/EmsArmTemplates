@@ -44,7 +44,8 @@
                 "sftp": "",
                 "wasabi": "",
                 "tableau": "",
-                "RDP": ""
+                "RDP": "",
+                "appGW": ""
             }
         },
         "subnet_addressPrefixes": {
@@ -55,7 +56,8 @@
                 "sftp": "",
                 "wasabi": "",
                 "tableau": "",
-                "RDP": ""
+                "RDP": "",
+                "appGW": ""
             }
         },
         "adILB_IP": {
@@ -73,10 +75,40 @@
         "RDPILB_IP": {
             "value": ""
         },
+        "appGW_domainNameLabel": {
+            "value": ""
+        },
+        "appGW_tier": {
+            "value": ""
+        },
+        "appGW_Size": {
+            "value": ""
+        },
+        "appGW_capacity": {
+            "value": 
+        },
+        "appGW_backendIPAddresses": {
+            "value": ""
+        },
+        "appGW_publicIpAddressName": {
+            "value": ""
+        },
+        "gatewayType": {
+            "value": ""
+        },
+        "vpnType": {
+            "value": ""
+        },
         "keyVaultResourceGroupName": {
             "value": ""
         },
         "keyvaultName": {
+            "value": ""
+        },
+        "secretName_appGW-certData": {
+            "value": ""
+        },
+        "secretName_certPassword": {
             "value": ""
         },
         "secretname_ApplicationID": {
