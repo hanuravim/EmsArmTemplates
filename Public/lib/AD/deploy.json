@@ -90,12 +90,12 @@
     "variables": {
         "uai": "uai2008973",
         "preserve": true,
-        "CharactersForvmName": 2,
+        "CharactersForvmName": 3,
         "StorageAccountType": "Standard_LRS",
         "resourceNames": {
-            "vnetResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-','01'))]",
-            "automationAccountResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-','02'))]",
-            "loganalyticsResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-','03'))]",
+            "vnetResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-01'))]",
+            "loganalyticsResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-01'))]",
+            "automationAccountResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-01'))]",
             "availabilitySet": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "StorageAccount": "[tolower(concat(parameters('ApplicationName'),parameters('Environment_Category'),'stg',parameters('Tenant'),'str','00'))]",
             "virtualNetwork": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-00'))]",
@@ -105,7 +105,7 @@
             "networkSecurityGroup": "[tolower(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
             "loadbalancer": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
             "networkinterface": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "virtualmachine": "[toupper(concat(take(parameters('ApplicationName'),variables('CharactersForvmName')),first(parameters('Environment_Category')),first(parameters('Role')),parameters('Custom'),'00'))]",
+            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),first(parameters('Environment_Category')),take(parameters('Role'),variables('CharactersForvmName')),parameters('Tenant'),'00'))]",
             "osDisk": "[tolower(concat('gav',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','','','osd','-','dsk','-',parameters('Role'),'-00'))]",
             "dataDisk": "[tolower(concat('gav',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'-00'))]"
         },
@@ -131,7 +131,6 @@
     "resources": [
         {
             "name": "DC",
-            "resourcegroup": "[variables('resourceNames').vnetResourceGroup]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "dependsOn": [],
@@ -230,7 +229,6 @@
         {
             "name": "ConfigureADForest",
             "type": "Microsoft.Resources/deployments",
-            "resourcegroup": "[variables('resourceNames').vnetResourceGroup]",
             "apiVersion": "2017-05-10",
             "dependsOn": [
                 "DC"
@@ -279,7 +277,6 @@
         {
             "name": "vnetDNS_Trigger",
             "type": "Microsoft.Resources/deployments",
-            "resourcegroup": "[variables('resourceNames').vnetResourceGroup]",
             "apiVersion": "2017-05-10",
             "dependsOn": [
                 "DC",
@@ -334,7 +331,6 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "resourcegroup": "[variables('resourceNames').vnetResourceGroup]",
             "name": "configureADBDC",
             "apiVersion": "2018-05-01",
             "dependsOn": [
