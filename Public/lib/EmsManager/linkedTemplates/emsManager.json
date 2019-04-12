@@ -70,7 +70,7 @@
         }
     },
     "variables": {
-        "AvailabilitySet": "Yes",
+        "AvailabilitySet": "No",
         "availabilitySetId": {
             "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
         }
