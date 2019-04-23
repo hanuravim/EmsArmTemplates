@@ -38,7 +38,7 @@
         {
             "name": "[parameters('automationAccount')]",
             "type": "Microsoft.Automation/automationAccounts",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "2018-06-30",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
             "tags": {},
@@ -51,7 +51,7 @@
                 {
                     "name": "vnetDNS_runbook",
                     "type": "runbooks",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
@@ -71,7 +71,7 @@
                 {
                     "name": "AzureRM.Profile",
                     "type": "modules",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
@@ -86,7 +86,7 @@
                 {
                     "name": "AzureRM.Network",
                     "type": "modules",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]",
@@ -102,7 +102,7 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/applicationId')]",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
@@ -115,7 +115,7 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/tenantid')]",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
@@ -128,7 +128,7 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/appsecret')]",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
@@ -141,7 +141,7 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/virtualNetworkResourceGroup')]",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
@@ -154,7 +154,7 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/virtualnetworkname')]",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
@@ -167,7 +167,7 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/pdc_networkInterfaceIP')]",
-                    "apiVersion": "2018-05-01",
+                    "apiVersion": "2018-06-30",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
