@@ -24,7 +24,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -48,7 +48,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -64,12 +64,12 @@
             "properties": {
                 "securityRules": [
                     {
-                        "name": "RDP",
+                        "name": "domain",
                         "properties": {
-                            "description": "Allows RDP traffic",
+                            "description": "Allows domain traffic",
                             "protocol": "Tcp",
                             "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
+                            "destinationPortRange": "13",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
                             "access": "Allow",
@@ -96,7 +96,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -120,7 +120,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -144,7 +144,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -168,7 +168,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -192,7 +192,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -216,7 +216,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -240,7 +240,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
@@ -264,7 +264,7 @@
                             "destinationPortRange": "3389",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "*",
-                            "access": "Allow",
+                            "access": "Deny",
                             "priority": 100,
                             "direction": "Inbound"
                         }
