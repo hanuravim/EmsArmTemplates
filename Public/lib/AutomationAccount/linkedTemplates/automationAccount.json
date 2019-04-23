@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "automationAccount": {
@@ -38,8 +38,8 @@
         {
             "name": "[parameters('automationAccount')]",
             "type": "Microsoft.Automation/automationAccounts",
-            "apiVersion": "2015-10-31",
-            "location": "eastus2",
+            "apiVersion": "2018-05-01",
+            "location": "[resourceGroup().location]",
             "dependsOn": [],
             "tags": {},
             "properties": {
@@ -51,8 +51,8 @@
                 {
                     "name": "vnetDNS_runbook",
                     "type": "runbooks",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
                     ],
@@ -71,8 +71,8 @@
                 {
                     "name": "AzureRM.Profile",
                     "type": "modules",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
                     ],
@@ -86,8 +86,8 @@
                 {
                     "name": "AzureRM.Network",
                     "type": "modules",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]",
                         "AzureRM.Profile"
@@ -102,8 +102,8 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/applicationId')]",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
                     ],
@@ -115,8 +115,8 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/tenantid')]",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
                     ],
@@ -128,8 +128,8 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/appsecret')]",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
                     ],
@@ -141,8 +141,8 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/virtualNetworkResourceGroup')]",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
                     ],
@@ -154,8 +154,8 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/virtualnetworkname')]",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
                     ],
@@ -167,8 +167,8 @@
                 {
                     "type": "Microsoft.Automation/automationAccounts/variables",
                     "name": "[concat(parameters('automationAccount'),'/pdc_networkInterfaceIP')]",
-                    "apiVersion": "2015-10-31",
-                    "location": "eastus2",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
                     ],
