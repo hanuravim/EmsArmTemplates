@@ -39,14 +39,145 @@
             "name": "[parameters('automationAccount')]",
             "type": "Microsoft.Automation/automationAccounts",
             "apiVersion": "2018-05-01",
-            "location": "eastus",
+            "location": "[resourceGroup().location]",
             "dependsOn": [],
             "tags": {},
             "properties": {
                 "sku": {
                     "name": "[variables('sku')]"
                 }
-            }
+            },
+            "resources": [
+                {
+                    "name": "vnetDNS_runbook",
+                    "type": "runbooks",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "description": "[variables('runbookDescription')]",
+                        "publishContentLink": {
+                            "uri": "[parameters('RunbookURL')]",
+                            "version": "1.0.0.0"
+                        }
+                    }
+                },
+                {
+                    "name": "AzureRM.Profile",
+                    "type": "modules",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "contentLink": {
+                            "uri": "[parameters('AzureRM.profile_Module_URL')]"
+                        }
+                    }
+                },
+                {
+                    "name": "AzureRM.Network",
+                    "type": "modules",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]",
+                        "AzureRM.Profile"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "contentLink": {
+                            "uri": "[parameters('AzureRM.Network_Module_URL')]"
+                        }
+                    }
+                },
+                {
+                    "type": "Microsoft.Automation/automationAccounts/variables",
+                    "name": "[concat(parameters('automationAccount'),'/applicationId')]",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
+                    ],
+                    "properties": {
+                        "description": "applicationId",
+                        "value": "[concat('\"',parameters('applicationId'),'\"')]"
+                    }
+                },
+                {
+                    "type": "Microsoft.Automation/automationAccounts/variables",
+                    "name": "[concat(parameters('automationAccount'),'/tenantid')]",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
+                    ],
+                    "properties": {
+                        "description": "tenantid",
+                        "value": "[concat('\"',subscription().tenantId,'\"')]"
+                    }
+                },
+                {
+                    "type": "Microsoft.Automation/automationAccounts/variables",
+                    "name": "[concat(parameters('automationAccount'),'/appsecret')]",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
+                    ],
+                    "properties": {
+                        "description": "appsecret",
+                        "value": "[concat('\"',parameters('appsecret'),'\"')]"
+                    }
+                },
+                {
+                    "type": "Microsoft.Automation/automationAccounts/variables",
+                    "name": "[concat(parameters('automationAccount'),'/virtualNetworkResourceGroup')]",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
+                    ],
+                    "properties": {
+                        "description": "virtualNetworkResourceGroup",
+                        "value": "[concat('\"',parameters('virtualNetworkResourceGroup'),'\"')]"
+                    }
+                },
+                {
+                    "type": "Microsoft.Automation/automationAccounts/variables",
+                    "name": "[concat(parameters('automationAccount'),'/virtualnetworkname')]",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
+                    ],
+                    "properties": {
+                        "description": "virtualnetworkname",
+                        "value": "[concat('\"',parameters('virtualnetworkname'),'\"')]"
+                    }
+                },
+                {
+                    "type": "Microsoft.Automation/automationAccounts/variables",
+                    "name": "[concat(parameters('automationAccount'),'/pdc_networkInterfaceIP')]",
+                    "apiVersion": "2018-05-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
+                    ],
+                    "properties": {
+                        "description": "pdc_networkInterfaceIP",
+                        "value": "[concat('\"',parameters('pdc_networkInterfaceIP'),'\"')]"
+                    }
+                }
+            ]
         }
     ],
     "outputs": {}
