@@ -10,215 +10,235 @@
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
             "name": "[concat(parameters('nsgName'),'1')]",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
             "properties": {
                 "securityRules": [
                     {
-                        "name": "RDP",
+                        "name": "rdpadmin-database",
                         "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
                             "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[concat(parameters('nsgName'),'2')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "RDP",
-                        "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[concat(parameters('nsgName'),'3')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "domain",
-                        "properties": {
-                            "description": "Allows domain traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "13",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
+                            "sourceAddressPrefix": "172.21.11.0/26",
+                            "destinationAddressPrefix": "10.0.2.0/24",
                             "access": "Allow",
                             "priority": 100,
-                            "direction": "Inbound"
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[concat(parameters('nsgName'),'4')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "securityRules": [
+                    },
                     {
-                        "name": "RDP",
+                        "name": "rdpadmin-domain",
                         "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "172.21.11.0/26",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135",
+                                "3389"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "rdpadmin-rdpgateway",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
                             "sourcePortRange": "*",
                             "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound"
+                            "sourceAddressPrefix": "172.21.11.0/26",
+                            "destinationAddressPrefix": "10.0.8.0/24",
+                            "access": "Allow",
+                            "priority": 120,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[concat(parameters('nsgName'),'5')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "securityRules": [
+                    },
                     {
-                        "name": "RDP",
+                        "name": "rdpadmin-sftp",
                         "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
                             "sourcePortRange": "*",
                             "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound"
+                            "sourceAddressPrefix": "172.21.11.0/26",
+                            "destinationAddressPrefix": "10.0.3.0/24",
+                            "access": "Allow",
+                            "priority": 130,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[concat(parameters('nsgName'),'6')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "securityRules": [
+                    },
                     {
-                        "name": "RDP",
+                        "name": "rdpadmin-tableau",
                         "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
                             "sourcePortRange": "*",
                             "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound"
+                            "sourceAddressPrefix": "172.21.11.0/26",
+                            "destinationAddressPrefix": "10.0.5.0/24",
+                            "access": "Allow",
+                            "priority": 140,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[concat(parameters('nsgName'),'7')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "securityRules": [
+                    },
                     {
-                        "name": "RDP",
+                        "name": "rdpadmin-wasabi",
                         "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
                             "sourcePortRange": "*",
                             "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound"
+                            "sourceAddressPrefix": "172.21.11.0/26",
+                            "destinationAddressPrefix": "10.0.4.0/24",
+                            "access": "Allow",
+                            "priority": 150,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[concat(parameters('nsgName'),'8')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "securityRules": [
+                    },
                     {
-                        "name": "RDP",
+                        "name": "database-rdpadmin",
                         "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
+                            "sourcePortRange": "3389",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.2.0/24",
+                            "destinationAddressPrefix": "172.21.11.0/26",
+                            "access": "Allow",
                             "priority": 100,
-                            "direction": "Inbound"
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[concat(parameters('nsgName'),'9')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "securityRules": [
+                    },
                     {
-                        "name": "RDP",
+                        "name": "domain-rdpadmin",
                         "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound"
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "172.21.11.0/26",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135",
+                                "3389"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "rdpgateway-rdpadmin",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
+                            "sourcePortRange": "3389",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "10.0.8.0/24",
+                            "destinationAddressPrefix": "172.21.11.0/26",
+                            "access": "Allow",
+                            "priority": 120,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "sftp-rdpadmin",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
+                            "sourcePortRange": "3389",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "10.0.3.0/24",
+                            "destinationAddressPrefix": "172.21.11.0/26",
+                            "access": "Allow",
+                            "priority": 130,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "tableau-rdpadmin",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
+                            "sourcePortRange": "3389",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "10.0.5.0/24",
+                            "destinationAddressPrefix": "172.21.11.0/26",
+                            "access": "Allow",
+                            "priority": 140,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "wasabi-rdpadmin",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "protocol": "*",
+                            "sourcePortRange": "3389",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "10.0.4.0/24",
+                            "destinationAddressPrefix": "172.21.11.0/26",
+                            "access": "Allow",
+                            "priority": 150,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
                     }
                 ]
@@ -226,9 +246,9 @@
         },
         {
             "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
             "name": "[concat(parameters('nsgName'),'10')]",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
             "properties": {
                 "securityRules": [
                     {
@@ -242,7 +262,11 @@
                             "destinationAddressPrefix": "*",
                             "access": "Deny",
                             "priority": 100,
-                            "direction": "Inbound"
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
                     }
                 ]
@@ -250,9 +274,9 @@
         },
         {
             "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
             "name": "[concat(parameters('nsgName'),'11')]",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2018-03-01",
             "properties": {
                 "securityRules": [
                     {
@@ -266,7 +290,603 @@
                             "destinationAddressPrefix": "*",
                             "access": "Deny",
                             "priority": 100,
-                            "direction": "Inbound"
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('nsgName'),'2')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('nsgName'),'3')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "domain_rdpgw",
+                        "properties": {
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "10.0.8.0/24",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "domain-database",
+                        "properties": {
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "10.0.2.0/24",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "domain-rdpadmin",
+                        "properties": {
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "172.21.11.0/26",
+                            "access": "Allow",
+                            "priority": 120,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135",
+                                "3389"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "domain-sftp",
+                        "properties": {
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "10.0.3.0/24",
+                            "access": "Allow",
+                            "priority": 130,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "domain-tableau",
+                        "properties": {
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "10.0.5.0/24",
+                            "access": "Allow",
+                            "priority": 140,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "domain-wasabi",
+                        "properties": {
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "10.0.4.0/24",
+                            "access": "Allow",
+                            "priority": 150,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "rdpgw-domain",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.8.0/24",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "database-domain",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.2.0/24",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "rdpadmin-domain",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "172.21.11.0/26",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 120,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135",
+                                "3389"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "sftp-domain",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.3.0/24",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 130,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "tableau-domain",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.5.0/24",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 140,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "wasabi-domain",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.4.0/24",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 150,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('nsgName'),'4')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "database-domain",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.2.0/24",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "database-rdpadmin",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "3389",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.2.0/24",
+                            "destinationAddressPrefix": "172.21.11.0/26",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "database-internet",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "0",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "10.0.2.0/24",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 120,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "domain-database",
+                        "properties": {
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "10.0.2.0/24",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [
+                                "3389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "rdpadmin-database",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "172.21.11.0/26",
+                            "destinationAddressPrefix": "10.0.2.0/24",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "internet-database",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "80",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "10.0.2.0/24",
+                            "access": "Allow",
+                            "priority": 120,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('nsgName'),'5')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('nsgName'),'6')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('nsgName'),'7')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "rdpgw-domain",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.8.0/24",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "domain_rdpgw",
+                        "properties": {
+                            "protocol": "*",
+                            "destinationPortRange": "1024-65535",
+                            "sourceAddressPrefix": "10.0.1.0/24",
+                            "destinationAddressPrefix": "10.0.8.0/24",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [
+                                "389",
+                                "53",
+                                "88",
+                                "464",
+                                "135"
+                            ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('nsgName'),'8')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('nsgName'),'9')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
                         }
                     }
                 ]
