@@ -1,0 +1,220 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. nxt (Next Net), ems"
+            }
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "shortLocation": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars. E.g. East US - EU, West US - WU, East US 2 - EU2"
+            }
+        },
+        "Environment_Category": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  DEV, QA, UAT and PRD"
+            }
+        },
+        "Role": {
+            "type": "string",
+            "defaultValue": "ems",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
+            }
+        },
+        "Tenant": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars  Shared (SRD), Tenant Acronym)"
+            }
+        },
+        "Custom": {
+            "type": "string",
+            "maxLength": 8,
+            "metadata": {
+                "description": "(Product Specific) Space. 8 chars (OPTIONAL)"
+            }
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "privateIpAddress": {
+            "type": "array"
+        },
+        "virtualMachineSize": {
+            "type": "string"
+        },
+        "numberOfDataDisks": {
+            "type": "int"
+        },
+        "DataDiskSize": {
+            "type": "int"
+        },
+        "omsWorkspaceResourceGroup": {
+            "type": "string"
+        },
+        "omsWorkspaceName": {
+            "type": "string"
+        },
+        "keyVaultResourceGroup": {
+            "type": "string"
+        },
+        "keyvaultName": {
+            "type": "string"
+        },
+        "domainName": {
+            "type": "string"
+        },
+        "secretname_DomainAdminUserName": {
+            "type": "string"
+        },
+        "secretname_DomainAdminPassword": {
+            "type": "string"
+        },
+        "secretName_appGW-certData": {
+            "type": "string"
+        },
+        "secretName_certPassword": {
+            "type": "string"
+        },
+        "secretname_ApplicationID": {
+            "type": "string"
+        },
+        "secretname_AppSecret": {
+            "type": "string"
+        },
+        "artifacts_baseUri": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "uai": "uai2008973",
+        "resource_Location": "central us",
+        "CharactersForvmName": 3,
+        "StorageAccountType": "Standard_LRS",
+        "vnetID": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('virtualNetworkResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('subnetName'))]",
+        "resourceNames": {
+            "commonResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
+            "networkInterfaceName": "[tolower(concat('GAV',parameters('shortLocation'),'-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','nic','-',parameters('Custom'),'-','00'))]",
+            "virtualmachineName": "[toupper(concat(take(parameters('ApplicationName'),variables('CharactersForvmName')),first(parameters('Environment_Category')),first(parameters('Role')),parameters('Custom'),'00'))]",
+            "osDiskName": "[tolower(concat('gav',parameters('shortLocation'),'-',parameters('ApplicationName'),'-','dr','-','osd','-','dsk','-',parameters('Role'),'00'))]",
+            "dataDiskName": "[tolower(concat('gav',parameters('shortLocation'),'-',parameters('ApplicationName'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'00'))]"
+        },
+        "TemplateURLs": {
+            "PRTG": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/PRTG/linkedTemplates/PRTGVM.json')]",
+            "domainJoin": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/PRTG/linkedTemplates/domainJoin.json')]",
+            "omsAgent": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/PRTG/linkedTemplates/OMSAgent.json')]",
+            "CustomScriptExtensionScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/PRTG/linkedTemplates/customScripts.ps1')]",
+            "CustomScriptFileName": "customScripts.ps1",
+            "PRTG_Installer": "https://dremsblobstore.blob.core.windows.net/scripts/PRTG_Remote_Probe_Installer_for_adiMonitoring.us.ae.ge.com_with_key_{A30FFAC8}.exe"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "fa-dr-poc",
+            "name": "PRTG",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateurls').PRTG]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmcount": {
+                        "value": 1
+                    },
+                    "SupportEmail": {
+                        "value": "[parameters('SupportEmail')]"
+                    },
+                    "Environment_Category": {
+                        "value": "[parameters('Environment_Category')]"
+                    },
+                    "subnetRef": {
+                        "value": "[variables('subnetRef')]"
+                    },
+                    "privateIpAddress": {
+                        "value": "[parameters('privateIpAddress')]"
+                    },
+                    "virtualmachineName": {
+                        "value": "[variables('resourcenames').virtualmachineName]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('virtualMachineSize')]"
+                    },
+                    "networkInterfaceName": {
+                        "value": "[variables('resourcenames').networkInterfaceName]"
+                    },
+                    "osDiskName": {
+                        "value": "[variables('resourcenames').osDiskName]"
+                    },
+                    "dataDiskName": {
+                        "value": "[variables('resourcenames').dataDiskName]"
+                    },
+                    "StorageAccountType": {
+                        "value": "[variables('StorageAccountType')]"
+                    },
+                    "numberOfDataDisks": {
+                        "value": "[parameters('numberOfDataDisks')]"
+                    },
+                    "DataDiskSize": {
+                        "value": "[parameters('DataDiskSize')]"
+                    },
+                    "adminUsername": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
+                        }
+                    },
+                    "adminPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminPassword')]"
+                        }
+                    },
+                    "omsWorkspaceResourceGroup": {
+                        "value": "[parameters('omsWorkspaceResourceGroup')]"
+                    },
+                    "omsWorkspaceName": {
+                        "value": "[parameters('omsWorkspaceName')]"
+                    },
+                    "PRTG_Installer": {
+                        "value": "[variables('TemplateURLs').PRTG_Installer]"
+                    },
+                    "CustomScriptExtensionScriptFilePath": {
+                        "value": "[variables('templateurls').CustomScriptExtensionScriptFilePath]"
+                    },
+                    "CustomScriptFileName": {
+                        "value": "[variables('TemplateURLs').CustomScriptFileName]"
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,86 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "value": "ems"
+        },
+        "SupportEmail": {
+            "value": "ravi.mishra@ge.com"
+        },
+        "shortLocation": {
+            "value": "cu"
+        },
+        "Environment_Category": {
+            "value": "dev"
+        },
+        "Role": {
+            "value": "rol"
+        },
+        "Tenant": {
+            "value": "srd"
+        },
+        "Custom": {
+            "value": "cust"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "fa-dr-poc"
+        },
+        "virtualNetworkName": {
+            "value": "DREFOQAPOC"
+        },
+        "subnetName": {
+            "value": "fadrpocsssubnet"
+        },
+        "privateIpAddress": {
+            "value": [
+                "10.5.5.10"
+            ]
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "numberOfDataDisks": {
+            "value": 1
+        },
+        "DataDiskSize": {
+            "value": 1
+        },
+        "omsWorkspaceResourceGroup": {
+            "value": "fa-dr-poc"
+        },
+        "omsWorkspaceName": {
+            "value": "GAV-EMS-DEV-SRD-EUS-002"
+        },
+        "keyVaultResourceGroup": {
+            "value": "fa-dr-poc"
+        },
+        "keyvaultName": {
+            "value": "emspocKeyVault"
+        },
+        "domainName": {
+            "value": "efoqa.local"
+        },
+        "secretname_DomainAdminUserName": {
+            "value": "DomainAdminUser"
+        },
+        "secretname_DomainAdminPassword": {
+            "value": "DomainAdminPassword"
+        },
+        "secretName_appGW-certData": {
+            "value": "appGW-certData"
+        },
+        "secretName_certPassword": {
+            "value": "certPassword"
+        },
+        "secretname_ApplicationID": {
+            "value": "DeploymentServicePrincipalId"
+        },
+        "secretname_AppSecret": {
+            "value": "DeploymentServicePrincipalPassword"
+        },
+        "artifacts_baseUri": {
+            "value": "https://raw.githubusercontent.com/hanuravim"
+        }
+    }
+}
