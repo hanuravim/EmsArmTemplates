@@ -4,7 +4,7 @@ Param (
 )
 
 # Download path for PRTG setup
-$File = $($env:TEMP) + '\PRTG.EXE'
+$File = 'D:\' + '\PRTG.EXE'
 # Start Download
 Invoke-WebRequest -Uri $PRTG_SetupLocation -OutFile $File
 # Install
