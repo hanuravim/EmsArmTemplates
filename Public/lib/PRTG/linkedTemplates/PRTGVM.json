@@ -11,9 +11,6 @@
         "Environment_Category": {
             "type": "string"
         },
-        "availabilitySetName": {
-            "type": "string"
-        },
         "virtualmachineName": {
             "type": "string"
         },
@@ -66,7 +63,7 @@
     "variables": {
         "AvailabilitySet": "No",
         "availabilitySetId": {
-            "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
+            "id": "[resourceId('Microsoft.Compute/availabilitySets', 'avset')]"
         }
     },
     "resources": [
