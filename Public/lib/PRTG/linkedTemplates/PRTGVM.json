@@ -53,6 +53,9 @@
         "omsWorkspaceName": {
             "type": "string"
         },
+        "PRTG_SetupLocation": {
+            "type": "string"
+        },
         "CustomScriptExtensionScriptFilePath": {
             "type": "string"
         },
