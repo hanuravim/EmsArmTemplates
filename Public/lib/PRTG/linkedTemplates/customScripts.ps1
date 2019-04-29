@@ -7,5 +7,6 @@ $File = $($env:TEMP) + '\PRTG.EXE'
 # Start Download
 Invoke-WebRequest -Uri $PRTG_SetupLocation -OutFile $File
 # Install
-Start-Process -Wait -FilePath $File -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES" -PassThru
-Restart-Computer -Force
+$command = “cmd.exe /c $file /silent /v`”/qn”
+$process = [WMICLASS]“\\$env:COMPUTERNAME\ROOT\CIMV2:win32_process“
+$process.Create($command)
