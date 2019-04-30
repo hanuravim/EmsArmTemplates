@@ -15,7 +15,7 @@
     "resources": [
         {
             "type": "extensions",
-            "name": "PRTG_Confgure",
+            "name": "PRTG_Configure",
             "location": "[resourcegroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [],
