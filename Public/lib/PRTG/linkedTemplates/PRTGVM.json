@@ -53,11 +53,13 @@
         "omsWorkspaceName": {
             "type": "string"
         },
-        "PRTG_Installer": {
+        "ResourceGroupName": {
             "type": "string"
         },
-       
         "CustomScriptFileName": {
+            "type": "string"
+        },
+        "customScript": {
             "type": "string"
         }
     },
@@ -180,14 +182,29 @@
                             "workspaceKey": "[listKeys(resourceId(parameters('omsWorkspaceResourceGroup'),'Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName')), '2015-03-20').primarySharedKey]"
                         }
                     }
+                },
+                {
+                    "type": "extensions",
+                    "name": "customScripts",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2015-06-15",
+                    "dependsOn": [
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.9",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[parameters('customScript')]"
+                            ],
+                            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ',parameters('CustomScriptFileName'), ' -ResourceGroupName', parameters('ResourceGroupName'), ' -VMName ', parameters('virtualmachineName'))]"
+                        }
+                    }
                 }
             ]
         }
-    ],
-    "outputs": {
-        "firstOutput": {
-            "type": "string",
-            "value": "[concat('powershell -ExecutionPolicy Unrestricted -File  ',parameters('CustomScriptFileName'),'  -PRTG_SetupLocation ',parameters('PRTG_Installer'))]"
-        }
-    }
+    ]
 }
