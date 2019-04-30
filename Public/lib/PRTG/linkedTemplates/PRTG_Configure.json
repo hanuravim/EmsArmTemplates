@@ -14,7 +14,7 @@
     },
     "resources": [
         {
-            "type": "extensions",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "PRTG",
             "location": "[resourcegroup().location]",
             "apiVersion": "2015-06-15",
