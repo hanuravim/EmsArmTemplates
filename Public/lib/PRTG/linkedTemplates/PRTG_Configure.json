@@ -2,9 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualmachineName": {
-            "type": "string"
-        },
         "CustomScriptExtensionScriptFilePath": {
             "type": "string"
         },
@@ -21,10 +18,7 @@
             "name": "PRTG",
             "location": "[resourcegroup().location]",
             "apiVersion": "2015-06-15",
-            "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]",
-                "Microsoft.EnterpriseCloud.Monitoring"
-            ],
+            "dependsOn": [],
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "CustomScriptExtension",
