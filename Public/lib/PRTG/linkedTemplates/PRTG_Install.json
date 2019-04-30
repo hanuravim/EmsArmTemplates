@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualmachineName": {
+            "type": "string"
+        },
+        "CustomScriptExtensionScriptFilePath": {
+            "type": "string"
+        },
+        "CustomScriptFileName": {
+            "type": "string"
+        },
+        "PRTG_Installer": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "type": "extensions",
+            "name": "PRTG",
+            "location": "[resourcegroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]",
+                "Microsoft.EnterpriseCloud.Monitoring"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[parameters('CustomScriptExtensionScriptFilePath')]"
+                    ]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File  ',parameters('CustomScriptFileName'),'  -PRTG_SetupLocation ',parameters('PRTG_Installer'))]"
+                }
+            }
+        }
+    ]
+}
