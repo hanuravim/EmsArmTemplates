@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "virtualmachineName": {
+            "type": "string"
+        },
         "CustomScriptExtensionScriptFilePath": {
             "type": "string"
         },
@@ -14,8 +17,8 @@
     },
     "resources": [
         {
-            "type": "extensions",
-            "name": "PRTG_Configure",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('virtualmachineName'), copyindex(1), '/prtg')]",
             "location": "[resourcegroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [],
