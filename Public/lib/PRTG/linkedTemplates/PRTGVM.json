@@ -59,7 +59,7 @@
         "CustomScriptFileName": {
             "type": "string"
         },
-        "customScript": {
+        "customScriptPath": {
             "type": "string"
         }
     },
@@ -198,7 +198,7 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "[parameters('customScript')]"
+                                "[parameters('customScriptPath')]"
                             ],
                             "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ',parameters('CustomScriptFileName'), ' -ResourceGroupName', parameters('ResourceGroupName'), ' -VMName ', parameters('virtualmachineName'))]"
                         }
