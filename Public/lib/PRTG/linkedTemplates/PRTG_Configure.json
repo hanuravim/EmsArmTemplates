@@ -5,6 +5,9 @@
         "virtualmachineName": {
             "type": "string"
         },
+        "vmCount": {
+            "type": "int"
+        },
         "CustomScriptExtensionScriptFilePath": {
             "type": "string"
         },
@@ -19,6 +22,10 @@
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(parameters('virtualmachineName'), copyindex(1), '/prtg')]",
+            "copy": {
+                "name": "domainjoinloop",
+                "count": "[parameters('vmCount')]"
+            },
             "location": "[resourcegroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [],
