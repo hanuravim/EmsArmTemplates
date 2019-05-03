@@ -51,7 +51,7 @@
                 "description": "(Product Specific) Space. 8 chars (OPTIONAL)"
             }
         },
-        "keyVaultResourceGroupName": {
+        "keyVaultResourceGroup": {
             "type": "string"
         },
         "keyvaultName": {
@@ -75,7 +75,7 @@
         "RDPILB_IP": {
             "type": "string"
         },
-        "appGW_domainNameLabel": {
+        "sqlILB_IP": {
             "type": "string"
         },
         "appGW_tier": {
@@ -86,9 +86,6 @@
         },
         "appGW_capacity": {
             "type": "int"
-        },
-        "appGW_publicIpAddressName": {
-            "type": "string"
         },
         "appGW_backendIPAddresses": {
             "type": "string"
@@ -121,6 +118,18 @@
                 "PolicyBased"
             ]
         },
+        "domainName": {
+            "type": "string"
+        },
+        "dc_virtualMachineSize": {
+            "type": "string"
+        },
+        "secretname_DomainAdminUserName": {
+            "type": "string"
+        },
+        "secretname_DomainAdminPassword": {
+            "type": "string"
+        },
         "secretname_ApplicationID": {
             "type": "string"
         },
@@ -132,16 +141,29 @@
         }
     },
     "variables": {
+        "uai": "uai2008973",
+        "preserve": true,
         "vpnSku": "VpnGw1",
+        "resource_Location": "south central us",
+        "CharactersForvmName": 3,
+        "StorageAccountType": "Standard_LRS",
+        "appGW_domainNameLabel": "emsappgw",
+        "appGW_publicIpAddressName": "emsappgwpip",
+        "vpnPublicIpAddress": "emsvpnpip",
         "resourceNames": {
-            "automationAccount": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "loganalyticsWorkspace": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
-            "virtualNetwork": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-001'))]",
-            "applicationGateway": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
-            "loadbalancer": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
-            "networkSecurityGroup": "[tolower(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
-            "vpn": "[tolower(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-vpn-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
-            "vpnPublicIpAddressName": "[tolower(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-pip-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]"
+            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
+            "automationAccount": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
+            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-002'))]",
+            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-001'))]",
+            "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
+            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
+            "networkSecurityGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
+            "vpn": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-vpn-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
+            "virtualmachine": "[toupper(concat(take(parameters('ApplicationName'),variables('CharactersForvmName')),first(parameters('Environment_Category')),first(parameters('Role')),parameters('Custom'),'00'))]",
+            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
+            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
+            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','','','osd','-','dsk','-',parameters('Role'),'-00'))]",
+            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'-00'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
@@ -153,67 +175,61 @@
             "logAnalytics": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/logAnalytics.json')]",
             "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]",
             "appGW": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/appGW.json')]",
-            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/VPN.json')]"
+            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/VPN.json')]",
+            "domainControllers": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/domainControllers.json')]",
+            "CreateADForest": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/CreateADForest.json')]",
+            "adPDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/CreateADPDC.ps1.zip')]",
+            "adBDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/ConfigureADBDC.ps1.zip')]",
+            "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+            "vnetDNS_Trigger": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.json')]",
+            "configureADBDC": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/configureADBDC.json')]",
+            "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
+            "setVNET_DNS": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.json')]"
         }
     },
     "resources": [
         {
-            "type": "Microsoft.Resources/deployments",
-            "name": "automationAccount",
+            "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2018-05-01",
-            "dependsOn": [],
+            "location": "[variables('resource_Location')]",
+            "name": "[variables('resourceNames').commonResourceGroup]",
+            "tags": {
+                "ApplicationName": "EMS",
+                "uai": "uai2008973",
+                "SupportEmail": "[parameters('SupportEmail')]",
+                "env": "[parameters('Environment_Category')]"
+            },
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "networkSecurityGroup",
+            "apiVersion": "2018-05-01",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('TemplateURLs').automationAccount]",
+                    "uri": "[variables('TemplateURLs').networkSecurityGroup]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "automationAccount": {
-                        "value": "[concat(variables('resourceNames').automationAccount,'1')]"
-                    },
-                    "AzureRM.profile_Module_URL": {
-                        "value": "[variables('TemplateURLs').AzureRM_Profile_Module_URL]"
-                    },
-                    "AzureRM.Network_Module_URL": {
-                        "value": "[variables('TemplateURLs').AzureRM_Network_Module_URL]"
-                    },
-                    "RunbookURL": {
-                        "value": "[variables('TemplateURLs').ad_RunbookURL]"
-                    },
-                    "applicationId": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroupName'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
-                            },
-                            "secretName": "[parameters('secretname_ApplicationID')]"
-                        }
-                    },
-                    "appsecret": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroupName'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
-                            },
-                            "secretName": "[parameters('secretname_AppSecret')]"
-                        }
-                    },
-                    "virtualNetworkResourceGroup": {
-                        "value": "[resourceGroup().name]"
-                    },
-                    "virtualnetworkname": {
-                        "value": "[concat(variables('resourceNames').virtualNetwork)]"
-                    },
-                    "pdc_networkInterfaceIP": {
-                        "value": "[parameters('domainController_IPs')[0]]"
+                    "nsgName": {
+                        "value": "[variables('resourceNames').networkSecurityGroup]"
                     }
                 }
             }
         },
         {
             "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "name": "logAnalytics",
             "apiVersion": "2017-05-10",
-            "dependsOn": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -232,27 +248,11 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "name": "networkSecurityGroup",
-            "apiVersion": "2018-05-01",
-            "dependsOn": [],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('TemplateURLs').networkSecurityGroup]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "nsgName": {
-                        "value": "[variables('resourceNames').networkSecurityGroup]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "name": "virtualNetwork",
             "apiVersion": "2018-05-01",
             "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]",
                 "networkSecurityGroup"
             ],
             "properties": {
@@ -283,6 +283,9 @@
                     "RDPILB_IP": {
                         "value": "[parameters('RDPILB_IP')]"
                     },
+                    "sqlILB_IP": {
+                        "value": "[parameters('sqlILB_IP')]"
+                    },
                     "subnet_Names": {
                         "value": "[parameters('subnet_Names')]"
                     },
@@ -297,10 +300,68 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "automationAccount",
+            "apiVersion": "2019-03-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]",
+                "virtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TemplateURLs').automationAccount]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "automationAccount": {
+                        "value": "[concat(variables('resourceNames').automationAccount,'1')]"
+                    },
+                    "AzureRM.profile_Module_URL": {
+                        "value": "[variables('TemplateURLs').AzureRM_Profile_Module_URL]"
+                    },
+                    "AzureRM.Network_Module_URL": {
+                        "value": "[variables('TemplateURLs').AzureRM_Network_Module_URL]"
+                    },
+                    "RunbookURL": {
+                        "value": "[variables('TemplateURLs').ad_RunbookURL]"
+                    },
+                    "applicationId": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
+                            },
+                            "secretName": "[parameters('secretname_ApplicationID')]"
+                        }
+                    },
+                    "appsecret": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
+                            },
+                            "secretName": "[parameters('secretname_AppSecret')]"
+                        }
+                    },
+                    "virtualNetworkResourceGroup": {
+                        "value": "[variables('resourceNames').commonResourceGroup]"
+                    },
+                    "virtualnetworkname": {
+                        "value": "[concat(variables('resourceNames').virtualNetwork)]"
+                    },
+                    "pdc_networkInterfaceIP": {
+                        "value": "[parameters('domainController_IPs')[0]]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "name": "applicationGateway",
             "apiVersion": "2018-05-01",
             "dependsOn": [
-                "virtualNetwork"
+                "virtualNetwork",
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -316,7 +377,7 @@
                         "value": "[variables('resourceNames').applicationGateway]"
                     },
                     "appGW_domainNameLabel": {
-                        "value": "[parameters('appGW_domainNameLabel')]"
+                        "value": "[variables('appGW_domainNameLabel')]"
                     },
                     "appGW_tier": {
                         "value": "[parameters('appGW_tier')]"
@@ -331,7 +392,7 @@
                         "value": "[parameters('subnet_Names').appGW]"
                     },
                     "appGW_publicIpAddressName": {
-                        "value": "[parameters('appGW_publicIpAddressName')]"
+                        "value": "[variables('appGW_publicIpAddressName')]"
                     },
                     "appGW_backendIPAddresses": {
                         "value": "[parameters('appGW_backendIPAddresses')]"
@@ -345,7 +406,7 @@
                     "appGW-certData": {
                         "reference": {
                             "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroupName'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
                             },
                             "secretName": "[parameters('secretName_appGW-certData')]"
                         }
@@ -353,7 +414,7 @@
                     "appGW_certPassword": {
                         "reference": {
                             "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroupName'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
                             },
                             "secretName": "[parameters('secretName_certPassword')]"
                         }
@@ -378,10 +439,12 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "name": "VPN",
             "apiVersion": "2018-05-01",
             "dependsOn": [
-                "virtualNetwork"
+                "virtualNetwork",
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -409,7 +472,7 @@
                         "value": "[parameters('subnet_Names').vpnSubnet]"
                     },
                     "vpnPublicIpAddressName": {
-                        "value": "[concat(variables('resourceNames').vpnPublicIpAddressName,'1')]"
+                        "value": "[variables('vpnPublicIpAddress')]"
                     }
                 }
             }
