@@ -118,18 +118,6 @@
                 "PolicyBased"
             ]
         },
-        "domainName": {
-            "type": "string"
-        },
-        "dc_virtualMachineSize": {
-            "type": "string"
-        },
-        "secretname_DomainAdminUserName": {
-            "type": "string"
-        },
-        "secretname_DomainAdminPassword": {
-            "type": "string"
-        },
         "secretname_ApplicationID": {
             "type": "string"
         },
@@ -141,12 +129,8 @@
         }
     },
     "variables": {
-        "uai": "uai2008973",
-        "preserve": true,
         "vpnSku": "VpnGw1",
         "resource_Location": "south central us",
-        "CharactersForvmName": 3,
-        "StorageAccountType": "Standard_LRS",
         "appGW_domainNameLabel": "emsappgw",
         "appGW_publicIpAddressName": "emsappgwpip",
         "vpnPublicIpAddress": "emsvpnpip",
@@ -158,12 +142,7 @@
             "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
             "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
             "networkSecurityGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
-            "vpn": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-vpn-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
-            "virtualmachine": "[toupper(concat(take(parameters('ApplicationName'),variables('CharactersForvmName')),first(parameters('Environment_Category')),first(parameters('Role')),parameters('Custom'),'00'))]",
-            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','','','osd','-','dsk','-',parameters('Role'),'-00'))]",
-            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'-00'))]"
+            "vpn": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-vpn-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
@@ -171,20 +150,10 @@
             "AzureRM_Profile_Module_URL": "[concat('https://www.powershellgallery.com/api/v2/package/', 'AzureRM.Profile')]",
             "AzureRM_Network_Module_URL": "[concat('https://www.powershellgallery.com/api/v2/package/', 'AzureRM.Network')]",
             "ad_RunbookURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_runbook.ps1')]",
-            "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.ps1')]",
             "logAnalytics": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/logAnalytics.json')]",
             "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]",
             "appGW": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/appGW.json')]",
-            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/VPN.json')]",
-            "domainControllers": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/domainControllers.json')]",
-            "CreateADForest": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/CreateADForest.json')]",
-            "adPDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/CreateADPDC.ps1.zip')]",
-            "adBDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/ConfigureADBDC.ps1.zip')]",
-            "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
-            "vnetDNS_Trigger": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.json')]",
-            "configureADBDC": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/configureADBDC.json')]",
-            "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
-            "setVNET_DNS": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.json')]"
+            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/VPN.json')]"
         }
     },
     "resources": [
