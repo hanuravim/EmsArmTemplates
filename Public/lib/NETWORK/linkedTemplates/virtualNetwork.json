@@ -23,6 +23,9 @@
         "RDPILB_IP": {
             "type": "string"
         },
+        "sqlILB_IP": {
+            "type": "string"
+        },
         "subnet_Names": {
             "type": "object"
         },
@@ -191,9 +194,9 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').external)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').RDP)]"
                             },
-                            "privateIPAddress": "[parameters('jumpboxILB_IP')]"
+                            "privateIPAddress": "[parameters('RDPILB_IP')]"
                         }
                     }
                 ]
@@ -217,9 +220,35 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').external)]"
+                            },
+                            "privateIPAddress": "[parameters('jumpboxILB_IP')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'4')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [
+                "[parameters('virtualNetwork')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').RDP)]"
                             },
-                            "privateIPAddress": "[parameters('RDPILB_IP')]"
+                            "privateIPAddress": "[parameters('sqlILB_IP')]"
                         }
                     }
                 ]
