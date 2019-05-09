@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetwork": {
+            "type": "string"
+        },
+        "vnet_addressPrefix": {
+            "type": "object"
+        },
+        "domain_addressPrefix": {
+            "type": "object"
+        },
+        "subnet_Names": {
+            "type": "object"
+        },
+        "networkSecurityGroup": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2015-05-01-preview",
+            "name": "[parameters('virtualNetwork')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vnet_addressPrefix').addr1]",
+                        "[parameters('vnet_addressPrefix').addr2]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnet_Names').domain]",
+                        "properties": {
+                            "addressPrefix": "[parameters('domain_addressPrefix').addr1]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'3'))]"
+                            },
+                            "serviceEndpoints": [],
+                            "delegations": []
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            },
+            "dependsOn": []
+        }
+    ]
+}
