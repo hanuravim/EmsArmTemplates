@@ -14,9 +14,6 @@
         "loadbalancer": {
             "type": "string"
         },
-        "adILB_IP": {
-            "type": "string"
-        },
         "jumpboxILB_IP": {
             "type": "string"
         },
@@ -149,32 +146,6 @@
                 "enableVmProtection": false
             },
             "dependsOn": []
-        },
-        {
-            "apiVersion": "2018-10-01",
-            "name": "[concat(parameters('loadbalancer'),'1')]",
-            "type": "Microsoft.Network/loadBalancers",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Basic"
-            },
-            "dependsOn": [
-                "[parameters('virtualNetwork')]"
-            ],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "LoadBalancerFrontEnd",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').domain)]"
-                            },
-                            "privateIPAddress": "[parameters('adILB_IP')]"
-                        }
-                    }
-                ]
-            }
         },
         {
             "apiVersion": "2018-10-01",
