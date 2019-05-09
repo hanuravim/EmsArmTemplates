@@ -60,14 +60,8 @@
         "vnet_addressPrefix": {
             "type": "object"
         },
-        "domain_addressPrefix": {
-            "type": "object"
-        },
         "adILB_IP": {
             "type": "string"
-        },
-        "domainController_IPs": {
-            "type": "array"
         },
         "jumpboxILB_IP": {
             "type": "string"
@@ -102,6 +96,9 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
+        "domain_addressPrefix": {
+            "type": "object"
+        },
         "gatewayType": {
             "type": "string",
             "defaultValue": "Vpn",
@@ -118,12 +115,6 @@
                 "PolicyBased"
             ]
         },
-        "secretname_ApplicationID": {
-            "type": "string"
-        },
-        "secretname_AppSecret": {
-            "type": "string"
-        },
         "artifacts_baseUri": {
             "type": "string"
         }
@@ -136,7 +127,6 @@
         "vpnPublicIpAddress": "emsvpnpip",
         "resourceNames": {
             "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
-            "automationAccount": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
             "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-002'))]",
             "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-001'))]",
             "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
@@ -146,10 +136,6 @@
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
-            "automationAccount": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AutomationAccount/linkedTemplates/automationAccount.json')]",
-            "AzureRM_Profile_Module_URL": "[concat('https://www.powershellgallery.com/api/v2/package/', 'AzureRM.Profile')]",
-            "AzureRM_Network_Module_URL": "[concat('https://www.powershellgallery.com/api/v2/package/', 'AzureRM.Network')]",
-            "ad_RunbookURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_runbook.ps1')]",
             "logAnalytics": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/logAnalytics.json')]",
             "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]",
             "appGW": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/appGW.json')]",
@@ -263,62 +249,6 @@
                     },
                     "networkSecurityGroup": {
                         "value": "[variables('resourceNames').networkSecurityGroup]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
-            "name": "automationAccount",
-            "apiVersion": "2019-03-01",
-            "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]",
-                "virtualNetwork"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('TemplateURLs').automationAccount]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "automationAccount": {
-                        "value": "[concat(variables('resourceNames').automationAccount,'1')]"
-                    },
-                    "AzureRM.profile_Module_URL": {
-                        "value": "[variables('TemplateURLs').AzureRM_Profile_Module_URL]"
-                    },
-                    "AzureRM.Network_Module_URL": {
-                        "value": "[variables('TemplateURLs').AzureRM_Network_Module_URL]"
-                    },
-                    "RunbookURL": {
-                        "value": "[variables('TemplateURLs').ad_RunbookURL]"
-                    },
-                    "applicationId": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
-                            },
-                            "secretName": "[parameters('secretname_ApplicationID')]"
-                        }
-                    },
-                    "appsecret": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
-                            },
-                            "secretName": "[parameters('secretname_AppSecret')]"
-                        }
-                    },
-                    "virtualNetworkResourceGroup": {
-                        "value": "[variables('resourceNames').commonResourceGroup]"
-                    },
-                    "virtualnetworkname": {
-                        "value": "[concat(variables('resourceNames').virtualNetwork)]"
-                    },
-                    "pdc_networkInterfaceIP": {
-                        "value": "[parameters('domainController_IPs')[0]]"
                     }
                 }
             }
