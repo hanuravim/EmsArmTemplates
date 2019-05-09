@@ -142,7 +142,8 @@
                 "count": "[parameters('ad_vmCount')]"
             },
             "dependsOn": [
-                "nicLoop"
+                "nicLoop",
+                "[parameters('availabilitySetName')]"
             ],
             "properties": {
                 "availabilitySet": "[if(equals(variables('AvailabilitySet'), 'Yes'), variables('availabilitySetId'), json('null'))]",
