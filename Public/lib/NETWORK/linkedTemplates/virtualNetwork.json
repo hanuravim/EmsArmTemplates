@@ -34,14 +34,11 @@
         },
         "networkSecurityGroup": {
             "type": "string"
-        },
-        "domainController_IPs": {
-            "type": "array"
         }
     },
     "resources": [
         {
-            "apiVersion": "2018-10-01",
+            "apiVersion": "2015-05-01-preview",
             "name": "[parameters('virtualNetwork')]",
             "type": "Microsoft.Network/virtualNetworks",
             "location": "[resourceGroup().location]",
@@ -51,9 +48,6 @@
                         "[parameters('vnet_addressPrefix').addr1]",
                         "[parameters('vnet_addressPrefix').addr2]"
                     ]
-                },
-                "dhcpOptions": {
-                    "dnsServers": "[parameters('domainController_IPs')]"
                 },
                 "subnets": [
                     {
