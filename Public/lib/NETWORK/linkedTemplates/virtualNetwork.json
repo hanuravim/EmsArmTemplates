@@ -11,6 +11,21 @@
         "domain_addressPrefix": {
             "type": "object"
         },
+        "loadbalancer": {
+            "type": "string"
+        },
+        "adILB_IP": {
+            "type": "string"
+        },
+        "jumpboxILB_IP": {
+            "type": "string"
+        },
+        "RDPILB_IP": {
+            "type": "string"
+        },
+        "sqlILB_IP": {
+            "type": "string"
+        },
         "subnet_Names": {
             "type": "object"
         },
@@ -134,6 +149,110 @@
                 "enableVmProtection": false
             },
             "dependsOn": []
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'1')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [
+                "[parameters('virtualNetwork')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').domain)]"
+                            },
+                            "privateIPAddress": "[parameters('adILB_IP')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'2')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [
+                "[parameters('virtualNetwork')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').RDP)]"
+                            },
+                            "privateIPAddress": "[parameters('RDPILB_IP')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'3')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [
+                "[parameters('virtualNetwork')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').external)]"
+                            },
+                            "privateIPAddress": "[parameters('jumpboxILB_IP')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'4')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [
+                "[parameters('virtualNetwork')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').commondb)]"
+                            },
+                            "privateIPAddress": "[parameters('sqlILB_IP')]"
+                        }
+                    }
+                ]
+            }
         }
     ]
 }
