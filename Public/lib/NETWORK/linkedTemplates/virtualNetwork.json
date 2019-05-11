@@ -35,7 +35,7 @@
         "networkSecurityGroup": {
             "type": "string"
         },
-        "DNSServerAddress": {
+        "domainController_IPs": {
             "type": "array"
         }
     },
@@ -53,7 +53,7 @@
                     ]
                 },
                 "dhcpOptions": {
-                    "dnsServers": "[parameters('DNSServerAddress')]"
+                    "dnsServers": "[parameters('domainController_IPs')]"
                 },
                 "subnets": [
                     {
