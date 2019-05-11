@@ -22,6 +22,15 @@
         },
         "networkSecurityGroup": {
             "type": "string"
+        },
+        "RDPILB_IP": {
+            "type": "string"
+        },
+        "jumpboxILB_IP": {
+            "type": "string"
+        },
+        "sqlILB_IP": {
+            "type": "string"
         }
     },
     "resources": [
