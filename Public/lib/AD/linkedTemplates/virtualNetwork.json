@@ -27,7 +27,7 @@
             "type": "string"
         },
         "DNSServerAddress": {
-            "type": "array"
+            "type": "string"
         }
     },
     "resources": [
