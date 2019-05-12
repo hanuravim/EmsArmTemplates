@@ -11,21 +11,6 @@
         "domain_addressPrefix": {
             "type": "object"
         },
-        "loadbalancer": {
-            "type": "string"
-        },
-        "adILB_IP": {
-            "type": "string"
-        },
-        "jumpboxILB_IP": {
-            "type": "string"
-        },
-        "RDPILB_IP": {
-            "type": "string"
-        },
-        "sqlILB_IP": {
-            "type": "string"
-        },
         "subnet_Names": {
             "type": "object"
         },
