@@ -27,15 +27,39 @@
     "variables": {},
     "resources": [
         {
-            "apiVersion": "2016-03-30",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('virtualmachineName'),copyindex(2),'/customscript')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourcegroup().location]",
+            "copy": {
+                "name": "customscriptloop",
+                "count": "[parameters('vmCount')]"
+            },
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.8",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "https://raw.githubusercontent.com/hanuravim/demo-ems/master/ems-manager/nestedTemplates/customScripts.ps1"
+                    ],
+                    "commandToExecute": "Restart-Computer -Force"
+                }
+            }
+        },
+        {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(parameters('virtualmachineName'),copyindex(2),'/ConfigureADBDC')]",
+            "apiVersion": "2016-03-30",
             "location": "[resourceGroup().location]",
             "copy": {
                 "name": "configADBDCloop",
                 "count": "[parameters('vmCount')]"
             },
-            "dependsOn": [],
+            "dependsOn": [
+                "[concat(parameters('virtualmachineName'),copyindex(2),'/customscript')]"
+            ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
                 "type": "DSC",
