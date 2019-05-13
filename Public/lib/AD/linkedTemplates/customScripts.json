@@ -9,9 +9,7 @@
             "type": "int"
         }
     },
-    "variables": {
-        "command": "Restart-Computer -Force"
-    },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
@@ -31,7 +29,7 @@
                     "fileUris": [
                         "https://raw.githubusercontent.com/hanuravim/demo-ems/master/ems-manager/nestedTemplates/customScripts.ps1"
                     ],
-                    "commandToExecute": "[concat('powershell -command ', variables('command'))]"
+                    "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
                 }
             }
         }
