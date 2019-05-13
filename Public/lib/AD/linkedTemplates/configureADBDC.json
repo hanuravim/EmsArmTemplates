@@ -35,9 +35,7 @@
                 "name": "configADBDCloop",
                 "count": "[parameters('vmCount')]"
             },
-            "dependsOn": [
-                "[concat(parameters('virtualmachineName'),copyindex(2),'/customscript')]"
-            ],
+            "dependsOn": [],
             "properties": {
                 "publisher": "Microsoft.Powershell",
                 "type": "DSC",
