@@ -26,10 +26,8 @@
                 "typeHandlerVersion": "1.8",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
-                    "fileUris": [
-                        "https://raw.githubusercontent.com/hanuravim/demo-ems/master/ems-manager/nestedTemplates/customScripts.ps1"
-                    ],
-                    "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
+                    "fileUris": [],
+                    "commandToExecute": "Restart-Computer -Force"
                 }
             }
         }
