@@ -9,7 +9,7 @@
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('virtualmachineName'),'/webhook')]",
+            "name": "[concat(parameters('virtualmachineName'),'/customScripts')]",
             "apiVersion": "2017-03-30",
             "location": "[resourcegroup().location]",
             "properties": {
