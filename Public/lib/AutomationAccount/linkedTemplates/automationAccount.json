@@ -11,27 +11,14 @@
         "AzureRM.Network_Module_URL": {
             "type": "string"
         },
-        "RunbookURL": {
-            "type": "string"
-        },
         "applicationId": {
             "type": "string"
         },
         "appsecret": {
             "type": "securestring"
-        },
-        "virtualNetworkResourceGroup": {
-            "type": "string"
-        },
-        "virtualnetworkname": {
-            "type": "string"
-        },
-        "pdc_networkInterfaceIP": {
-            "type": "string"
         }
     },
     "variables": {
-        "runbookDescription": "Configures the VNET for DNS server with Primary domain controller IP",
         "sku": "Free"
     },
     "resources": [
@@ -48,26 +35,6 @@
                 }
             },
             "resources": [
-                {
-                    "name": "vnetDNS_runbook",
-                    "type": "runbooks",
-                    "apiVersion": "2018-06-30",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
-                    ],
-                    "tags": {},
-                    "properties": {
-                        "runbookType": "PowerShell",
-                        "logProgress": false,
-                        "logVerbose": false,
-                        "description": "[variables('runbookDescription')]",
-                        "publishContentLink": {
-                            "uri": "[parameters('RunbookURL')]",
-                            "version": "1.0.0.0"
-                        }
-                    }
-                },
                 {
                     "name": "AzureRM.Profile",
                     "type": "modules",
@@ -136,45 +103,6 @@
                     "properties": {
                         "description": "appsecret",
                         "value": "[concat('\"',parameters('appsecret'),'\"')]"
-                    }
-                },
-                {
-                    "type": "Microsoft.Automation/automationAccounts/variables",
-                    "name": "[concat(parameters('automationAccount'),'/virtualNetworkResourceGroup')]",
-                    "apiVersion": "2018-06-30",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
-                    ],
-                    "properties": {
-                        "description": "virtualNetworkResourceGroup",
-                        "value": "[concat('\"',parameters('virtualNetworkResourceGroup'),'\"')]"
-                    }
-                },
-                {
-                    "type": "Microsoft.Automation/automationAccounts/variables",
-                    "name": "[concat(parameters('automationAccount'),'/virtualnetworkname')]",
-                    "apiVersion": "2018-06-30",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
-                    ],
-                    "properties": {
-                        "description": "virtualnetworkname",
-                        "value": "[concat('\"',parameters('virtualnetworkname'),'\"')]"
-                    }
-                },
-                {
-                    "type": "Microsoft.Automation/automationAccounts/variables",
-                    "name": "[concat(parameters('automationAccount'),'/pdc_networkInterfaceIP')]",
-                    "apiVersion": "2018-06-30",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccount'))]"
-                    ],
-                    "properties": {
-                        "description": "pdc_networkInterfaceIP",
-                        "value": "[concat('\"',parameters('pdc_networkInterfaceIP'),'\"')]"
                     }
                 }
             ]
