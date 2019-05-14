@@ -51,86 +51,29 @@
                 "description": "(Product Specific) Space. 8 chars (OPTIONAL)"
             }
         },
-        "keyVaultResourceGroup": {
-            "type": "string"
-        },
-        "keyvaultName": {
-            "type": "string"
-        },
         "vnet_addressPrefix": {
-            "type": "object"
-        },
-        "adILB_IP": {
-            "type": "string"
-        },
-        "jumpboxILB_IP": {
-            "type": "string"
-        },
-        "RDPILB_IP": {
-            "type": "string"
-        },
-        "sqlILB_IP": {
-            "type": "string"
-        },
-        "appGW_tier": {
-            "type": "string"
-        },
-        "appGW_Size": {
-            "type": "string"
-        },
-        "appGW_capacity": {
-            "type": "int"
-        },
-        "appGW_backendIPAddresses": {
-            "type": "string"
-        },
-        "secretName_appGW-certData": {
-            "type": "string"
-        },
-        "secretName_certPassword": {
-            "type": "string"
-        },
-        "subnet_Names": {
-            "type": "object"
-        },
-        "subnet_addressPrefixes": {
             "type": "object"
         },
         "domain_addressPrefix": {
             "type": "object"
         },
-        "gatewayType": {
-            "type": "string",
-            "defaultValue": "Vpn",
-            "allowedValues": [
-                "Vpn",
-                "ExpressRoute"
-            ]
+        "subnet_addressPrefixes": {
+            "type": "object"
         },
-        "vpnType": {
-            "type": "string",
-            "defaultValue": "RouteBased",
-            "allowedValues": [
-                "RouteBased",
-                "PolicyBased"
-            ]
+        "subnet_Names": {
+            "type": "object"
         },
         "artifacts_baseUri": {
             "type": "string"
         }
     },
     "variables": {
-        "vpnSku": "VpnGw1",
         "resource_Location": "south central us",
-        "appGW_domainNameLabel": "emsappgw",
-        "appGW_publicIpAddressName": "emsappgwpip",
-        "vpnPublicIpAddress": "emsvpnpip",
         "resourceNames": {
             "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
-            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
+            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-002'))]",
             "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-001'))]",
             "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
-            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
             "networkSecurityGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
             "vpn": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-vpn-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]"
         },
@@ -226,21 +169,6 @@
                     "domain_addressPrefix": {
                         "value": "[parameters('domain_addressPrefix')]"
                     },
-                    "loadbalancer": {
-                        "value": "[variables('resourceNames').loadbalancer]"
-                    },
-                    "adILB_IP": {
-                        "value": "[parameters('adILB_IP')]"
-                    },
-                    "jumpboxILB_IP": {
-                        "value": "[parameters('jumpboxILB_IP')]"
-                    },
-                    "RDPILB_IP": {
-                        "value": "[parameters('RDPILB_IP')]"
-                    },
-                    "sqlILB_IP": {
-                        "value": "[parameters('sqlILB_IP')]"
-                    },
                     "subnet_Names": {
                         "value": "[parameters('subnet_Names')]"
                     },
@@ -249,129 +177,6 @@
                     },
                     "networkSecurityGroup": {
                         "value": "[variables('resourceNames').networkSecurityGroup]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
-            "name": "applicationGateway",
-            "apiVersion": "2018-05-01",
-            "dependsOn": [
-                "virtualNetwork",
-                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('TemplateURLs').appGW]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "virtualNetwork": {
-                        "value": "[variables('resourceNames').virtualNetwork]"
-                    },
-                    "appGW_Name": {
-                        "value": "[variables('resourceNames').applicationGateway]"
-                    },
-                    "appGW_domainNameLabel": {
-                        "value": "[variables('appGW_domainNameLabel')]"
-                    },
-                    "appGW_tier": {
-                        "value": "[parameters('appGW_tier')]"
-                    },
-                    "appGW_Size": {
-                        "value": "[parameters('appGW_Size')]"
-                    },
-                    "appGW_capacity": {
-                        "value": "[parameters('appGW_capacity')]"
-                    },
-                    "appGW_subnetName": {
-                        "value": "[parameters('subnet_Names').appGW]"
-                    },
-                    "appGW_publicIpAddressName": {
-                        "value": "[variables('appGW_publicIpAddressName')]"
-                    },
-                    "appGW_backendIPAddresses": {
-                        "value": "[parameters('appGW_backendIPAddresses')]"
-                    },
-                    "appGW_allocationMethod": {
-                        "value": "Dynamic"
-                    },
-                    "appGW_idleTimeoutInMinutes": {
-                        "value": 5
-                    },
-                    "appGW-certData": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
-                            },
-                            "secretName": "[parameters('secretName_appGW-certData')]"
-                        }
-                    },
-                    "appGW_certPassword": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVaultName'))]"
-                            },
-                            "secretName": "[parameters('secretName_certPassword')]"
-                        }
-                    },
-                    "ApplicationName": {
-                        "value": "[parameters('ApplicationName')]"
-                    },
-                    "uai": {
-                        "value": "uai2008973"
-                    },
-                    "SupportEmail": {
-                        "value": "[parameters('SupportEmail')]"
-                    },
-                    "env": {
-                        "value": "[parameters('Environment_Category')]"
-                    },
-                    "preserve": {
-                        "value": true
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
-            "name": "VPN",
-            "apiVersion": "2018-05-01",
-            "dependsOn": [
-                "virtualNetwork",
-                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('TemplateURLs').vpn]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vpnName": {
-                        "value": "[concat(variables('resourceNames').vpn,'1')]"
-                    },
-                    "vpnSku": {
-                        "value": "[variables('vpnSku')]"
-                    },
-                    "gatewayType": {
-                        "value": "[parameters('gatewayType')]"
-                    },
-                    "vpnType": {
-                        "value": "[parameters('vpnType')]"
-                    },
-                    "VirtualNetworkName": {
-                        "value": "[variables('resourceNames').virtualNetwork]"
-                    },
-                    "vpnSubnetName": {
-                        "value": "[parameters('subnet_Names').vpnSubnet]"
-                    },
-                    "vpnPublicIpAddressName": {
-                        "value": "[variables('vpnPublicIpAddress')]"
                     }
                 }
             }
