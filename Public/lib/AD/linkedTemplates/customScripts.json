@@ -6,6 +6,9 @@
             "type": "string"
         }
     },
+    "variables": {
+        "command": "Restart-Computer -Force"
+    },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
@@ -19,7 +22,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [],
-                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command 'Restart-Computer -Force'"
+                    "commandToExecute": "[concat('powershell -command ', variables('command'))]"
                 }
             }
         }
