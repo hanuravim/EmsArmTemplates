@@ -19,7 +19,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [],
-                    "commandToExecute": "powershell.exe -Command 'Restart-Computer -Force'"
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command 'Restart-Computer -Force'"
                 }
             }
         }
