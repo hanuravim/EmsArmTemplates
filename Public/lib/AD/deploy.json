@@ -59,8 +59,7 @@
             "type": "string"
         },
         "subnet_Names": {
-            "type": "object",
-            "defaultValue": ""
+            "type": "object"
         },
         "dc_virtualMachineSize": {
             "type": "string"
@@ -71,16 +70,22 @@
         "domainName": {
             "type": "string"
         },
+        "vnet_addressPrefix": {
+            "type": "object"
+        },
+        "domain_addressPrefix": {
+            "type": "object"
+        },
+        "adILB_IP": {
+            "type": "string"
+        },
+        "subnet_addressPrefixes": {
+            "type": "object"
+        },
         "secretname_DomainAdminUserName": {
             "type": "string"
         },
         "secretname_DomainAdminPassword": {
-            "type": "string"
-        },
-        "secretname_ApplicationID": {
-            "type": "string"
-        },
-        "secretname_AppSecret": {
             "type": "string"
         },
         "artifacts_baseUri": {
@@ -93,27 +98,24 @@
         "CharactersForvmName": 3,
         "StorageAccountType": "Standard_LRS",
         "resourceNames": {
-            "vnetResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-01'))]",
-            "loganalyticsResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-01'))]",
-            "automationAccountResourceGroup": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-01'))]",
-            "availabilitySet": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "StorageAccount": "[tolower(concat(parameters('ApplicationName'),parameters('Environment_Category'),'stg',parameters('Tenant'),'str','00'))]",
-            "virtualNetwork": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-00'))]",
-            "loganalyticsWorkspace": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
-            "automationAccount": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
-            "applicationGateway": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "networkSecurityGroup": "[tolower(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
-            "loadbalancer": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
-            "networkinterface": "[toupper(concat('gav-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
+            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-02'))]",
+            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
+            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-002'))]",
+            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-003'))]",
+            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
+            "automationAccount": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
+            "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
+            "networkSecurityGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
+            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
             "virtualmachine": "[toupper(concat(parameters('ApplicationName'),first(parameters('Environment_Category')),take(parameters('Role'),variables('CharactersForvmName')),parameters('Tenant'),'00'))]",
-            "osDisk": "[tolower(concat('gav',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','','','osd','-','dsk','-',parameters('Role'),'-00'))]",
-            "dataDisk": "[tolower(concat('gav',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'-00'))]"
+            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','','','osd','-','dsk','-',parameters('Role'),'-00'))]",
+            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'-00'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
             "loganalyticsWorkspace": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/LogAnalyticsWorkspace.json')]",
-            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]",
-            "automationAccount": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AutomationAccount/linkedTemplate/automationAccount.json')]",
+            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/virtualNetwork.json')]",
+            "automationAccount": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AutomationAccount/linkedTemplates/automationAccount.json')]",
             "domainControllers": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/domainControllers.json')]",
             "CreateADForest": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/CreateADForest.json')]",
             "configureADBDC": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/configureADBDC.json')]",
@@ -121,17 +123,14 @@
             "adBDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/ConfigureADBDC.ps1.zip')]",
             "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
             "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
-            "AzureRM_Profile_Module_URL": "[concat('https://www.powershellgallery.com/api/v2/package/', 'AzureRM.Profile')]",
-            "AzureRM_Network_Module_URL": "[concat('https://www.powershellgallery.com/api/v2/package/', 'AzureRM.Network')]",
-            "vnetDNS_Trigger": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.json')]",
-            "ad_RunbookURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_runbook.ps1')]",
-            "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vnetDNS_Trigger.ps1')]"
+            "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/customScripts.json')]"
         }
     },
     "resources": [
         {
             "name": "DC",
             "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "apiVersion": "2018-05-01",
             "dependsOn": [],
             "properties": {
@@ -154,10 +153,10 @@
                         "value": "[variables('resourceNames').virtualmachine]"
                     },
                     "vnetResourceGroup": {
-                        "value": "[variables('resourceNames').vnetResourceGroup]"
+                        "value": "[variables('resourceNames').commonResourceGroup]"
                     },
                     "virtualNetworkName": {
-                        "value": "[concat(variables('resourceNames').virtualNetwork,'1')]"
+                        "value": "[concat(variables('resourceNames').virtualNetwork)]"
                     },
                     "networkInterfaceName": {
                         "value": "[variables('resourceNames').networkinterface]"
@@ -203,7 +202,7 @@
                         }
                     },
                     "omsWorkspaceResourceGroup": {
-                        "value": "[variables('resourceNames').loganalyticsResourceGroup]"
+                        "value": "[variables('resourceNames').commonResourceGroup]"
                     },
                     "omsWorkspaceName": {
                         "value": "[variables('resourceNames').loganalyticsWorkspace]"
@@ -229,6 +228,7 @@
         {
             "name": "ConfigureADForest",
             "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "apiVersion": "2017-05-10",
             "dependsOn": [
                 "DC"
@@ -275,67 +275,79 @@
             }
         },
         {
-            "name": "vnetDNS_Trigger",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2017-05-10",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "virtualNetwork",
+            "apiVersion": "2018-05-01",
             "dependsOn": [
-                "DC",
                 "ConfigureADForest"
             ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('TemplateURLs').vnetDNS_Trigger]",
+                    "uri": "[variables('TemplateURLs').virtualNetwork]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "virtualmachineName": {
-                        "value": "[variables('resourcenames').virtualmachine]"
+                    "virtualNetwork": {
+                        "value": "[variables('resourceNames').virtualNetwork]"
                     },
-                    "vmCount": {
-                        "value": 1
+                    "vnet_addressPrefix": {
+                        "value": "[parameters('vnet_addressPrefix')]"
                     },
-                    "CustomScriptFileName": {
-                        "value": "vnetDNS_Trigger.ps1"
+                    "domain_addressPrefix": {
+                        "value": "[parameters('domain_addressPrefix')]"
                     },
-                    "vnetDNSTrigger_ScriptFilePath": {
-                        "value": "[variables('TemplateURLs').ad_customScriptFilePath]"
+                    "loadbalancer": {
+                        "value": "[variables('resourceNames').loadbalancer]"
                     },
-                    "applicationId": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
-                            },
-                            "secretName": "[parameters('secretname_ApplicationID')]"
-                        }
+                    "adILB_IP": {
+                        "value": "[parameters('adILB_IP')]"
                     },
-                    "appsecret": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
-                            },
-                            "secretName": "[parameters('secretname_AppSecret')]"
-                        }
+                    "subnet_Names": {
+                        "value": "[parameters('subnet_Names')]"
                     },
-                    "tenantId": {
-                        "value": "[subscription().tenantId]"
+                    "subnet_addressPrefixes": {
+                        "value": "[parameters('subnet_addressPrefixes')]"
                     },
-                    "automationAccountResourceGroup": {
-                        "value": "[variables('resourceNames').automationAccountResourceGroup]"
+                    "networkSecurityGroup": {
+                        "value": "[variables('resourceNames').networkSecurityGroup]"
                     },
-                    "automationAccount": {
-                        "value": "[variables('resourceNames').automationAccount]"
+                    "DNSServerAddress": {
+                        "value": "[parameters('domainController_IPs')[0]]"
                     }
                 }
             }
         },
         {
             "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "customScripts",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "virtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TemplateURLs').ad_customScriptFilePath]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualmachineName": {
+                        "value": "[concat(variables('resourcenames').virtualmachine,'2')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "name": "configureADBDC",
             "apiVersion": "2018-05-01",
             "dependsOn": [
-                "DC",
-                "vnetDNS_Trigger"
+                "virtualNetwork",
+                "customScripts"
             ],
             "properties": {
                 "mode": "Incremental",
