@@ -1,25 +1,12 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "virtualmachineName": {
-            "type": "string"
-        },
-        "vmCount": {
-            "type": "int"
-        }
-    },
-    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('virtualmachineName'),copyindex(2),'/customscript')]",
+            "name": "[concat('adVM','/customScript')]",
             "apiVersion": "2017-03-30",
             "location": "[resourcegroup().location]",
-            "copy": {
-                "name": "customscriptloop",
-                "count": "[parameters('vmCount')]"
-            },
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "CustomScriptExtension",
@@ -27,9 +14,10 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [],
-                    "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -Command 'Restart-Computer -Force'"
+                    "commandToExecute": "powershell.exe -Command 'Restart-Computer -Force'"
                 }
             }
         }
-    ]
+    ],
+    "outputs": {}
 }
