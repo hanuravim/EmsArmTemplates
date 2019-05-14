@@ -1,5 +1,5 @@
 #GET THE OPEN SSH PACKAGE
-$Uri = 'https://raw.githubusercontent.com/hanuravim/SFTP/master/OpenSSH-Win64.zip'
+$Uri = 'https://raw.githubusercontent.com/hanuravim/EmsArmTemplates/master/Public/lib/SFTP/BvSshServer-Inst.exe'
 Invoke-WebRequest -Uri $Uri -OutFile "$($env:ProgramFiles)\OpenSSH-Win64.zip"
 
 #NAVIGATE TO THE RESPECTIVE PATH
