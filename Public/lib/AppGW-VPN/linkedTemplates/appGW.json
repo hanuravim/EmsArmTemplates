@@ -157,7 +157,6 @@
                             "Protocol": "Http",
                             "CookieBasedAffinity": "Disabled",
                             "requestTimeout": 600,
-                            "cookieBasedAffinity": "Disabled",
                             "hostName": null,
                             "pickHostNameFromBackendAddress": false,
                             "affinityCookieName": "ApplicationGatewayAffinity",
