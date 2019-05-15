@@ -8,7 +8,7 @@
         "vpnSku": {
             "type": "string"
         },
-        "gatewayType": {
+        "vpnConnection": {
             "type": "string",
             "defaultValue": "Vpn",
             "allowedValues": [
@@ -50,7 +50,7 @@
             ],
             "tags": {},
             "properties": {
-                "gatewayType": "[parameters('gatewayType')]",
+                "gatewayType": "[parameters('vpnConnection')]",
                 "ipConfigurations": [
                     {
                         "name": "default",
@@ -83,4 +83,3 @@
         }
     ]
 }
-
