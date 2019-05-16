@@ -20,7 +20,7 @@
         "virtualNetworkName": {
             "type": "string"
         },
-        "ad_SubnetRef": {
+        "ad_SubnetName": {
             "type": "string"
         },
         "networkInterfaceName": {
@@ -115,7 +115,7 @@
                             "privateIpAddressVersion": "IPv4",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('ad_SubnetRef'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('ad_SubnetName'))]"
                             }
                         }
                     }
