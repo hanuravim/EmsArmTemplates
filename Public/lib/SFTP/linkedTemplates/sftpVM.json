@@ -112,7 +112,7 @@
                 "preserve": "[parameters('preserve')]"
             },
             "dependsOn": [
-                "nicLoop"
+                "[parameters('networkInterfaceName')]"
             ],
             "properties": {
                 "hardwareProfile": {
