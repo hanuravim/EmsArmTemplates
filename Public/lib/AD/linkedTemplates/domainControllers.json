@@ -44,9 +44,6 @@
         "DataDiskSize": {
             "type": "int"
         },
-        "domainName": {
-            "type": "string"
-        },
         "DomainAdminUserName": {
             "type": "string"
         },
