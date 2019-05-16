@@ -101,7 +101,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
+            "name": "[parameters('virtualmachineName')]",
             "apiVersion": "2018-10-01",
             "location": "[resourcegroup().location]",
             "tags": {
@@ -111,17 +111,13 @@
                 "env": "[parameters('Environment_Category')]",
                 "preserve": "[parameters('preserve')]"
             },
-            "copy": {
-                "name": "virtualMachineLoop",
-                "count": "[parameters('vmCount')]"
-            },
             "dependsOn": [],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('virtualmachineName'),copyIndex(1))]",
+                    "computerName": "[parameters('virtualmachineName')]",
                     "adminUsername": "[parameters('DomainAdminUserName')]",
                     "adminPassword": "[parameters('DomainAdminPassword')]"
                 },
