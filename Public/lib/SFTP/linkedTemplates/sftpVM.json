@@ -92,7 +92,7 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIpAddress": "[parameters('privateIpAddress')[copyIndex()]]",
+                            "privateIpAddress": "[parameters('privateIpAddress')]",
                             "privateIpAddressVersion": "IPv4",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
