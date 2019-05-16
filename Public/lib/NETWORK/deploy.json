@@ -35,6 +35,9 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
+        "adminSubnet_pop-env_Octet": {
+            "type": "string"
+        },
         "subnet_Names": {
             "type": "object"
         },
@@ -43,6 +46,7 @@
         }
     },
     "variables": {
+        "admin_addressPrefixes": "[concat('172.21.',parameters('adminSubnet_pop-env_Octet'),'.0','/','26')]",
         "resource_Location": "south central us",
         "resourceNames": {
             "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
@@ -143,6 +147,9 @@
                     },
                     "subnet_addressPrefixes": {
                         "value": "[parameters('subnet_addressPrefixes')]"
+                    },
+                    "admin_addressPrefixes": {
+                        "value": "[variables('admin_addressPrefixes')]"
                     },
                     "networkSecurityGroup": {
                         "value": "[variables('resourceNames').networkSecurityGroup]"
