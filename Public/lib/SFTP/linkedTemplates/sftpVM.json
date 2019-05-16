@@ -115,9 +115,7 @@
                 "name": "virtualMachineLoop",
                 "count": "[parameters('vmCount')]"
             },
-            "dependsOn": [
-                "nicLoop"
-            ],
+            "dependsOn": [],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
