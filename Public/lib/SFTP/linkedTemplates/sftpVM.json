@@ -79,9 +79,13 @@
     "resources": [
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[parameters('networkInterfaceName')]",
+            "name": "[concat(parameters('networkInterfaceName'), copyindex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
+            "copy": {
+                "name": "nicLoop",
+                "count": "[parameters('vmCount')]"
+            },
             "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
@@ -101,7 +105,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[parameters('virtualmachineName')]",
+            "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
             "apiVersion": "2018-10-01",
             "location": "[resourcegroup().location]",
             "tags": {
@@ -111,15 +115,19 @@
                 "env": "[parameters('Environment_Category')]",
                 "preserve": "[parameters('preserve')]"
             },
+            "copy": {
+                "name": "virtualMachineLoop",
+                "count": "[parameters('vmCount')]"
+            },
             "dependsOn": [
-                "[parameters('networkInterfaceName')]"
+                "nicLoop"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualmachineName')]",
+                    "computerName": "[concat(parameters('virtualmachineName'),copyIndex(1))]",
                     "adminUsername": "[parameters('DomainAdminUserName')]",
                     "adminPassword": "[parameters('DomainAdminPassword')]"
                 },
@@ -155,7 +163,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('networkInterfaceName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('networkInterfaceName'), copyindex(1)))]"
                         }
                     ]
                 }
@@ -167,7 +175,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'))]"
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.EnterpriseCloud.Monitoring",
@@ -188,7 +196,7 @@
                     "location": "[resourcegroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'))]"
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
