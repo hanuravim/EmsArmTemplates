@@ -36,9 +36,9 @@
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('subnet_Names').external]",
+                        "name": "[parameters('subnet_Names').jumpbox]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').external]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').jumpbox]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'1'))]"
                             },
@@ -47,9 +47,9 @@
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').vpnSubnet]",
+                        "name": "[parameters('subnet_Names').vpn]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').vpnSubnet]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').vpn]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'2'))]"
                             },
@@ -60,7 +60,7 @@
                     {
                         "name": "[parameters('subnet_Names').domain]",
                         "properties": {
-                            "addressPrefix": "[parameters('domain_addressPrefix').addr1]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').domain_addr1]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'3'))]"
                             },
@@ -124,6 +124,16 @@
                             "addressPrefix": "[parameters('subnet_addressPrefixes').appGW]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'8'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').smtp]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').smtp]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'9'))]"
                             },
                             "delegations": []
                         }
