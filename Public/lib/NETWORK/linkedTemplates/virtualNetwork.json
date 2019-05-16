@@ -14,6 +14,9 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
+        "admin_addressPrefixes": {
+            "type": "string"
+        },
         "networkSecurityGroup": {
             "type": "string"
         }
@@ -35,7 +38,7 @@
                     {
                         "name": "[parameters('subnet_Names').jumpbox]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').jumpbox]",
+                            "addressPrefix": "[parameters('admin_addressPrefixes')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'1'))]"
                             },
