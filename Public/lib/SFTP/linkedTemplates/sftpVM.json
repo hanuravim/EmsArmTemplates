@@ -12,7 +12,7 @@
             "type": "string"
         },
         "privateIpAddress": {
-            "type": "array"
+            "type": "string"
         },
         "virtualMachineSize": {
             "type": "string"
