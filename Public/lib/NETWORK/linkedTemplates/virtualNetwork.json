@@ -8,9 +8,6 @@
         "vnet_addressPrefix": {
             "type": "object"
         },
-        "domain_addressPrefix": {
-            "type": "object"
-        },
         "subnet_Names": {
             "type": "object"
         },
