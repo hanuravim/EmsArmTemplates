@@ -2,13 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "AvailabilitySet": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
         "availabilitySetName": {
             "type": "string"
         },
@@ -18,16 +11,19 @@
         "virtualmachineName": {
             "type": "string"
         },
-        "nicCount": {
-            "type": "int"
-        },
         "privateIpAddress": {
             "type": "array"
         },
         "virtualMachineSize": {
             "type": "string"
         },
-        "Subnet1Ref": {
+        "vnetResourceGroup": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "sftp_SubnetName": {
             "type": "string"
         },
         "networkInterfaceName": {
@@ -48,10 +44,10 @@
         "DataDiskSize": {
             "type": "int"
         },
-        "adminUsername": {
+        "DomainAdminUserName": {
             "type": "string"
         },
-        "adminPassword": {
+        "DomainAdminPassword": {
             "type": "securestring"
         },
         "omsWorkspaceResourceGroup": {
@@ -83,13 +79,14 @@
         }
     },
     "variables": {
+        "AvailabilitySet": "Yes",
         "availabilitySetId": {
             "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
         }
     },
     "resources": [
         {
-            "condition": "[equals(parameters('AvailabilitySet'), 'Yes')]",
+            "condition": "[equals(variables('AvailabilitySet'), 'Yes')]",
             "type": "Microsoft.Compute/availabilitySets",
             "apiVersion": "2017-03-30",
             "name": "[parameters('availabilitySetName')]",
@@ -109,7 +106,7 @@
             "location": "[resourcegroup().location]",
             "copy": {
                 "name": "nicLoop",
-                "count": "[parameters('nicCount')]"
+                "count": "[parameters('vmCount')]"
             },
             "dependsOn": [],
             "properties": {
@@ -121,7 +118,7 @@
                             "privateIpAddressVersion": "IPv4",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[parameters('Subnet1Ref')]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('sftp_SubnetName'))]"
                             }
                         }
                     }
@@ -148,14 +145,14 @@
                 "nicLoop"
             ],
             "properties": {
-                "availabilitySet": "[if(equals(parameters('AvailabilitySet'), 'Yes'), variables('availabilitySetId'), json('null'))]",
+                "availabilitySet": "[if(equals(variables('AvailabilitySet'), 'Yes'), variables('availabilitySetId'), json('null'))]",
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
                 "osProfile": {
                     "computerName": "[concat(parameters('virtualmachineName'),copyIndex(1))]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "adminUsername": "[parameters('DomainAdminUserName')]",
+                    "adminPassword": "[parameters('DomainAdminPassword')]"
                 },
                 "storageProfile": {
                     "imageReference": {
