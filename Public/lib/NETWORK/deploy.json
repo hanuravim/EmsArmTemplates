@@ -13,14 +13,6 @@
         "SupportEmail": {
             "type": "string"
         },
-        "shortLocation": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars. E.g. East US - EU, West US - WU, East US 2 - EU2"
-            },
-            "defaultValue": ""
-        },
         "Environment_Category": {
             "type": "string",
             "maxLength": 3,
@@ -37,24 +29,7 @@
             },
             "defaultValue": ""
         },
-        "Role": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
-            }
-        },
-        "Custom": {
-            "type": "string",
-            "maxLength": 8,
-            "metadata": {
-                "description": "(Product Specific) Space. 8 chars (OPTIONAL)"
-            }
-        },
         "vnet_addressPrefix": {
-            "type": "object"
-        },
-        "domain_addressPrefix": {
             "type": "object"
         },
         "subnet_addressPrefixes": {
@@ -71,18 +46,15 @@
         "resource_Location": "south central us",
         "resourceNames": {
             "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
-            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-002'))]",
-            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-001'))]",
-            "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
-            "networkSecurityGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
-            "vpn": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-vpn-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]"
+            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('Tenant'),'-01'))]",
+            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
+            "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-apgw-',parameters('Tenant'),'-00'))]",
+            "networkSecurityGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('Tenant'),'-00'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
             "logAnalytics": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/logAnalytics.json')]",
-            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]",
-            "appGW": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/appGW.json')]",
-            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/VPN.json')]"
+            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]"
         }
     },
     "resources": [
@@ -165,9 +137,6 @@
                     },
                     "vnet_addressPrefix": {
                         "value": "[parameters('vnet_addressPrefix')]"
-                    },
-                    "domain_addressPrefix": {
-                        "value": "[parameters('domain_addressPrefix')]"
                     },
                     "subnet_Names": {
                         "value": "[parameters('subnet_Names')]"
