@@ -2,9 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "availabilitySetName": {
-            "type": "string"
-        },
         "vmCount": {
             "type": "int"
         },
@@ -78,27 +75,8 @@
             "type": "bool"
         }
     },
-    "variables": {
-        "AvailabilitySet": "Yes",
-        "availabilitySetId": {
-            "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
-        }
-    },
+    "variables": {},
     "resources": [
-        {
-            "condition": "[equals(variables('AvailabilitySet'), 'Yes')]",
-            "type": "Microsoft.Compute/availabilitySets",
-            "apiVersion": "2017-03-30",
-            "name": "[parameters('availabilitySetName')]",
-            "location": "[resourcegroup().location]",
-            "properties": {
-                "platformFaultDomainCount": 2,
-                "platformUpdateDomainCount": 3
-            },
-            "sku": {
-                "name": "Aligned"
-            }
-        },
         {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(parameters('networkInterfaceName'), copyindex(1))]",
@@ -145,7 +123,6 @@
                 "nicLoop"
             ],
             "properties": {
-                "availabilitySet": "[if(equals(variables('AvailabilitySet'), 'Yes'), variables('availabilitySetId'), json('null'))]",
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
