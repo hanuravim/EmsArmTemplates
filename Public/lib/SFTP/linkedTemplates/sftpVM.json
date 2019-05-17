@@ -115,7 +115,9 @@
                 "name": "virtualMachineLoop",
                 "count": "[parameters('vmCount')]"
             },
-            "dependsOn": [],
+            "dependsOn": [
+                "[parameters('networkInterfaceName')]"
+            ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
