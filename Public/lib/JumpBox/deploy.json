@@ -7,42 +7,36 @@
             "maxLength": 3,
             "metadata": {
                 "description": "3 chars e.g. nxt (Next Net), ems"
-            },
-            "defaultValue": ""
+            }
         },
         "Environment_Category": {
             "type": "string",
             "maxLength": 3,
             "metadata": {
                 "description": "3 char. E.g.  DEV, QA, UAT and PRD"
-            },
-            "defaultValue": ""
+            }
         },
         "Tenant": {
             "type": "string",
             "maxLength": 5,
             "metadata": {
                 "description": "3 char. E.g.  SRD"
-            },
-            "defaultValue": ""
+            }
         },
         "SupportEmail": {
             "type": "string"
         },
-        "sftp_subnetName": {
+        "jumpboxILB_IP": {
             "type": "string"
         },
-        "privateIpAddress": {
+        "jumpboxSubnet_Name": {
             "type": "string"
+        },
+        "jumpbox_IP": {
+            "type": "array"
         },
         "virtualMachineSize": {
             "type": "string"
-        },
-        "numberOfDataDisks": {
-            "type": "int"
-        },
-        "DataDiskSize": {
-            "type": "int"
         },
         "keyVault_Name": {
             "type": "string"
@@ -71,15 +65,17 @@
             "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
             "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('Tenant'),'-01'))]",
             "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
-            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-sftp-vm','-00'))]",
-            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-sftp-nic-',parameters('Tenant'),'-001'))]",
-            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-sftp-osd-',parameters('Tenant'),'-00'))]",
-            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-sftp-dd-',parameters('Tenant'),'-00'))]"
+            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-adm-vm','-00'))]",
+            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-nic-',parameters('Tenant'),'-00'))]",
+            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-av-',parameters('Tenant'),'-00'))]",
+            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-lb-',parameters('Tenant'),'-001'))]",
+            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-osd-',parameters('Tenant'),'-00'))]",
+            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-dd-',parameters('Tenant'),'-00'))]"
         },
         "TemplateURLs": {
-            "SFTPVMTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/sftpVM.json')]",
-            "domainJoinTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/domainJoin.json')]",
-            "CustomScriptExtensionScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/customScripts.ps1')]",
+            "jumpbox": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/JumpBox/linkedTemplates/jumpbox.json')]",
+            "domainJoinTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/JumpBox/linkedTemplates/domainJoin.json')]",
+            "CustomScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/JumpBox/linkedTemplates/customScripts.ps1')]",
             "CustomScriptFileName": "customScripts.ps1"
         }
     },
@@ -87,121 +83,72 @@
         {
             "type": "Microsoft.Resources/deployments",
             "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
-            "name": "SFTPVM",
+            "name": "jumpbox",
             "apiVersion": "2018-05-01",
             "dependsOn": [],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('templateurls').SFTPVMTemplate]",
+                    "uri": "[variables('templateurls').jumpbox]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "vmCount": {
                         "value": 1
                     },
-                    "vnetResourceGroup": {
-                        "value": "[variables('resourcenames').commonResourceGroup]"
+                    "availabilitySetName": {
+                        "value": "[variables('resourceNames').availabilitySet]"
                     },
-                    "virtualNetworkName": {
-                        "value": "[variables('resourcenames').virtualNetwork]"
+                    "jumpboxILB_IP": {
+                        "value": "[parameters('jumpboxILB_IP')]"
                     },
-                    "sftp_SubnetName": {
-                        "value": "[parameters('sftp_subnetName')]"
+                    "jumpboxSubnet_Name": {
+                        "value": "[parameters('jumpboxSubnet_Name')]"
                     },
-                    "privateIpAddress": {
-                        "value": "[parameters('privateIpAddress')]"
-                    },
-                    "virtualmachineName": {
-                        "value": "[variables('resourcenames').virtualmachine]"
+                    "jumpbox_IP": {
+                        "value": "[parameters('jumpbox_IP')]"
                     },
                     "virtualMachineSize": {
                         "value": "[parameters('virtualMachineSize')]"
                     },
-                    "StorageAccountType": {
-                        "value": "[variables('StorageAccountType')]"
-                    },
-                    "networkInterfaceName": {
-                        "value": "[variables('resourcenames').networkinterface]"
-                    },
-                    "osDiskName": {
-                        "value": "[variables('resourcenames').osDisk]"
-                    },
-                    "dataDiskName": {
-                        "value": "[variables('resourcenames').dataDisk]"
-                    },
-                    "numberOfDataDisks": {
-                        "value": "[parameters('numberOfDataDisks')]"
-                    },
-                    "DataDiskSize": {
-                        "value": "[parameters('DataDiskSize')]"
-                    },
-                    "DomainAdminUserName": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
-                            },
-                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
-                        }
-                    },
-                    "DomainAdminPassword": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
-                            },
-                            "secretName": "[parameters('secretname_DomainAdminPassword')]"
-                        }
-                    },
-                    "omsWorkspaceResourceGroup": {
-                        "value": "[variables('resourcenames').commonResourceGroup]"
-                    },
-                    "omsWorkspaceName": {
-                        "value": "[variables('resourcenames').loganalyticsWorkspace]"
-                    },
-                    "CustomScriptExtensionScriptFilePath": {
-                        "value": "[variables('templateurls').CustomScriptExtensionScriptFilePath]"
-                    },
-                    "CustomScriptFileName": {
-                        "value": "[variables('TemplateURLs').CustomScriptFileName]"
-                    },
-                    "ApplicationName": {
-                        "value": "[parameters('ApplicationName')]"
-                    },
                     "SupportEmail": {
                         "value": "[parameters('SupportEmail')]"
                     },
-                    "uai": {
-                        "value": "[variables('uai')]"
+                    "StorageAccountType": {
+                        "value": "[variables('StorageAccountType')]"
                     },
                     "Environment_Category": {
                         "value": "[parameters('Environment_Category')]"
                     },
-                    "preserve": {
-                        "value": "[variables('preserve')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
-            "name": "domainJoin",
-            "apiVersion": "2018-05-01",
-            "dependsOn": [
-                "SFTPVM"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('templateurls').domainJoinTemplate]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vmCount": {
-                        "value": 1
+                    "networkinterfaceName": {
+                        "value": "[variables('resourceNames').networkinterface]"
+                    },
+                    "vnetResourceGroup": {
+                        "value": "[variables('resourceNames').commonResourceGroup]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('resourceNames').virtualNetwork]"
+                    },
+                    "jumpboxILB_Name": {
+                        "value": "[variables('resourceNames').loadbalancer]"
                     },
                     "virtualmachineName": {
-                        "value": "[variables('resourcenames').virtualmachine]"
+                        "value": "[variables('resourceNames').virtualmachine]"
+                    },
+                    "osDiskName": {
+                        "value": "[variables('resourceNames').osDisk]"
+                    },
+                    "uai": {
+                        "value": "[variables('uai')]"
+                    },
+                    "CustomScriptFilePath": {
+                        "value": "[variables('TemplateURLs').CustomScriptFilePath]"
+                    },
+                    "omsWorkspaceResourceGroup": {
+                        "value": "[variables('resourceNames').commonResourceGroup]"
+                    },
+                    "omsWorkspaceName": {
+                        "value": "[variables('resourceNames').loganalyticsWorkspace]"
                     },
                     "domainName": {
                         "value": "[parameters('domainName')]"
