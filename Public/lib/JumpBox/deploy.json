@@ -1,0 +1,229 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. nxt (Next Net), ems"
+            },
+            "defaultValue": ""
+        },
+        "Environment_Category": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  DEV, QA, UAT and PRD"
+            },
+            "defaultValue": ""
+        },
+        "Tenant": {
+            "type": "string",
+            "maxLength": 5,
+            "metadata": {
+                "description": "3 char. E.g.  SRD"
+            },
+            "defaultValue": ""
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "sftp_subnetName": {
+            "type": "string"
+        },
+        "privateIpAddress": {
+            "type": "string"
+        },
+        "virtualMachineSize": {
+            "type": "string"
+        },
+        "numberOfDataDisks": {
+            "type": "int"
+        },
+        "DataDiskSize": {
+            "type": "int"
+        },
+        "keyVault_Name": {
+            "type": "string"
+        },
+        "keyVault_ResourceGroup": {
+            "type": "string"
+        },
+        "domainName": {
+            "type": "string"
+        },
+        "secretname_DomainAdminUserName": {
+            "type": "string"
+        },
+        "secretname_DomainAdminPassword": {
+            "type": "string"
+        },
+        "artifacts_baseUri": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "uai": "uai2008973",
+        "preserve": true,
+        "StorageAccountType": "Standard_LRS",
+        "resourceNames": {
+            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
+            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('Tenant'),'-01'))]",
+            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
+            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-sftp-vm','-00'))]",
+            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-sftp-nic-',parameters('Tenant'),'-001'))]",
+            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-sftp-osd-',parameters('Tenant'),'-00'))]",
+            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-sftp-dd-',parameters('Tenant'),'-00'))]"
+        },
+        "TemplateURLs": {
+            "SFTPVMTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/sftpVM.json')]",
+            "domainJoinTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/domainJoin.json')]",
+            "CustomScriptExtensionScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/customScripts.ps1')]",
+            "CustomScriptFileName": "customScripts.ps1"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "SFTPVM",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateurls').SFTPVMTemplate]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmCount": {
+                        "value": 1
+                    },
+                    "vnetResourceGroup": {
+                        "value": "[variables('resourcenames').commonResourceGroup]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('resourcenames').virtualNetwork]"
+                    },
+                    "sftp_SubnetName": {
+                        "value": "[parameters('sftp_subnetName')]"
+                    },
+                    "privateIpAddress": {
+                        "value": "[parameters('privateIpAddress')]"
+                    },
+                    "virtualmachineName": {
+                        "value": "[variables('resourcenames').virtualmachine]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('virtualMachineSize')]"
+                    },
+                    "StorageAccountType": {
+                        "value": "[variables('StorageAccountType')]"
+                    },
+                    "networkInterfaceName": {
+                        "value": "[variables('resourcenames').networkinterface]"
+                    },
+                    "osDiskName": {
+                        "value": "[variables('resourcenames').osDisk]"
+                    },
+                    "dataDiskName": {
+                        "value": "[variables('resourcenames').dataDisk]"
+                    },
+                    "numberOfDataDisks": {
+                        "value": "[parameters('numberOfDataDisks')]"
+                    },
+                    "DataDiskSize": {
+                        "value": "[parameters('DataDiskSize')]"
+                    },
+                    "DomainAdminUserName": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
+                        }
+                    },
+                    "DomainAdminPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminPassword')]"
+                        }
+                    },
+                    "omsWorkspaceResourceGroup": {
+                        "value": "[variables('resourcenames').commonResourceGroup]"
+                    },
+                    "omsWorkspaceName": {
+                        "value": "[variables('resourcenames').loganalyticsWorkspace]"
+                    },
+                    "CustomScriptExtensionScriptFilePath": {
+                        "value": "[variables('templateurls').CustomScriptExtensionScriptFilePath]"
+                    },
+                    "CustomScriptFileName": {
+                        "value": "[variables('TemplateURLs').CustomScriptFileName]"
+                    },
+                    "ApplicationName": {
+                        "value": "[parameters('ApplicationName')]"
+                    },
+                    "SupportEmail": {
+                        "value": "[parameters('SupportEmail')]"
+                    },
+                    "uai": {
+                        "value": "[variables('uai')]"
+                    },
+                    "Environment_Category": {
+                        "value": "[parameters('Environment_Category')]"
+                    },
+                    "preserve": {
+                        "value": "[variables('preserve')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "domainJoin",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "SFTPVM"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateurls').domainJoinTemplate]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmCount": {
+                        "value": 1
+                    },
+                    "virtualmachineName": {
+                        "value": "[variables('resourcenames').virtualmachine]"
+                    },
+                    "domainName": {
+                        "value": "[parameters('domainName')]"
+                    },
+                    "DomainAdminUserName": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
+                        }
+                    },
+                    "DomainAdminPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminPassword')]"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
