@@ -10,17 +10,6 @@
             },
             "defaultValue": ""
         },
-        "SupportEmail": {
-            "type": "string"
-        },
-        "shortLocation": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars. E.g. East US - EU, West US - WU, East US 2 - EU2"
-            },
-            "defaultValue": ""
-        },
         "Environment_Category": {
             "type": "string",
             "maxLength": 3,
@@ -37,20 +26,8 @@
             },
             "defaultValue": ""
         },
-        "Role": {
-            "type": "string",
-            "defaultValue": "sft",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
-            }
-        },
-        "Custom": {
-            "type": "string",
-            "maxLength": 8,
-            "metadata": {
-                "description": "(Product Specific) Space. 8 chars (OPTIONAL)"
-            }
+        "SupportEmail": {
+            "type": "string"
         },
         "keyVault_Name": {
             "type": "string"
@@ -73,8 +50,8 @@
         "vnet_addressPrefix": {
             "type": "object"
         },
-        "domain_addressPrefix": {
-            "type": "object"
+        "adminSubnet_pop-env_Octet": {
+            "type": "string"
         },
         "adILB_IP": {
             "type": "string"
@@ -95,21 +72,21 @@
     "variables": {
         "uai": "uai2008973",
         "preserve": true,
-        "CharactersForvmName": 3,
         "StorageAccountType": "Standard_LRS",
+        "admin_addressPrefixes": "[concat('172.21.',parameters('adminSubnet_pop-env_Octet'),'.0','/','26')]",
         "resourceNames": {
-            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-02'))]",
-            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('shortLocation'),'-002'))]",
-            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-003'))]",
-            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "automationAccount": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-001'))]",
-            "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-',parameters('shortLocation'),'-00'))]",
-            "networkSecurityGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('shortLocation'),'-',parameters('Tenant'),'-00'))]",
-            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-ilb-',parameters('shortLocation'),'-00'))]",
-            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),first(parameters('Environment_Category')),take(parameters('Role'),variables('CharactersForvmName')),parameters('Tenant'),'00'))]",
-            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','','','osd','-','dsk','-',parameters('Role'),'-00'))]",
-            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'-00'))]"
+            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
+            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('Tenant'),'-01'))]",
+            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
+            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-dc-av-',parameters('Tenant'),'-00'))]",
+            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-dc-nic-',parameters('Tenant'),'-00'))]",
+            "automationAccount": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-auto-',parameters('Tenant'),'-00'))]",
+            "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-apgw-',parameters('Tenant'),'-00'))]",
+            "networkSecurityGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('Tenant'),'-00'))]",
+            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-dc-lb-',parameters('Tenant'),'-00'))]",
+            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-','dc-vm','-00'))]",
+            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-','dc-osd','-',parameters('Tenant'),'-00'))]",
+            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-','dc-dd','-',parameters('Tenant'),'-00'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
@@ -143,7 +120,7 @@
                     "ad_vmCount": {
                         "value": 2
                     },
-                    "ad_SubnetRef": {
+                    "ad_SubnetName": {
                         "value": "[parameters('subnet_Names').domain]"
                     },
                     "domainController_IPs": {
@@ -181,9 +158,6 @@
                     },
                     "DataDiskSize": {
                         "value": 100
-                    },
-                    "domainName": {
-                        "value": "[parameters('domainName')]"
                     },
                     "DomainAdminUserName": {
                         "reference": {
@@ -295,8 +269,8 @@
                     "vnet_addressPrefix": {
                         "value": "[parameters('vnet_addressPrefix')]"
                     },
-                    "domain_addressPrefix": {
-                        "value": "[parameters('domain_addressPrefix')]"
+                    "admin_addressPrefixes": {
+                        "value": "[variables('admin_addressPrefixes')]"
                     },
                     "loadbalancer": {
                         "value": "[variables('resourceNames').loadbalancer]"
