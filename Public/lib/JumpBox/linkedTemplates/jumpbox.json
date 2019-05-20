@@ -12,7 +12,7 @@
             "type": "string"
         },
         "jumpboxSubnet_Name": {
-            "type": "object"
+            "type": "string"
         },
         "jumpbox_IP": {
             "type": "array"
