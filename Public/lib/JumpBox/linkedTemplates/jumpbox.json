@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vmCount": {
-            "type": "string"
+            "type": "int"
         },
         "availabilitySetName": {
             "type": "string"
@@ -50,7 +50,7 @@
         "uai": {
             "type": "string"
         },
-        "jumpboxCustom_ScriptFilePath": {
+        "CustomScriptFilePath": {
             "type": "string"
         },
         "omsWorkspaceResourceGroup": {
@@ -210,7 +210,7 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "[parameters('jumpboxCustom_ScriptFilePath')]"
+                                "[parameters('CustomScriptFilePath')]"
                             ],
                             "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
                         }
