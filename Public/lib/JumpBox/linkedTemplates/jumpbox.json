@@ -90,7 +90,7 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('networkinterfaceName'), copyIndex(6))]",
+            "name": "[concat(parameters('networkinterfaceName'), copyIndex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "copy": {
@@ -139,7 +139,7 @@
             }
         },
         {
-            "name": "[concat(parameters('virtualmachineName'), copyIndex(6))]",
+            "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
@@ -148,7 +148,7 @@
                 "count": "[parameters('vmCount')]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(6)))]"
+                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(1)))]"
             ],
             "properties": {
                 "availabilitySet": "[variables('availabilitySetId')]",
@@ -157,7 +157,7 @@
                 },
                 "storageProfile": {
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(6))]",
+                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -174,12 +174,12 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(6)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(1)))]"
                         }
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(6))]",
+                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
                     "adminUsername": "[parameters('DomainAdminUserName')]",
                     "adminPassword": "[parameters('DomainAdminPassword')]",
                     "windowsConfiguration": {
@@ -201,7 +201,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(6))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(1))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -222,7 +222,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(6))]",
+                        "[concat(parameters('virtualmachineName'), copyIndex(1))]",
                         "customscripts"
                     ],
                     "properties": {
@@ -248,7 +248,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(6))]",
+                        "[concat(parameters('virtualmachineName'), copyIndex(1))]",
                         "domainJoin"
                     ],
                     "properties": {
