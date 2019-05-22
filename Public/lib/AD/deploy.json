@@ -7,28 +7,31 @@
             "maxLength": 3,
             "metadata": {
                 "description": "3 chars e.g. nxt (Next Net), ems"
-            },
-            "defaultValue": ""
+            }
         },
         "Environment_Category": {
             "type": "string",
             "maxLength": 3,
             "metadata": {
                 "description": "3 char. E.g.  DEV, QA, UAT and PRD"
-            },
-            "defaultValue": ""
+            }
         },
         "Tenant": {
             "type": "string",
             "maxLength": 5,
             "metadata": {
                 "description": "3 char. E.g.  SRD"
-            },
-            "defaultValue": ""
+            }
         },
-        "SupportEmail": {
-            "type": "string"
+        "Role": {
+            "type": "string",
+            "defaultValue": "ems",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
+            }
         },
+       
         "keyVault_Name": {
             "type": "string"
         },
@@ -72,7 +75,10 @@
     "variables": {
         "uai": "uai2008973",
         "preserve": true,
+        "SupportEmail": "ravi.mishra@ge.com",
         "StorageAccountType": "Standard_LRS",
+        "Location": "south central us",
+        "CharactersForvmName": 2,
         "admin_addressPrefixes": "[concat('172.21.',parameters('adminSubnet_pop-env_Octet'),'.0','/','26')]",
         "resourceNames": {
             "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
@@ -84,7 +90,7 @@
             "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-apgw-',parameters('Tenant'),'-00'))]",
             "networkSecurityGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('Tenant'),'-00'))]",
             "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-dc-lb-',parameters('Tenant'),'-00'))]",
-            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-','dc-vm','-00'))]",
+            "virtualmachine":"[toupper(concat(take(parameters('ApplicationName'),variables('CharactersForvmName')),first(parameters('Environment_Category')),first(parameters('Role')),'adc','00'))]",
             "osDisk": "[tolower(concat(parameters('ApplicationName'),'-','dc-osd','-',parameters('Tenant'),'-00'))]",
             "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-','dc-dd','-',parameters('Tenant'),'-00'))]"
         },
@@ -185,7 +191,7 @@
                         "value": "[parameters('ApplicationName')]"
                     },
                     "SupportEmail": {
-                        "value": "[parameters('SupportEmail')]"
+                        "value": "[variables('SupportEmail')]"
                     },
                     "uai": {
                         "value": "[variables('uai')]"
