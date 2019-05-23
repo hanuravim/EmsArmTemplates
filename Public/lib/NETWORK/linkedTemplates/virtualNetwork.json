@@ -14,10 +14,19 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
-        "admin_addressPrefixes": {
+        "vpn": {
             "type": "string"
         },
-        "networkSecurityGroup": {
+        "jumpbox": {
+            "type": "string"
+        },
+        "Tenant_EMS": {
+            "type": "string"
+        },
+        "Tenant_Workers": {
+            "type": "string"
+        },
+        "Tenant_API": {
             "type": "string"
         }
     },
@@ -38,9 +47,9 @@
                     {
                         "name": "[parameters('subnet_Names').jumpbox]",
                         "properties": {
-                            "addressPrefix": "[parameters('admin_addressPrefixes')]",
+                            "addressPrefix": "[parameters('jumpbox')]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'1'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').jumpbox,'-nsg-','01'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
@@ -49,9 +58,9 @@
                     {
                         "name": "[parameters('subnet_Names').vpn]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').vpn]",
+                            "addressPrefix": "[parameters('vpn')]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'2'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').vpn,'-nsg-','02'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
@@ -60,20 +69,20 @@
                     {
                         "name": "[parameters('subnet_Names').domain]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').domain_addr1]",
+                            "addressPrefix": "[parameters('subnet_Names').domain]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'3'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').domain,'-nsg-','03'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').commondb]",
+                        "name": "[parameters('subnet_Names').sql]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').commondb]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').sql]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'4'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').sql,'-nsg-','04'))]"
                             },
                             "delegations": []
                         }
@@ -83,7 +92,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').wasabi]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'7'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').wasabi,'-nsg-','05'))]"
                             },
                             "delegations": []
                         }
@@ -93,27 +102,27 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').tableau]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'5'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').tableau,'-nsg-','06'))]"
                             },
                             "delegations": []
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').appGW]",
+                        "name": "[parameters('subnet_Names').RDPGateway]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').appGW]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').RDPGateway]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'8'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').RDPGateway,'-nsg-','07'))]"
                             },
                             "delegations": []
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').RDP]",
+                        "name": "[parameters('subnet_Names').Shared_File]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').RDP]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').Shared_File]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'7'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Shared_File,'-nsg-','08'))]"
                             },
                             "delegations": []
                         }
@@ -123,7 +132,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').sftp]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('networkSecurityGroup'),'6'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').sftp,'-nsg-','09'))]"
                             },
                             "delegations": []
                         }
@@ -133,7 +142,37 @@
                         "properties": {
                             "addressPrefix": "[parameters('subnet_addressPrefixes').smtp]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('networkSecurityGroup'),'9'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').smtp,'-nsg-','10'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').Tenant_EMS]",
+                        "properties": {
+                            "addressPrefix": "[parameters('Tenant_EMS')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_EMS,'-nsg-','11'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').Tenant_Workers]",
+                        "properties": {
+                            "addressPrefix": "[parameters('Tenant_Workers')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_Workers,'-nsg-','12'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').Tenant_API]",
+                        "properties": {
+                            "addressPrefix": "[parameters('Tenant_API')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_API,'-nsg-','13'))]"
                             },
                             "delegations": []
                         }
