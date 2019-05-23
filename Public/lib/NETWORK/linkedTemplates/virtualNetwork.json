@@ -69,7 +69,7 @@
                     {
                         "name": "[parameters('subnet_Names').domain]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_Names').domain]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').domain]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').domain,'-nsg-','03'))]"
                             },
