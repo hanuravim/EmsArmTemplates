@@ -11,7 +11,35 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').jumpbox,'-nsg-','01')]",
+            "name": "[concat(parameters('subnet_Names').vpn,'-nsg-','01')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('subnet_Names').jumpbox,'-nsg-','02')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -247,91 +275,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').vpn,'-nsg-','02')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "RDP",
-                        "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2018-12-01",
             "name": "[concat(parameters('subnet_Names').domain,'-nsg-','03')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "RDP",
-                        "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').sql,'-nsg-','04')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "RDP",
-                        "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').sftp,'-nsg-','05')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -607,7 +551,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').wasabi,'-nsg-','06')]",
+            "name": "[concat(parameters('subnet_Names').sql,'-nsg-','04')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -729,6 +673,62 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('subnet_Names').sftp,'-nsg-','05')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('subnet_Names').wasabi,'-nsg-','06')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
             "name": "[concat(parameters('subnet_Names').tableau,'-nsg-','07')]",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -757,35 +757,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').RDP,'-nsg-','08')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "RDP",
-                        "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').appGW,'-nsg-','09')]",
+            "name": "[concat(parameters('subnet_Names').RDPGateway,'-nsg-','08')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -828,6 +800,34 @@
                                 "464",
                                 "135"
                             ],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-12-01",
+            "name": "[concat(parameters('subnet_Names').Shared_File,'-nsg-','09')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "RDP",
+                        "properties": {
+                            "description": "Allows RDP traffic",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
                             "destinationPortRanges": [],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
