@@ -118,11 +118,11 @@
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').RDPGateway]",
+                        "name": "[parameters('subnet_Names').RDP_Gateway]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').RDPGateway]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').RDP_Gateway]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').RDPGateway,'-nsg-','08'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').RDP_Gateway,'-nsg-','08'))]"
                             },
                             "delegations": []
                         }
