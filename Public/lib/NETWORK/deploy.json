@@ -7,27 +7,35 @@
             "maxLength": 3,
             "metadata": {
                 "description": "3 chars e.g. nxt (Next Net), ems"
-            },
-            "defaultValue": ""
-        },
-        "SupportEmail": {
-            "type": "string"
+            }
         },
         "Environment_Category": {
             "type": "string",
+            "maxLength": 1,
+            "metadata": {
+                "description": "1 char. E.g.  DEV=d, QA=q, UAT=u and PRD=p"
+            }
+        },
+        "shortlocation": {
+            "type": "string",
             "maxLength": 3,
             "metadata": {
-                "description": "3 char. E.g.  DEV, QA, UAT and PRD"
-            },
-            "defaultValue": ""
+                "description": "3 char. E.g.  eastus=eus, eastus2=eu2, southcentralus=scu"
+            }
         },
         "Tenant": {
             "type": "string",
             "maxLength": 5,
             "metadata": {
-                "description": "3 char. E.g.  SRD"
-            },
-            "defaultValue": ""
+                "description": "4 char. E.g.  asa,aal,fa1"
+            }
+        },
+        "Role": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. Domain controller (adc), Azure resource group (rgp), Azure Network (net)"
+            }
         },
         "vnet_addressPrefix": {
             "type": "object"
@@ -35,7 +43,19 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
-        "adminSubnet_pop-env_Octet": {
+        "GatewaySubnet_pop-env": {
+            "type": "string"
+        },
+        "ExternalSubnet_pop-env": {
+            "type": "string"
+        },
+        "Tenant_EMS": {
+            "type": "string"
+        },
+        "Tenant_Workers": {
+            "type": "string"
+        },
+        "Tenant_API": {
             "type": "string"
         },
         "subnet_Names": {
@@ -46,14 +66,19 @@
         }
     },
     "variables": {
-        "admin_addressPrefixes": "[concat('172.21.',parameters('adminSubnet_pop-env_Octet'),'.0','/','26')]",
-        "resource_Location": "south central us",
+        "uai": "uai2008973",
+        "SupportEmail": "ravi.mishra@ge.com",
+        "vpn": "[concat('172.20.',parameters('GatewaySubnet_pop-env'),'.64','/','28')]",
+        "jumpbox": "[concat('172.20.',parameters('ExternalSubnet_pop-env'),'.0','/','26')]",
+        "Tenant_EMS": "[concat('10.',parameters('Tenant_EMS'),'.0.0','/','24')]",
+        "Tenant_Workers": "[concat('10.',parameters('Tenant_Workers'),'.1.0','/','24')]",
+        "Tenant_API": "[concat('10.',parameters('Tenant_API'),'.2.0','/','24')]",
+        "location": "eastus",
+        "description": "",
         "resourceNames": {
-            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
-            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('Tenant'),'-01'))]",
-            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
-            "applicationGateway": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-apgw-',parameters('Tenant'),'-00'))]",
-            "networkSecurityGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-nsg-',parameters('Tenant'),'-00'))]"
+            "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
+            "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
+            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
@@ -65,12 +90,12 @@
         {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2018-05-01",
-            "location": "[variables('resource_Location')]",
+            "location": "[variables('location')]",
             "name": "[variables('resourceNames').commonResourceGroup]",
             "tags": {
-                "ApplicationName": "EMS",
-                "uai": "uai2008973",
-                "SupportEmail": "[parameters('SupportEmail')]",
+                "ApplicationName": "[parameters('ApplicationName')]",
+                "uai": "[variables('uai')]",
+                "SupportEmail": "[variables('SupportEmail')]",
                 "env": "[parameters('Environment_Category')]"
             },
             "properties": {}
@@ -90,8 +115,8 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "nsgName": {
-                        "value": "[variables('resourceNames').networkSecurityGroup]"
+                    "subnet_Names": {
+                        "value": "[parameters('subnet_Names')]"
                     }
                 }
             }
@@ -148,11 +173,20 @@
                     "subnet_addressPrefixes": {
                         "value": "[parameters('subnet_addressPrefixes')]"
                     },
-                    "admin_addressPrefixes": {
-                        "value": "[variables('admin_addressPrefixes')]"
+                    "vpn": {
+                        "value": "[variables('vpn')]"
                     },
-                    "networkSecurityGroup": {
-                        "value": "[variables('resourceNames').networkSecurityGroup]"
+                    "jumpbox": {
+                        "value": "[variables('jumpbox')]"
+                    },
+                    "Tenant_EMS": {
+                        "value": "[variables('Tenant_EMS')]"
+                    },
+                    "Tenant_Workers": {
+                        "value": "[variables('Tenant_Workers')]"
+                    },
+                    "Tenant_API": {
+                        "value": "[variables('Tenant_API')]"
                     }
                 }
             }
