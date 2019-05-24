@@ -86,7 +86,7 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('virtualmachineName'), '-nic-',copyindex(01))]",
+            "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "tags": {
@@ -151,7 +151,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('virtualmachineName'),'-dsk-', copyIndex(01))]",
+                        "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -166,7 +166,7 @@
                                 "caching": "ReadWrite",
                                 "diskSizeGB": "[parameters('DataDiskSize')]",
                                 "lun": "[copyIndex('dataDisks')]",
-                                "name": "[concat(parameters('virtualmachineName'),'-dsk-',copyIndex(01), copyIndex('dataDisks'))]",
+                                "name": "[concat(parameters('virtualmachineName'),'1-dsk-0',copyIndex(1), copyIndex('dataDisks'))]",
                                 "createOption": "Empty"
                             }
                         }
