@@ -25,17 +25,13 @@
         },
         "Tenant": {
             "type": "string",
-            "maxLength": 5,
+            "maxLength": 4,
             "metadata": {
                 "description": "4 char. E.g.  asa,aal,fa1"
             }
         },
-        "Role": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars e.g. Domain controller (adc), Azure resource group (rgp), Azure Network (net)"
-            }
+        "resourcelocation": {
+            "type": "string"
         },
         "vnet_addressPrefix": {
             "type": "object"
@@ -68,17 +64,16 @@
     "variables": {
         "uai": "uai2008973",
         "SupportEmail": "ravi.mishra@ge.com",
-        "vpn": "[concat('172.20.',parameters('GatewaySubnet_pop-env'),'.64','/','28')]",
-        "jumpbox": "[concat('172.20.',parameters('ExternalSubnet_pop-env'),'.0','/','26')]",
+        "vpn": "[concat('172.21.',parameters('GatewaySubnet_pop-env'),'.64','/','28')]",
+        "jumpbox": "[concat('172.21.',parameters('ExternalSubnet_pop-env'),'.0','/','26')]",
         "Tenant_EMS": "[concat('10.',parameters('Tenant_EMS'),'.0.0','/','24')]",
         "Tenant_Workers": "[concat('10.',parameters('Tenant_Workers'),'.1.0','/','24')]",
         "Tenant_API": "[concat('10.',parameters('Tenant_API'),'.2.0','/','24')]",
-        "location": "eastus",
         "description": "",
         "resourceNames": {
             "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
             "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
-            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]"
+            "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
@@ -90,7 +85,7 @@
         {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2018-05-01",
-            "location": "[variables('location')]",
+            "location": "[parameters('resourcelocation')]",
             "name": "[variables('resourceNames').commonResourceGroup]",
             "tags": {
                 "ApplicationName": "[parameters('ApplicationName')]",
