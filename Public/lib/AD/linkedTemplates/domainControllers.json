@@ -32,12 +32,6 @@
         "numberOfDataDisks": {
             "type": "int"
         },
-        "osDiskName": {
-            "type": "string"
-        },
-        "dataDiskName": {
-            "type": "string"
-        },
         "DataDiskSize": {
             "type": "int"
         },
@@ -157,7 +151,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "name": "[concat(parameters('virtualmachineName'),'-dsk-', copyIndex(01))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -172,7 +166,7 @@
                                 "caching": "ReadWrite",
                                 "diskSizeGB": "[parameters('DataDiskSize')]",
                                 "lun": "[copyIndex('dataDisks')]",
-                                "name": "[concat(parameters('dataDiskName'),copyIndex(1), copyIndex('dataDisks'))]",
+                                "name": "[concat(parameters('virtualmachineName'),'-dsk-',copyIndex(01), copyIndex('dataDisks'))]",
                                 "createOption": "Empty"
                             }
                         }
