@@ -175,7 +175,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('virtualmachineName'), '-nic-',copyindex(01)))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1)))]"
                         }
                     ]
                 }
