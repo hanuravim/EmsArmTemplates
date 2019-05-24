@@ -23,9 +23,6 @@
         "ad_SubnetName": {
             "type": "string"
         },
-        "networkInterfaceName": {
-            "type": "string"
-        },
         "domainController_IPs": {
             "type": "array"
         },
@@ -95,7 +92,7 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('networkInterfaceName'), copyindex(1))]",
+            "name": "[concat(parameters('virtualmachineName'), '-nic-',copyindex(01))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "tags": {
@@ -184,7 +181,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('virtualmachineName'), '-nic-',copyindex(01)))]"
                         }
                     ]
                 }
