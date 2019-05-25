@@ -14,7 +14,7 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
-        "vpn": {
+        "AppGateway": {
             "type": "string"
         },
         "jumpbox": {
@@ -45,11 +45,11 @@
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('subnet_Names').vpn]",
+                        "name": "[parameters('subnet_Names').AppGateway]",
                         "properties": {
-                            "addressPrefix": "[parameters('vpn')]",
+                            "addressPrefix": "[parameters('AppGateway')]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').vpn,'-nsg-','01'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').AppGateway,'-nsg-','01'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
