@@ -17,7 +17,7 @@
         "vpn": {
             "type": "string"
         },
-        "jumpbox": {
+        "appgw_jumpBox": {
             "type": "string"
         },
         "Tenant_EMS": {
@@ -45,7 +45,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('subnet_Names').vpn]",
+                        "name": "[parameters('subnet_Names').appGW]",
                         "properties": {
                             "addressPrefix": "[parameters('vpn')]",
                             "networkSecurityGroup": {
@@ -56,11 +56,11 @@
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').jumpbox]",
+                        "name": "[parameters('subnet_Names').appgw_jumpBox]",
                         "properties": {
-                            "addressPrefix": "[parameters('jumpbox')]",
+                            "addressPrefix": "[parameters('appgw_jumpBox')]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').jumpbox,'-nsg-','02'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').appgw_jumpBox,'-nsg-','02'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
