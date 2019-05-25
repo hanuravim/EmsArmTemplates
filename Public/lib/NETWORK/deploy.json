@@ -64,7 +64,7 @@
     "variables": {
         "uai": "uai2008973",
         "SupportEmail": "ravi.mishra@ge.com",
-        "AppGateway": "[concat('172.21.',parameters('GatewaySubnet_pop-env'),'.64','/','28')]",
+        "vpn": "[concat('172.21.',parameters('GatewaySubnet_pop-env'),'.64','/','28')]",
         "jumpbox": "[concat('172.21.',parameters('ExternalSubnet_pop-env'),'.0','/','26')]",
         "Tenant_EMS": "[concat('10.',parameters('Tenant_EMS'),'.0.0','/','24')]",
         "Tenant_Workers": "[concat('10.',parameters('Tenant_Workers'),'.1.0','/','24')]",
@@ -168,8 +168,8 @@
                     "subnet_addressPrefixes": {
                         "value": "[parameters('subnet_addressPrefixes')]"
                     },
-                    "AppGateway": {
-                        "value": "[variables('AppGateway')]"
+                    "vpn": {
+                        "value": "[variables('vpn')]"
                     },
                     "jumpbox": {
                         "value": "[variables('jumpbox')]"
