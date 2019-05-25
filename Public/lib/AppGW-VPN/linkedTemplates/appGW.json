@@ -59,7 +59,6 @@
     },
     "variables": {
         "vnetId": "[resourceId(resourcegroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetwork'))]",
-        "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('appGW_publicIpAddressName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('appGW_subnetName'))]",
         "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways', parameters('appGW_Name'))]",
         "probeid": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/applicationGateways/',parameters('appGW_Name'),'/probes/nginx-probe')]"
