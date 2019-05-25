@@ -45,7 +45,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('subnet_Names').appGW]",
+                        "name": "[parameters('subnet_Names').vpn]",
                         "properties": {
                             "addressPrefix": "[parameters('vpn')]",
                             "networkSecurityGroup": {
