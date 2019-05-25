@@ -11,7 +11,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').AppGateway,'-nsg-','01')]",
+            "name": "[concat(parameters('subnet_Names').vpn,'-nsg-','01')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
