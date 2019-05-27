@@ -26,9 +26,6 @@
         "vnetResourceGroup": {
             "type": "string"
         },
-        "networkInterfaceName": {
-            "type": "string"
-        },
         "virtualMachineSize": {
             "type": "string"
         },
@@ -102,7 +99,7 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('networkinterfaceName'), copyIndex(1))]",
+            "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "copy": {
@@ -181,7 +178,7 @@
                     "imageReference": {
                         "publisher": "MicrosoftSqlServer",
                         "offer": "SQL2016SP1-WS2016",
-                        "sku": "Enterprise",
+                        "sku": "Standard",
                         "version": "latest"
                     },
                     "osDisk": {
@@ -209,7 +206,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkinterfaceName'), copyIndex(1)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1)))]"
                         }
                     ]
                 }
