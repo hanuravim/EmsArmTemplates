@@ -29,9 +29,6 @@
         "virtualMachineSize": {
             "type": "string"
         },
-        "osDiskName": {
-            "type": "string"
-        },
         "StorageAccountType": {
             "type": "string"
         },
@@ -43,9 +40,6 @@
         },
         "DataDiskSize": {
             "type": "int"
-        },
-        "dataDiskName": {
-            "type": "string"
         },
         "domainName": {
             "type": "string"
@@ -182,7 +176,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -197,7 +191,7 @@
                                 "caching": "ReadWrite",
                                 "diskSizeGB": "[parameters('DataDiskSize')]",
                                 "lun": "[copyIndex('dataDisks')]",
-                                "name": "[concat(parameters('dataDiskName'),copyIndex(1), copyIndex('dataDisks'))]",
+                                "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1), copyIndex('dataDisks'))]",
                                 "createOption": "Empty"
                             }
                         }
