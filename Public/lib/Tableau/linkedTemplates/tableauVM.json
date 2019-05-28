@@ -80,7 +80,7 @@
             }
         },
         {
-            "name": "[concat(parameters('virtualmachineName'), copyIndex(5))]",
+            "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
@@ -119,7 +119,7 @@
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(5))]",
+                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
                     "adminUsername": "[parameters('DomainAdminUserName')]",
                     "adminPassword": "[parameters('DomainAdminPassword')]",
                     "windowsConfiguration": {
@@ -146,7 +146,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(5))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(1))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -167,7 +167,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(5))]",
+                        "[concat(parameters('virtualmachineName'), copyIndex(1))]",
                         "customscripts"
                     ],
                     "properties": {
@@ -193,7 +193,7 @@
                     "apiVersion": "2015-06-15",
                     "location": "[resourcegroup().location]",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(5))]",
+                        "[concat(parameters('virtualmachineName'), copyIndex(1))]",
                         "domainJoin"
                     ],
                     "properties": {
