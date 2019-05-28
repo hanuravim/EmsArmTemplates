@@ -23,20 +23,11 @@
         "sftp_SubnetName": {
             "type": "string"
         },
-        "networkInterfaceName": {
-            "type": "string"
-        },
         "StorageAccountType": {
             "type": "string"
         },
         "numberOfDataDisks": {
             "type": "int"
-        },
-        "osDiskName": {
-            "type": "string"
-        },
-        "dataDiskName": {
-            "type": "string"
         },
         "DataDiskSize": {
             "type": "int"
@@ -79,7 +70,7 @@
     "resources": [
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[parameters('networkInterfaceName')]",
+            "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "dependsOn": [],
@@ -116,7 +107,7 @@
                 "count": "[parameters('vmCount')]"
             },
             "dependsOn": [
-                "[parameters('networkInterfaceName')]"
+                "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -135,7 +126,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -150,7 +141,7 @@
                                 "caching": "ReadWrite",
                                 "diskSizeGB": "[parameters('DataDiskSize')]",
                                 "lun": "[copyIndex('dataDisks')]",
-                                "name": "[concat(parameters('dataDiskName'),copyIndex(1), copyIndex('dataDisks'))]",
+                                "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1), copyIndex('dataDisks'))]",
                                 "createOption": "Empty"
                             }
                         }
@@ -159,7 +150,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('networkInterfaceName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1)))]"
                         }
                     ]
                 }
