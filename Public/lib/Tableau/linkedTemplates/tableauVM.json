@@ -1,0 +1,215 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetResourceGroup": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "tableau_subnetName": {
+            "type": "string"
+        },
+        "tableauVM_IP": {
+            "type": "string"
+        },
+        "virtualMachineName": {
+            "type": "string"
+        },
+        "storageAccountType": {
+            "type": "string"
+        },
+        "virtualMachineSize": {
+            "type": "string"
+        },
+        "uai": {
+            "type": "string"
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "Environment_Category": {
+            "type": "string"
+        },
+        "domainName": {
+            "type": "string"
+        },
+        "DomainAdminUserName": {
+            "type": "string"
+        },
+        "DomainAdminPassword": {
+            "type": "securestring"
+        },
+        "omsWorkspaceResourceGroup": {
+            "type": "string"
+        },
+        "omsWorkspaceName": {
+            "type": "string"
+        },
+        "tableauCustom_ScriptFilePath": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
+            "apiVersion": "2018-05-01",
+            "location": "[resourcegroup().location]",
+            "copy": {
+                "name": "nicLoop",
+                "count": 1
+            },
+            "dependsOn": [],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIpAddress": "[parameters('tableauVM_IP')]",
+                            "privateIpAddressVersion": "IPv4",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('tableau_subnetName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat(parameters('virtualmachineName'), copyIndex(5))]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-06-01",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "tableauloop",
+                "count": 1
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1)))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1))]",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('StorageAccountType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "tableau",
+                        "offer": "tableau-server",
+                        "sku": "bring-your-own-license",
+                        "version": "10.3.1"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1)))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[concat(parameters('virtualmachineName'), copyIndex(5))]",
+                    "adminUsername": "[parameters('DomainAdminUserName')]",
+                    "adminPassword": "[parameters('DomainAdminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVmAgent": true
+                    }
+                }
+            },
+            "plan": {
+                "name": "bring-your-own-license",
+                "publisher": "tableau",
+                "product": "tableau-server"
+            },
+            "tags": {
+                "ApplicationName": "EMS",
+                "uai": "[parameters('uai')]",
+                "SupportEmail": "[parameters('SupportEmail')]",
+                "env": "[parameters('Environment_Category')]"
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "name": "customscripts",
+                    "apiVersion": "2015-06-15",
+                    "location": "[resourcegroup().location]",
+                    "dependson": [
+                        "[concat(parameters('virtualmachineName'), copyIndex(5))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.9",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[parameters('tableauCustom_ScriptFilePath')]"
+                            ],
+                            "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
+                        }
+                    }
+                },
+                {
+                    "type": "extensions",
+                    "name": "domainJoin",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2015-06-15",
+                    "dependson": [
+                        "[concat(parameters('virtualmachineName'), copyIndex(5))]",
+                        "customscripts"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "JsonADDomainExtension",
+                        "typeHandlerVersion": "1.3",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "Name": "[parameters('domainName')]",
+                            "OUPath": "",
+                            "User": "[concat(parameters('domainName'), '\\', parameters('DomainAdminUserName'))]",
+                            "Restart": "true",
+                            "Options": "3"
+                        },
+                        "protectedSettings": {
+                            "Password": "[parameters('DomainAdminPassword')]"
+                        }
+                    }
+                },
+                {
+                    "type": "extensions",
+                    "name": "logAnalytics",
+                    "apiVersion": "2015-06-15",
+                    "location": "[resourcegroup().location]",
+                    "dependson": [
+                        "[concat(parameters('virtualmachineName'), copyIndex(5))]",
+                        "domainJoin"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                        "type": "MicrosoftMonitoringAgent",
+                        "typeHandlerVersion": "1.0",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "workspaceId": "[reference(resourceId(parameters('omsWorkspaceResourceGroup'),'Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName')), '2015-03-20').customerId]"
+                        },
+                        "protectedSettings": {
+                            "workspaceKey": "[listKeys(resourceId(parameters('omsWorkspaceResourceGroup'),'Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName')), '2015-03-20').primarySharedKey]"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
