@@ -26,7 +26,13 @@
         "vnetResourceGroup": {
             "type": "string"
         },
+        "networkInterfaceName": {
+            "type": "string"
+        },
         "virtualMachineSize": {
+            "type": "string"
+        },
+        "osDiskName": {
             "type": "string"
         },
         "StorageAccountType": {
@@ -40,6 +46,9 @@
         },
         "DataDiskSize": {
             "type": "int"
+        },
+        "dataDiskName": {
+            "type": "string"
         },
         "domainName": {
             "type": "string"
@@ -93,7 +102,7 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
+            "name": "[concat(parameters('networkinterfaceName'), copyIndex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "copy": {
@@ -172,11 +181,11 @@
                     "imageReference": {
                         "publisher": "MicrosoftSqlServer",
                         "offer": "SQL2016SP1-WS2016",
-                        "sku": "Standard",
+                        "sku": "Enterprise",
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1))]",
+                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -191,7 +200,7 @@
                                 "caching": "ReadWrite",
                                 "diskSizeGB": "[parameters('DataDiskSize')]",
                                 "lun": "[copyIndex('dataDisks')]",
-                                "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1), copyIndex('dataDisks'))]",
+                                "name": "[concat(parameters('dataDiskName'),copyIndex(1), copyIndex('dataDisks'))]",
                                 "createOption": "Empty"
                             }
                         }
@@ -200,7 +209,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkinterfaceName'), copyIndex(1)))]"
                         }
                     ]
                 }
@@ -269,7 +278,7 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/hanuravim/EmsArmTemplates/master/Public/lib/SQL/linkedTemplates/customScripts.ps1"
+                                "[parameters('sqlCustom_ScriptFilePath')]"
                             ],
                             "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
                         }
