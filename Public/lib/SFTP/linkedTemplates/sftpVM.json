@@ -73,6 +73,10 @@
             "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
+            "copy": {
+                "name": "nicLoop",
+                "count": "[parameters('vmCount')]"
+            },
             "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
