@@ -2,43 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "nsgCount": {
-            "type": "int",
-            "maxValue": 1
-        },
-        "nicCount": {
-            "type": "int",
-            "maxValue": 1
-        },
-        "vmCount": {
-            "type": "int",
-            "maxValue": 1
-        },
-        "ResourceGroupLocation": {
-            "type": "string"
-        },
-        "SupportEmail": {
-            "type": "string"
-        },
-        "shortLocation": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars. E.g. East US - EU, West US - WU, East US 2 - EU2"
-            }
-        },
         "ApplicationName": {
             "type": "string",
             "maxLength": 3,
             "metadata": {
                 "description": "3 chars e.g. nxt (Next Net), ems"
-            }
-        },
-        "Tier_Name": {
-            "type": "string",
-            "maxLength": 2,
-            "metadata": {
-                "description": "2 chars E.g. Sanbox (SB), Live (LI) and training (TR)"
             }
         },
         "Environment_Category": {
@@ -48,50 +16,35 @@
                 "description": "3 char. E.g.  DEV, QA, UAT and PRD"
             }
         },
+        "shortlocation": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  eastus=eus, eastus2=eu2, southcentralus=scu"
+            }
+        },
+        "Tenant": {
+            "type": "string",
+            "maxLength": 5,
+            "metadata": {
+                "description": "3 char. E.g.  SRD"
+            }
+        },
         "Role": {
             "type": "string",
-            "defaultValue": "sft",
             "maxLength": 3,
             "metadata": {
                 "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
             }
         },
-        "Tenant": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "3 chars  Shared (SRD), Tenant Acronym)"
-            }
-        },
-        "Custom": {
-            "type": "string",
-            "maxLength": 8,
-            "metadata": {
-                "description": "(Product Specific) Space. 8 chars (OPTIONAL)"
-            }
-        },
-        "virtualNetworkResourceGroup": {
+        "SupportEmail": {
             "type": "string"
         },
-        "virtualNetworkName": {
+        "sftp_subnetName": {
             "type": "string"
-        },
-        "subnet1Name": {
-            "type": "string"
-        },
-        "AvailabilitySet": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "metadata": {
-                "description": "Select whether the VM should be in AvailabilitySet or not."
-            }
         },
         "privateIpAddress": {
-            "type": "array"
+            "type": "string"
         },
         "virtualMachineSize": {
             "type": "string"
@@ -102,19 +55,10 @@
         "DataDiskSize": {
             "type": "int"
         },
-        "omsWorkspaceResourceGroup": {
+        "keyVault_Name": {
             "type": "string"
         },
-        "omsWorkspaceName": {
-            "type": "string"
-        },
-        "keyVaultResourceGroupName": {
-            "type": "string"
-        },
-        "keyvaultName": {
-            "type": "string"
-        },
-        "adminUsername": {
+        "keyVault_ResourceGroup": {
             "type": "string"
         },
         "domainName": {
@@ -126,41 +70,32 @@
         "secretname_DomainAdminPassword": {
             "type": "string"
         },
-        "baseUri": {
+        "artifacts_baseUri": {
             "type": "string"
         }
     },
     "variables": {
         "uai": "uai2008973",
         "preserve": true,
-        "CharactersForvmName": 2,
         "StorageAccountType": "Standard_LRS",
-        "vnetID": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('virtualNetworkResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'))]",
-        "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('subnet1Name'))]",
         "resourceNames": {
-            "availabilitySetName": "[tolower(concat(parameters('ApplicationName'),'emsavset'))]",
-            "ResourceGroupName": "[toupper(concat('GAV-',parameters('shortLocation'),'-',parameters('ApplicationName'),'-',parameters('Tier_Name'),'-',parameters('Environment_Category'),'-',parameters('Role'),'-',parameters('Tenant'),'-','01','-',parameters('Custom')))]",
-            "StorageAccountName": "[tolower(concat(parameters('ApplicationName'),parameters('shortlocation'),parameters('Tier_Name'),parameters('role'),'001'))]",
-            "AzureFileShareName": "[tolower(concat(parameters('ApplicationName'),'azrfileshare'))]",
-            "networkInterfaceName": "[tolower(concat('GAV',parameters('shortLocation'),'-',parameters('ApplicationName'),'-',parameters('role'),'-','nic','-',parameters('Custom'),'-','00'))]",
-            "networkSecurityGroupName": "[tolower(concat('GAV',parameters('shortLocation'),'-',parameters('ApplicationName'),'-',parameters('Environment_Category'),'-','nsg','-',parameters('Custom'),'-','00'))]",
-            "virtualmachineName": "[tolower(concat(take(parameters('ApplicationName'),variables('CharactersForvmName')),first(parameters('Environment_Category')),first(parameters('Role')),parameters('Custom'),'00'))]",
-            "osDiskName": "[tolower(concat('gav',parameters('shortLocation'),'-',parameters('ApplicationName'),'-','dr','-','osd','-','dsk','-',parameters('Role'),'00'))]",
-            "dataDiskName": "[tolower(concat('gav',parameters('shortLocation'),'-',parameters('ApplicationName'),'-','dr','-','dat','-','dsk','-',parameters('Role'),'00'))]"
+            "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
+            "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
+            "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]",
+            "virtualmachine": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
+            "StorageAccount": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('shortlocation'),parameters('Tenant'),'sto','0'))]"
         },
         "TemplateURLs": {
-            "nsgTemplate": "[concat(parameters('baseUri'),'/emsManager/master/emsmanagerNSG.json')]",
-            "StorageAccountTemplate": "[concat(parameters('baseUri'),'/sharedTemplates/master/StorageAccount.json')]",
-            "SFTPVMTemplate": "[concat(parameters('baseUri'),'/SFTP/master/SFTPVM.json')]",
-            "domainJoinTemplate": "[concat(parameters('baseUri'),'/sharedTemplates/master/domainJoin.json')]",
-            "omsAgentTemplate": "[concat(parameters('baseUri'),'/sharedTemplates/master/omsAgent.json')]",
-            "CustomScriptExtensionScriptFilePath": "[concat(parameters('baseUri'),'/SFTP/master/customScripts.ps1')]",
+            "SFTPVMTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/sftpVM.json')]",
+            "domainJoinTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/domainJoin.json')]",
+            "CustomScriptExtensionScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/customScripts.ps1')]",
             "CustomScriptFileName": "customScripts.ps1"
         }
     },
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "name": "SFTPVM",
             "apiVersion": "2018-05-01",
             "dependsOn": [],
@@ -172,25 +107,22 @@
                 },
                 "parameters": {
                     "vmCount": {
-                        "value": "[parameters('vmCount')]"
+                        "value": 1
                     },
-                    "nicCount": {
-                        "value": "[parameters('nicCount')]"
+                    "vnetResourceGroup": {
+                        "value": "[variables('resourcenames').commonResourceGroup]"
                     },
-                    "subnet1Ref": {
-                        "value": "[variables('subnet1Ref')]"
+                    "virtualNetworkName": {
+                        "value": "[variables('resourcenames').virtualNetwork]"
+                    },
+                    "sftp_SubnetName": {
+                        "value": "[parameters('sftp_subnetName')]"
                     },
                     "privateIpAddress": {
                         "value": "[parameters('privateIpAddress')]"
                     },
                     "virtualmachineName": {
-                        "value": "[variables('resourcenames').virtualmachineName]"
-                    },
-                    "AvailabilitySet": {
-                        "value": "[parameters('AvailabilitySet')]"
-                    },
-                    "availabilitySetName": {
-                        "value": "[variables('resourcenames').availabilitySetName]"
+                        "value": "[variables('resourcenames').virtualmachine]"
                     },
                     "virtualMachineSize": {
                         "value": "[parameters('virtualMachineSize')]"
@@ -198,37 +130,33 @@
                     "StorageAccountType": {
                         "value": "[variables('StorageAccountType')]"
                     },
-                    "networkInterfaceName": {
-                        "value": "[variables('resourcenames').networkInterfaceName]"
-                    },
-                    "osDiskName": {
-                        "value": "[variables('resourcenames').osDiskName]"
-                    },
-                    "dataDiskName": {
-                        "value": "[variables('resourcenames').dataDiskName]"
-                    },
                     "numberOfDataDisks": {
                         "value": "[parameters('numberOfDataDisks')]"
                     },
                     "DataDiskSize": {
                         "value": "[parameters('DataDiskSize')]"
                     },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
+                    "DomainAdminUserName": {
                         "reference": {
                             "keyVault": {
-                                "id": "[resourceId(subscription().subscriptionId,  parameters('keyVaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('keyvaultName'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
+                        }
+                    },
+                    "DomainAdminPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
                             },
                             "secretName": "[parameters('secretname_DomainAdminPassword')]"
                         }
                     },
                     "omsWorkspaceResourceGroup": {
-                        "value": "[parameters('omsWorkspaceResourceGroup')]"
+                        "value": "[variables('resourcenames').commonResourceGroup]"
                     },
                     "omsWorkspaceName": {
-                        "value": "[parameters('omsWorkspaceName')]"
+                        "value": "[variables('resourcenames').loganalyticsWorkspace]"
                     },
                     "CustomScriptExtensionScriptFilePath": {
                         "value": "[variables('templateurls').CustomScriptExtensionScriptFilePath]"
@@ -256,6 +184,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "name": "domainJoin",
             "apiVersion": "2018-05-01",
             "dependsOn": [
@@ -269,26 +198,26 @@
                 },
                 "parameters": {
                     "vmCount": {
-                        "value": "[parameters('vmCount')]"
+                        "value": 1
                     },
                     "virtualmachineName": {
-                        "value": "[variables('resourcenames').virtualmachineName]"
+                        "value": "[variables('resourcenames').virtualmachine]"
                     },
                     "domainName": {
                         "value": "[parameters('domainName')]"
                     },
-                    "DomainUserName": {
+                    "DomainAdminUserName": {
                         "reference": {
                             "keyVault": {
-                                "id": "[resourceId(subscription().subscriptionId,  parameters('keyVaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('keyvaultName'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
                             },
                             "secretName": "[parameters('secretname_DomainAdminUserName')]"
                         }
                     },
-                    "DomainPassword": {
+                    "DomainAdminPassword": {
                         "reference": {
                             "keyVault": {
-                                "id": "[resourceId(subscription().subscriptionId,  parameters('keyVaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('keyvaultName'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
                             },
                             "secretName": "[parameters('secretname_DomainAdminPassword')]"
                         }
