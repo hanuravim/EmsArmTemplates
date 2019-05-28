@@ -269,9 +269,9 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "[parameters('sqlCustom_ScriptFilePath')]"
+                                "https://raw.githubusercontent.com/hanuravim/EmsArmTemplates/master/Public/lib/SQL/linkedTemplates/customScripts.ps1"
                             ],
-                            "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File sqlCustom_ScriptFilePath"
+                            "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
                         }
                     }
                 }
