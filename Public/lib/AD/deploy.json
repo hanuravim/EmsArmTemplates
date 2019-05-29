@@ -71,6 +71,12 @@
         "secretname_DomainAdminPassword": {
             "type": "string"
         },
+        "secretName_appGW-certData": {
+            "type": "string"
+        },
+        "secretName_certPassword": {
+            "type": "string"
+        },
         "artifacts_baseUri": {
             "type": "string"
         }
@@ -80,14 +86,18 @@
         "preserve": true,
         "SupportEmail": "ravi.mishra@ge.com",
         "StorageAccountType": "Standard_LRS",
+        "appGW_backendIPAddresses": "10.0.0.0",
         "resourceNames": {
             "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
             "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
             "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]",
             "availabilitySet": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'-avs-','0'))]",
             "automationAccount": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),parameters('Tenant'),'-aut-','01'))]",
-            "applicationGateway": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),parameters('Tenant'),'-agx-','01'))]",
-            "virtualmachine": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]"
+            "loadbalancer": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-ilb-','01'))]",
+            "virtualmachine": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
+            "appGw": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agx-','01'))]",
+            "appGW_domainNameLabel": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agx-pip-','01'))]",
+            "vpn": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-vpn-','01'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
@@ -101,7 +111,9 @@
             "adBDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/ConfigureADBDC.ps1.zip')]",
             "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
             "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
-            "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/customScripts.json')]"
+            "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/customScripts.json')]",
+            "appGW": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AppGW-VPN/linkedTemplates/appGW.json')]",
+            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AppGW-VPN/linkedTemplates/vpn.json')]"
         }
     },
     "resources": [
@@ -246,7 +258,9 @@
             "name": "virtualNetwork",
             "apiVersion": "2018-05-01",
             "dependsOn": [
-                "ConfigureADForest"
+                "ConfigureADForest",
+                "applicationGateway",
+                "VPN"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -262,7 +276,7 @@
                         "value": "[parameters('vnet_addressPrefix')]"
                     },
                     "loadbalancer": {
-                        "value": "[variables('resourceNames').applicationGateway]"
+                        "value": "[variables('resourceNames').loadbalancer]"
                     },
                     "adILB_IP": {
                         "value": "[parameters('adILB_IP')]"
@@ -346,6 +360,123 @@
                     },
                     "adBDCConfigurationFunction": {
                         "value": "[variables('templateURLs').adBDCConfigurationFunction]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "VPN",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TemplateURLs').vpn]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vpnName": {
+                        "value": "[variables('resourceNames').vpn]"
+                    },
+                    "vpnSku": {
+                        "value": "VpnGw1"
+                    },
+                    "vpnConnection": {
+                        "value": "Vpn"
+                    },
+                    "vpnType": {
+                        "value": "RouteBased"
+                    },
+                    "VirtualNetworkName": {
+                        "value": "[variables('resourceNames').virtualNetwork]"
+                    },
+                    "vpnSubnetName": {
+                        "value": "[parameters('subnet_Names').vpn]"
+                    },
+                    "vpnPublicIpAddressName": {
+                        "value": "[variables('resourceNames').vpn]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "applicationGateway",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TemplateURLs').appGW]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetwork": {
+                        "value": "[variables('resourceNames').virtualNetwork]"
+                    },
+                    "appGW_Name": {
+                        "value": "[variables('resourceNames').appGw]"
+                    },
+                    "appGW_domainNameLabel": {
+                        "value": "[variables('resourceNames').appGW_domainNameLabel]"
+                    },
+                    "appGW_tier": {
+                        "value": "WAF"
+                    },
+                    "appGW_Size": {
+                        "value": "WAF_Medium"
+                    },
+                    "appGW_capacity": {
+                        "value": 1
+                    },
+                    "appGW_subnetName": {
+                        "value": "[parameters('subnet_Names').applicationGateway]"
+                    },
+                    "appGW_publicIpAddressName": {
+                        "value": "[variables('resourceNames').appGW_domainNameLabel]"
+                    },
+                    "appGW_backendIPAddresses": {
+                        "value": "[variables('appGW_backendIPAddresses')]"
+                    },
+                    "appGW_allocationMethod": {
+                        "value": "Dynamic"
+                    },
+                    "appGW_idleTimeoutInMinutes": {
+                        "value": 5
+                    },
+                    "appGW-certData": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretName_appGW-certData')]"
+                        }
+                    },
+                    "appGW_certPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretName_certPassword')]"
+                        }
+                    },
+                    "ApplicationName": {
+                        "value": "[parameters('ApplicationName')]"
+                    },
+                    "uai": {
+                        "value": "uai2008973"
+                    },
+                    "SupportEmail": {
+                        "value": "[variables('SupportEmail')]"
+                    },
+                    "env": {
+                        "value": "[parameters('Environment_Category')]"
+                    },
+                    "preserve": {
+                        "value": true
                     }
                 }
             }
