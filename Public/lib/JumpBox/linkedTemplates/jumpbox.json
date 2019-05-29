@@ -26,9 +26,6 @@
         "Environment_Category": {
             "type": "string"
         },
-        "networkinterfaceName": {
-            "type": "string"
-        },
         "vnetResourceGroup": {
             "type": "string"
         },
@@ -41,9 +38,6 @@
         "virtualmachineName": {
             "type": "string"
         },
-        "osDiskName": {
-            "type": "string"
-        },
         "StorageAccountType": {
             "type": "string"
         },
@@ -51,6 +45,9 @@
             "type": "string"
         },
         "CustomScriptFilePath": {
+            "type": "string"
+        },
+        "loadbalancer": {
             "type": "string"
         },
         "omsWorkspaceResourceGroup": {
@@ -89,8 +86,32 @@
             }
         },
         {
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('loadbalancer'),'1')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('jumpboxSubnet_Name'))]"
+                            },
+                            "privateIPAddress": "[parameters('jumpboxILB_IP')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('networkinterfaceName'), copyIndex(1))]",
+            "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "copy": {
@@ -148,7 +169,7 @@
                 "count": "[parameters('vmCount')]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1)))]"
             ],
             "properties": {
                 "availabilitySet": "[variables('availabilitySetId')]",
@@ -157,7 +178,7 @@
                 },
                 "storageProfile": {
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -174,7 +195,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1)))]"
                         }
                     ]
                 },
