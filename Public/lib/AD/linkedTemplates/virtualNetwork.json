@@ -55,11 +55,11 @@
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').appgw_jumpBox]",
+                        "name": "[parameters('subnet_Names').jumpBox]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').appgw_jumpBox]",
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').jumpBox]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').appgw_jumpBox,'-nsg-','02'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').jumpBox,'-nsg-','02'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
