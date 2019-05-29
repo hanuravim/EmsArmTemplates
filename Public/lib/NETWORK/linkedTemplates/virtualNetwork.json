@@ -17,7 +17,7 @@
         "vpn": {
             "type": "string"
         },
-        "appgw_jumpBox": {
+        "jumpBox": {
             "type": "string"
         },
         "Tenant_EMS": {
@@ -56,9 +56,9 @@
                         }
                     },
                     {
-                        "name": "[parameters('subnet_Names').appgw_jumpBox]",
+                        "name": "[parameters('subnet_Names').jumpBox]",
                         "properties": {
-                            "addressPrefix": "[parameters('appgw_jumpBox')]",
+                            "addressPrefix": "[parameters('jumpBox')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').appgw_jumpBox,'-nsg-','02'))]"
                             },
