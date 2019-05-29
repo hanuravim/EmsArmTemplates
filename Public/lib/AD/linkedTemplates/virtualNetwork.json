@@ -175,6 +175,16 @@
                             },
                             "delegations": []
                         }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').applicationGateway]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').applicationGateway]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').applicationGateway,'-nsg-','14'))]"
+                            },
+                            "delegations": []
+                        }
                     }
                 ],
                 "virtualNetworkPeerings": [],
