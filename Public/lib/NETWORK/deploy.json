@@ -39,10 +39,10 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
-        "GatewaySubnet_pop-env": {
+        "vpn_GatewaySubnet_pop": {
             "type": "string"
         },
-        "ExternalSubnet_pop-env": {
+        "ExternalSubnet_pop": {
             "type": "string"
         },
         "Tenant_EMS": {
@@ -64,8 +64,8 @@
     "variables": {
         "uai": "uai2008973",
         "SupportEmail": "ravi.mishra@ge.com",
-        "vpn": "[concat('172.21.',parameters('GatewaySubnet_pop-env'),'.64','/','28')]",
-        "jumpbox": "[concat('172.21.',parameters('ExternalSubnet_pop-env'),'.0','/','26')]",
+        "vpn": "[concat('172.20.',parameters('vpn_GatewaySubnet_pop'),'.64','/','28')]",
+        "jumpBox": "[concat('172.20.',parameters('ExternalSubnet_pop'),'.0','/','26')]",
         "Tenant_EMS": "[concat('10.',parameters('Tenant_EMS'),'.0.0','/','24')]",
         "Tenant_Workers": "[concat('10.',parameters('Tenant_Workers'),'.1.0','/','24')]",
         "Tenant_API": "[concat('10.',parameters('Tenant_API'),'.2.0','/','24')]",
@@ -73,12 +73,14 @@
         "resourceNames": {
             "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
             "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
-            "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]"
+            "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]",
+            "automationaccount": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-aut-','01'))]"
         },
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
             "logAnalytics": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/logAnalytics.json')]",
-            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]"
+            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/virtualNetwork.json')]",
+            "automationaccount": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/automationAccount.json')]"
         }
     },
     "resources": [
@@ -171,8 +173,8 @@
                     "vpn": {
                         "value": "[variables('vpn')]"
                     },
-                    "jumpbox": {
-                        "value": "[variables('jumpbox')]"
+                    "jumpBox": {
+                        "value": "[variables('jumpBox')]"
                     },
                     "Tenant_EMS": {
                         "value": "[variables('Tenant_EMS')]"
@@ -185,7 +187,28 @@
                     }
                 }
             }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "automationaccount",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceNames').commonResourceGroup)]",
+                "networkSecurityGroup"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TemplateURLs').automationaccount]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "automationAccount": {
+                        "value": "[variables('resourceNames').automationaccount]"
+                    }
+                }
+            }
         }
-    ],
-    "outputs": {}
+    ]
 }
