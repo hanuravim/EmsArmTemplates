@@ -60,7 +60,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('jumpBox')]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').appgw_jumpBox,'-nsg-','02'))]"
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').jumpBox,'-nsg-','02'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": []
