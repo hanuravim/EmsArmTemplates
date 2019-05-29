@@ -8,19 +8,25 @@
         "vnet_addressPrefix": {
             "type": "object"
         },
-        "loadbalancer": {
-            "type": "string"
-        },
-        "adILB_IP": {
-            "type": "string"
-        },
         "subnet_Names": {
             "type": "object"
         },
         "subnet_addressPrefixes": {
             "type": "object"
         },
-        "DNSServerAddress": {
+        "vpn": {
+            "type": "string"
+        },
+        "jumpBox": {
+            "type": "string"
+        },
+        "Tenant_EMS": {
+            "type": "string"
+        },
+        "Tenant_Workers": {
+            "type": "string"
+        },
+        "Tenant_API": {
             "type": "string"
         }
     },
@@ -37,16 +43,11 @@
                         "[parameters('vnet_addressPrefix').addr2]"
                     ]
                 },
-                "dhcpOptions": {
-                    "dnsServers": [
-                        "[parameters('DNSServerAddress')]"
-                    ]
-                },
                 "subnets": [
                     {
                         "name": "[parameters('subnet_Names').vpn]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').vpn]",
+                            "addressPrefix": "[parameters('vpn')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').vpn,'-nsg-','01'))]"
                             },
@@ -57,7 +58,7 @@
                     {
                         "name": "[parameters('subnet_Names').jumpBox]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').jumpBox]",
+                            "addressPrefix": "[parameters('jumpBox')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').jumpBox,'-nsg-','02'))]"
                             },
@@ -149,7 +150,7 @@
                     {
                         "name": "[parameters('subnet_Names').Tenant_EMS]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').Tenant_EMS]",
+                            "addressPrefix": "[parameters('Tenant_EMS')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_EMS,'-nsg-','11'))]"
                             },
@@ -159,7 +160,7 @@
                     {
                         "name": "[parameters('subnet_Names').Tenant_Workers]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').Tenant_Workers]",
+                            "addressPrefix": "[parameters('Tenant_Workers')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_Workers,'-nsg-','12'))]"
                             },
@@ -169,9 +170,19 @@
                     {
                         "name": "[parameters('subnet_Names').Tenant_API]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').Tenant_API]",
+                            "addressPrefix": "[parameters('Tenant_API')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_API,'-nsg-','13'))]"
+                            },
+                            "delegations": []
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet_Names').applicationGateway]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet_addressPrefixes').applicationGateway]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').applicationGateway,'-nsg-','14'))]"
                             },
                             "delegations": []
                         }
@@ -182,32 +193,6 @@
                 "enableVmProtection": false
             },
             "dependsOn": []
-        },
-        {
-            "apiVersion": "2018-10-01",
-            "name": "[parameters('loadbalancer')]",
-            "type": "Microsoft.Network/loadBalancers",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Basic"
-            },
-            "dependsOn": [
-                "[parameters('virtualNetwork')]"
-            ],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "LoadBalancerFrontEnd",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork'), parameters('subnet_Names').domain)]"
-                            },
-                            "privateIPAddress": "[parameters('adILB_IP')]"
-                        }
-                    }
-                ]
-            }
         }
     ]
 }
