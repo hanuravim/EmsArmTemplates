@@ -26,12 +26,6 @@
         "StorageAccountType": {
             "type": "string"
         },
-        "numberOfDataDisks": {
-            "type": "int"
-        },
-        "DataDiskSize": {
-            "type": "int"
-        },
         "virtualNetworkName": {
             "type": "string"
         },
