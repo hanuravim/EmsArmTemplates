@@ -84,7 +84,7 @@
         },
         {
             "apiVersion": "2018-10-01",
-            "name": "[concat(parameters('jumpboxILB_Name'),'1')]",
+            "name": "[parameters('jumpboxILB_Name')]",
             "type": "Microsoft.Network/loadBalancers",
             "location": "[resourceGroup().location]",
             "sku": {
