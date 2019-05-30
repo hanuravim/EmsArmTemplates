@@ -14,16 +14,13 @@
         "virtualmachineName": {
             "type": "string"
         },
-        "privateIpAddress": {
-            "type": "array"
+        "prtgVM_IP": {
+            "type": "string"
         },
         "virtualMachineSize": {
             "type": "string"
         },
-        "SubnetRef": {
-            "type": "string"
-        },
-        "networkInterfaceName": {
+        "prtg_SubnetName": {
             "type": "string"
         },
         "StorageAccountType": {
@@ -32,14 +29,11 @@
         "numberOfDataDisks": {
             "type": "int"
         },
-        "osDiskName": {
-            "type": "string"
-        },
-        "dataDiskName": {
-            "type": "string"
-        },
         "DataDiskSize": {
             "type": "int"
+        },
+        "virtualNetworkName": {
+            "type": "string"
         },
         "adminUsername": {
             "type": "string"
@@ -52,15 +46,6 @@
         },
         "omsWorkspaceName": {
             "type": "string"
-        },
-        "ResourceGroupName": {
-            "type": "string"
-        },
-        "CustomScriptFileName": {
-            "type": "string"
-        },
-        "customScriptPath": {
-            "type": "string"
         }
     },
     "variables": {
@@ -72,7 +57,7 @@
     "resources": [
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('networkInterfaceName'), copyindex(1))]",
+            "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourcegroup().location]",
             "copy": {
@@ -85,11 +70,11 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIpAddress": "[parameters('privateIpAddress')[copyIndex()]]",
+                            "privateIpAddress": "[parameters('prtgVM_IP')]",
                             "privateIpAddressVersion": "IPv4",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[parameters('SubnetRef')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('prtg_SubnetName'))]"
                             }
                         }
                     }
@@ -132,31 +117,18 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "name": "[concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1))]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
                             "storageAccountType": "[parameters('StorageAccountType')]"
                         }
-                    },
-                    "copy": [
-                        {
-                            "name": "dataDisks",
-                            "count": "[parameters('numberOfDataDisks')]",
-                            "input": {
-                                "caching": "ReadWrite",
-                                "diskSizeGB": "[parameters('DataDiskSize')]",
-                                "lun": "[copyIndex('dataDisks')]",
-                                "name": "[concat(parameters('dataDiskName'),copyIndex(1), copyIndex('dataDisks'))]",
-                                "createOption": "Empty"
-                            }
-                        }
-                    ]
+                    }
                 },
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('virtualmachineName'),'1-nic-0', copyIndex(1)))]"
                         }
                     ]
                 }
@@ -180,27 +152,6 @@
                         },
                         "protectedSettings": {
                             "workspaceKey": "[listKeys(resourceId(parameters('omsWorkspaceResourceGroup'),'Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName')), '2015-03-20').primarySharedKey]"
-                        }
-                    }
-                },
-                {
-                    "type": "extensions",
-                    "name": "customScripts",
-                    "location": "[resourceGroup().location]",
-                    "apiVersion": "2015-06-15",
-                    "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Compute",
-                        "type": "CustomScriptExtension",
-                        "typeHandlerVersion": "1.9",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "fileUris": [
-                                "[parameters('customScriptPath')]"
-                            ],
-                            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ',parameters('CustomScriptFileName'), ' -ResourceGroupName', parameters('ResourceGroupName'), ' -VMName ', parameters('virtualmachineName'))]"
                         }
                     }
                 }
