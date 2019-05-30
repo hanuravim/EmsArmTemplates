@@ -133,30 +133,6 @@
             }
         },
         {
-            "apiVersion": "2018-10-01",
-            "name": "[parameters('jumpboxILB_Name')]",
-            "type": "Microsoft.Network/loadBalancers",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Basic"
-            },
-            "dependsOn": [],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "LoadBalancerFrontEnd",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('jumpboxSubnet_Name'))]"
-                            },
-                            "privateIPAddress": "[parameters('jumpboxILB_IP')]"
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
@@ -192,7 +168,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('virtualmachineName'),'1-dsk-0', copyIndex(1)))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('virtualmachineName'),'1-nic-0', copyIndex(1)))]"
                         }
                     ]
                 },
