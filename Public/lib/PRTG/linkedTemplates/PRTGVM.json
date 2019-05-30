@@ -20,6 +20,9 @@
         "virtualMachineSize": {
             "type": "string"
         },
+        "vnetResourceGroup": {
+            "type": "string"
+        },
         "prtg_SubnetName": {
             "type": "string"
         },
@@ -68,7 +71,7 @@
                             "privateIpAddressVersion": "IPv4",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('prtg_SubnetName'))]"
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('prtg_SubnetName'))]"
                             }
                         }
                     }
