@@ -172,7 +172,7 @@
                     "imageReference": {
                         "publisher": "MicrosoftSqlServer",
                         "offer": "SQL2016SP1-WS2016",
-                        "sku": "Enterprise",
+                        "sku": "Standard",
                         "version": "latest"
                     },
                     "osDisk": {
