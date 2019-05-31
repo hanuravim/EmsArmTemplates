@@ -77,7 +77,8 @@
                                 "88",
                                 "464",
                                 "135",
-                                "3389"
+                                "3389",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -428,7 +429,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -450,7 +452,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -473,7 +476,8 @@
                                 "88",
                                 "464",
                                 "135",
-                                "3389"
+                                "3389",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -495,7 +499,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -517,7 +522,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -539,7 +545,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -571,7 +578,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -638,7 +646,7 @@
                         "properties": {
                             "protocol": "*",
                             "sourcePortRange": "1024-65535",
-                            "destinationPortRange": "1024-65535",
+                            "destinationPortRange": "3389",
                             "sourceAddressPrefix": "172.21.11.0/26",
                             "destinationAddressPrefix": "10.0.2.0/24",
                             "access": "Allow",
@@ -655,7 +663,7 @@
                         "properties": {
                             "protocol": "*",
                             "sourcePortRange": "80",
-                            "destinationPortRange": "1024-65535",
+                            "destinationPortRange": "",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "10.0.2.0/24",
                             "access": "Allow",
@@ -777,7 +785,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
