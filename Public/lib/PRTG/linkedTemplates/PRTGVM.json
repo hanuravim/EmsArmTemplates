@@ -196,15 +196,13 @@
                     }
                 },
                 {
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
-                    "name": "[concat(parameters('virtualmachineName'), copyindex(1), '/prtg')]",
-                    "copy": {
-                        "name": "customScriptLoop",
-                        "count": "[parameters('vmCount')]"
-                    },
+                    "type": "extensions",
+                    "name": "customScript",
                     "location": "[resourcegroup().location]",
                     "apiVersion": "2015-06-15",
-                    "dependsOn": [],
+                    "dependsOn": [
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]"
+                    ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
                         "type": "CustomScriptExtension",
