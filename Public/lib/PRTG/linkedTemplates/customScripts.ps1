@@ -1,14 +1,11 @@
 Param (
     [Parameter()]
-    [String]$ResourceGroupName,
-    [String]$VMName
-
+    [String]$PRTG_SetupLocation
 )
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-Install-Module Azure -Confirm:$False
-Install-Module AzureRm -Confirm:$False
-Import-Module Azure
-Import-Module AzureRm
-Restart-Computer -Force
-Remove-AzureRmVMExtension -ResourceGroupName $ResourceGroupName -VMName $VMName -Name 'customScripts' -Force
+# Download path for PRTG setup
+$File = $($env:TEMP) + '\PRTG.EXE'
+# Start Download
+Invoke-WebRequest -Uri $PRTG_SetupLocation -OutFile $File
+# Install
+Start-Process -Wait -FilePath $File -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES" -PassThru
+Restart-Computer -Force 
