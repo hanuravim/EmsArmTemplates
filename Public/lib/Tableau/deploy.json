@@ -35,6 +35,7 @@
         },
         "Role": {
             "type": "string",
+            "defaultValue": "ems",
             "maxLength": 3,
             "metadata": {
                 "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
@@ -43,10 +44,10 @@
         "virtualMachineSize": {
             "type": "string"
         },
-        "wasabi_subnetName": {
+        "tableau_SubnetName": {
             "type": "string"
         },
-        "wasabiVM_IP": {
+        "tableauVM_IP": {
             "type": "string"
         },
         "domainName": {
@@ -78,8 +79,8 @@
             "virtualmachine": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]"
         },
         "TemplateURLs": {
-            "wasabi": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/WASABI/linkedTemplates/wasabiVM.json')]",
-            "CustomScriptExtensionScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SQL/linkedTemplates/customScripts.ps1')]",
+            "tableau": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/Tableau/linkedTemplates/tableauVM.json')]",
+            "CustomScriptExtensionScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/Tableau/linkedTemplates/customScripts.ps1')]",
             "CustomScriptFileName": "customScripts.ps1"
         }
     },
@@ -87,39 +88,36 @@
         {
             "type": "Microsoft.Resources/deployments",
             "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
-            "name": "wasabi",
+            "name": "tableau",
             "apiVersion": "2018-05-01",
             "dependsOn": [],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('templateurls').wasabi]",
+                    "uri": "[variables('templateurls').tableau]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "vmCount": {
-                        "value": 1
-                    },
                     "vnetResourceGroup": {
                         "value": "[variables('resourceNames').commonResourceGroup]"
                     },
                     "virtualNetworkName": {
                         "value": "[variables('resourceNames').virtualNetwork]"
                     },
-                    "wasabi_subnetName": {
-                        "value": "[parameters('wasabi_subnetName')]"
+                    "tableau_subnetName": {
+                        "value": "[parameters('tableau_subnetName')]"
                     },
-                    "wasabi_IP": {
-                        "value": "[parameters('wasabiVM_IP')]"
+                    "tableauVM_IP": {
+                        "value": "[parameters('tableauVM_IP')]"
                     },
                     "virtualMachineName": {
                         "value": "[variables('resourceNames').virtualmachine]"
                     },
-                    "virtualMachineSize": {
-                        "value": "[parameters('virtualMachineSize')]"
-                    },
                     "storageAccountType": {
                         "value": "[variables('StorageAccountType')]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('virtualMachineSize')]"
                     },
                     "uai": {
                         "value": "[variables('uai')]"
@@ -154,6 +152,9 @@
                     },
                     "omsWorkspaceName": {
                         "value": "[variables('resourceNames').loganalyticsWorkspace]"
+                    },
+                    "tableauCustom_ScriptFilePath": {
+                        "value": "[variables('TemplateURLs').CustomScriptExtensionScriptFilePath]"
                     }
                 }
             }
