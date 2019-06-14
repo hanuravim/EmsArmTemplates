@@ -1,0 +1,1 @@
+﻿Get-WindowsFeature -Name Web-* | Install-WindowsFeature
