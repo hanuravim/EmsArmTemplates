@@ -71,7 +71,7 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIpAddress": "[concat(parameters('smtp_IP')[copyindex()])]",
+                            "privateIpAddress": "[parameters('smtp_IP')]",
                             "privateIpAddressVersion": "IPv4",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
@@ -95,7 +95,6 @@
                 "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1)))]"
             ],
             "properties": {
-               
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
