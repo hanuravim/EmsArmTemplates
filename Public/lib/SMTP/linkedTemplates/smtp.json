@@ -9,7 +9,7 @@
             "type": "string"
         },
         "smtp_IP": {
-            "type": "array"
+            "type": "string"
         },
         "virtualMachineSize": {
             "type": "string"
