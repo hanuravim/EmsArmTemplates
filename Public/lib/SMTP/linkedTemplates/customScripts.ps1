@@ -1,1 +1,5 @@
-﻿Get-WindowsFeature -Name Web-* | Install-WindowsFeature
+# install SMTP
+Install-WindowsFeature "smtp-server"
+
+# install Telnet
+Install-WindowsFeature "telnet-client"
