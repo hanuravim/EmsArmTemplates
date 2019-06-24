@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "StorageAccount": {
+            "type": "string"
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "Environment_Category": {
+            "type": "string"
+        },
+        "StorageAccountType": {
+            "type": "string"
+        },
+        "Container1Name": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('StorageAccount')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "ApplicationName": "EMS",
+                "uai": "uai2008973",
+                "SupportEmail": "[parameters('SupportEmail')]",
+                "env": "[parameters('Environment_Category')]",
+                "preserve": "true"
+            },
+            "sku": {
+                "name": "[parameters('StorageAccountType')]"
+            },
+            "kind": "StorageV2",
+            "properties": {},
+            "resources": [
+                {
+                    "type": "blobServices/containers",
+                    "apiVersion": "2018-11-01",
+                    "name": "[tolower(concat('default/', parameters('Container1Name')))]",
+                    "dependsOn": [
+                        "[parameters('StorageAccount')]"
+                    ],
+                    "properties": {
+                        "publicAccess": "None"
+                    }
+                }
+            ]
+        }
+    ]
+}
