@@ -1,0 +1,104 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. nxt (Next Net), ems"
+            }
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "Environment_Category": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  DEV, QA, UAT and PRD"
+            }
+        },
+        "shortlocation": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  eastus=eus, eastus2=eu2, southcentralus=scu"
+            }
+        },
+        "Tenant": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars  Shared (SRD), Tenant Acronym)"
+            }
+        },
+        "Role": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
+            }
+        },
+        "StorageAccountName": {
+            "type": "string"
+        },
+        "StorageAccountType": {
+            "type": "string"
+        },
+        "Container1Name": {
+            "type": "string"
+        },
+        "artifacts_baseUri": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "resourceNames": {
+            "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
+            "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
+            "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]",
+            "loadbalancer": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-ilb-','01'))]",
+            "virtualmachine": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
+            "StorageAccount": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('shortlocation'),parameters('Tenant'),'sto','0'))]"
+        },
+        "TemplateURLs": {
+            "storageaccount": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SQL/linkedTemplates/SQL.json')]",
+            "CustomScriptExtensionScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SQL/linkedTemplates/customScripts.ps1')]",
+            "CustomScriptFileName": "customScripts.ps1"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "StorageAccount",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateurls').storageaccount]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "StorageAccount": {
+                        "value": "[parameters('StorageAccountName')]"
+                    },
+                    "SupportEmail": {
+                        "value": "[parameters('SupportEmail')]"
+                    },
+                    "Environment_Category": {
+                        "value": "[parameters('Environment_Category')]"
+                    },
+                    "StorageAccountType": {
+                        "value": "[parameters('StorageAccountType')]"
+                    },
+                    "Container1Name": {
+                        "value": "[parameters('Container1Name')]"
+                    }
+                }
+            }
+        }
+    ]
+}
