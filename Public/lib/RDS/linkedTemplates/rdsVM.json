@@ -56,12 +56,6 @@
         "omsWorkspaceName": {
             "type": "string"
         },
-        "StorageAccountName": {
-            "type": "string"
-        },
-        "AzureFileShareName": {
-            "type": "string"
-        },
         "CustomScriptExtensionScriptFilePath": {
             "type": "string"
         },
