@@ -29,12 +29,6 @@
         "StorageAccountType": {
             "type": "string"
         },
-        "numberOfDataDisks": {
-            "type": "int"
-        },
-        "DataDiskSize": {
-            "type": "int"
-        },
         "DomainAdminUserName": {
             "type": "string"
         },
@@ -157,20 +151,7 @@
                         "managedDisk": {
                             "storageAccountType": "[parameters('StorageAccountType')]"
                         }
-                    },
-                    "copy": [
-                        {
-                            "name": "dataDisks",
-                            "count": "[parameters('numberOfDataDisks')]",
-                            "input": {
-                                "caching": "ReadWrite",
-                                "diskSizeGB": "[parameters('DataDiskSize')]",
-                                "lun": "[copyIndex('dataDisks')]",
-                                "name": "[concat(parameters('virtualmachineName'),'1-dsk-0',copyIndex(1), copyIndex('dataDisks'))]",
-                                "createOption": "Empty"
-                            }
-                        }
-                    ]
+                    }
                 },
                 "networkProfile": {
                     "networkInterfaces": [
