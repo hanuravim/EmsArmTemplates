@@ -5,7 +5,13 @@
         "vmCount": {
             "type": "int"
         },
+        "sftpILB_Name": {
+            "type": "string"
+        },
         "virtualmachineName": {
+            "type": "string"
+        },
+        "sftpILB_IP": {
             "type": "string"
         },
         "privateIpAddress": {
@@ -89,6 +95,30 @@
                             "subnet": {
                                 "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('sftp_SubnetName'))]"
                             }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[parameters('sftpILB_Name')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('sftp_subnetName'))]"
+                            },
+                            "privateIPAddress": "[parameters('sftpILB_IP')]"
                         }
                     }
                 ]
