@@ -227,11 +227,11 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/hanuravim/EmsArmTemplates/master/Public/lib/RDS/linkedTemplates/customScripts.ps1"
+                                "[parameters('CustomScriptExtensionScriptFilePath')]"
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File  ',parameters('CustomScriptFileName'))]"
+                            "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
                         }
                     }
                 }
