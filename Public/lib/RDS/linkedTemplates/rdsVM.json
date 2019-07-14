@@ -26,6 +26,12 @@
         "rdsSubnet_Name": {
             "type": "string"
         },
+        "rdsILB_Name": {
+            "type": "string"
+        },
+        "rdsILB_IP": {
+            "type": "string"
+        },
         "privateIpAddress": {
             "type": "array"
         },
@@ -102,6 +108,30 @@
                             "subnet": {
                                 "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('rdsSubnet_Name'))]"
                             }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "name": "[parameters('rdsILB_Name')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "dependsOn": [],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('rdsSubnet_Name'))]"
+                            },
+                            "privateIPAddress": "[parameters('rdsILB_IP')]"
                         }
                     }
                 ]
