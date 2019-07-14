@@ -147,7 +147,8 @@
                 "count": "[parameters('vmCount')]"
             },
             "dependsOn": [
-                "nicLoop"
+                "nicLoop",
+                "[parameters('availabilitySetName')]"
             ],
             "tags": {
                 "ApplicationName": "EMS",
@@ -231,7 +232,7 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File  ',parameters('CustomScriptFileName'))]"
+                            "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
                         }
                     }
                 }
