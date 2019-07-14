@@ -232,7 +232,7 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File customScripts.ps1"
+                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File  ',parameters('CustomScriptFileName'))]"
                         }
                     }
                 }
