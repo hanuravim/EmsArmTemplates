@@ -206,8 +206,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(1))]",
-                        "customscripts"
+                        "[concat(parameters('virtualmachineName'), copyIndex(1))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
