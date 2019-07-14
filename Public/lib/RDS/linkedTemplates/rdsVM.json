@@ -227,7 +227,7 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "[parameters('CustomScriptExtensionScriptFilePath')]"
+                                "https://raw.githubusercontent.com/hanuravim/EmsArmTemplates/master/Public/lib/RDS/linkedTemplates/customScripts.ps1"
                             ]
                         },
                         "protectedSettings": {
