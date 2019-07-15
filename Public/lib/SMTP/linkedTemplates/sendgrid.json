@@ -1,140 +1,68 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "logicAppName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name for the logic app."
-            }
-        },
-        "sendgridApiKey": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The SendGrid API key from the SendGrid service."
-            }
-        },
-        "sendgridName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name for the SendGrid connection."
-            }
+        "name": {
+            "type": "String"
         },
         "location": {
-            "type": "string",
-            "metadata": {
-                "description": "Location for all resources."
-            }
+            "type": "String"
+        },
+        "plan_name": {
+            "type": "String"
+        },
+        "plan_publisher": {
+            "type": "String"
+        },
+        "plan_product": {
+            "type": "String"
+        },
+        "plan_promotion_code": {
+            "type": "String"
+        },
+        "password": {
+            "type": "SecureString"
+        },
+        "email": {
+            "type": "String"
+        },
+        "firstName": {
+            "type": "String"
+        },
+        "lastName": {
+            "type": "String"
+        },
+        "company": {
+            "type": "String"
+        },
+        "website": {
+            "type": "String"
+        },
+        "acceptMarketingEmails": {
+            "type": "String"
         }
     },
-    "variables": {},
     "resources": [
         {
-            "type": "Microsoft.Web/connections",
-            "apiVersion": "2016-06-01",
+            "type": "Sendgrid.Email/accounts",
+            "apiVersion": "2015-01-01",
+            "name": "[parameters('name')]",
             "location": "[parameters('location')]",
-            "name": "[parameters('sendgridName')]",
+            "plan": {
+                "name": "[parameters('plan_name')]",
+                "publisher": "[parameters('plan_publisher')]",
+                "product": "[parameters('plan_product')]",
+                "promotionCode": "[parameters('plan_promotion_code')]"
+            },
             "properties": {
-                "api": {
-                    "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/sendgrid')]"
-                },
-                "displayName": "sendgrid",
-                "parameterValues": {
-                    "apiKey": "[parameters('sendgridApiKey')]"
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Logic/workflows",
-            "apiVersion": "2016-06-01",
-            "name": "[parameters('logicAppName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/connections', parameters('sendgridName'))]"
-            ],
-            "properties": {
-                "definition": {
-                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {
-                        "$connections": {
-                            "defaultValue": {},
-                            "type": "Object"
-                        }
-                    },
-                    "triggers": {
-                        "manual": {
-                            "type": "request",
-                            "kind": "http",
-                            "inputs": {
-                                "schema": {
-                                    "$schema": "http://json-schema.org/draft-04/schema#",
-                                    "properties": {
-                                        "emailbody": {
-                                            "type": "string"
-                                        },
-                                        "from": {
-                                            "type": "string"
-                                        },
-                                        "subject": {
-                                            "type": "string"
-                                        },
-                                        "to": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": [
-                                        "from",
-                                        "to",
-                                        "subject",
-                                        "emailbody"
-                                    ],
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "actions": {
-                        "Send_email": {
-                            "type": "ApiConnection",
-                            "inputs": {
-                                "body": {
-                                    "body": "@{triggerBody()['emailbody']}",
-                                    "from": "@{triggerBody()['from']}",
-                                    "ishtml": false,
-                                    "subject": "@{triggerBody()['subject']}",
-                                    "to": "@{triggerBody()['to']}"
-                                },
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['sendgrid']['connectionId']"
-                                    }
-                                },
-                                "method": "post",
-                                "path": "/api/mail.send.json"
-                            },
-                            "runAfter": {}
-                        }
-                    },
-                    "outputs": {}
-                },
-                "parameters": {
-                    "$connections": {
-                        "value": {
-                            "sendgrid": {
-                                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/sendgrid')]",
-                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('sendgridName'))]"
-                            }
-                        }
-                    }
-                }
+                "password": "[parameters('password')]",
+                "acceptMarketingEmails": "[parameters('acceptMarketingEmails')]",
+                "email": "[parameters('email')]",
+                "firstName": "[parameters('firstName')]",
+                "lastName": "[parameters('lastName')]",
+                "company": "[parameters('company')]",
+                "website": "[parameters('website')]"
             }
         }
-    ],
-    "outputs": {
-        "triggerURI": {
-            "type": "string",
-            "value": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', parameters('logicAppName')), '/triggers/manual'), '2016-06-01').value]"
-        }
-    }
+    ]
 }
