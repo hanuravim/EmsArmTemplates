@@ -47,7 +47,7 @@
             "type": "Sendgrid.Email/accounts",
             "apiVersion": "2015-01-01",
             "name": "[parameters('name')]",
-            "location": "[parameters('location')]",
+            "location": "[resourcegroup().location]",
             "plan": {
                 "name": "[parameters('plan_name')]",
                 "publisher": "[parameters('plan_publisher')]",
