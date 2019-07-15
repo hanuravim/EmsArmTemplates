@@ -5,9 +5,6 @@
         "name": {
             "type": "String"
         },
-        "location": {
-            "type": "String"
-        },
         "plan_name": {
             "type": "String"
         },
