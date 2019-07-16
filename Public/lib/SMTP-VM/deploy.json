@@ -1,0 +1,194 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. nxt (Next Net), ems"
+            }
+        },
+        "Environment_Category": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  DEV, QA, UAT and PRD"
+            }
+        },
+        "Tenant": {
+            "type": "string",
+            "maxLength": 5,
+            "metadata": {
+                "description": "3 char. E.g.  SRD"
+            }
+        },
+        "SupportEmail": {
+            "type": "string"
+        },
+        "jumpboxILB_IP": {
+            "type": "string"
+        },
+        "jumpboxSubnet_Name": {
+            "type": "string"
+        },
+        "jumpbox_IP": {
+            "type": "array"
+        },
+        "virtualMachineSize": {
+            "type": "string"
+        },
+        "keyVault_Name": {
+            "type": "string"
+        },
+        "keyVault_ResourceGroup": {
+            "type": "string"
+        },
+        "domainName": {
+            "type": "string"
+        },
+        "secretname_DomainAdminUserName": {
+            "type": "string"
+        },
+        "secretname_DomainAdminPassword": {
+            "type": "string"
+        },
+        "artifacts_baseUri": {
+            "type": "string"
+        },
+        "_artifactsBranch": {
+            "type": "string",
+            "defaultValue": "master",
+            "metadata": {
+                "description": "The branch of EmsArmTemplates to read linked templates from (this only modifies the default _artifactsLocation parameter)."
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "defaultValue": "[concat('https://emsdstgemsarm001.blob.core.windows.net/', parameters('_artifactsBranch'), '/')]"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation."
+            },
+            "defaultValue": ""
+        }
+    },
+    "variables": {
+        "uai": "uai2008973",
+        "preserve": true,
+        "StorageAccountType": "Standard_LRS",
+        "resourceNames": {
+            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
+            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('Tenant'),'-01'))]",
+            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
+            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-smtp-vm','-00'))]",
+            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-nic-',parameters('Tenant'),'-00'))]",
+            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-av-',parameters('Tenant'),'-00'))]",
+            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-lb-',parameters('Tenant'),'-001'))]",
+            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-osd-',parameters('Tenant'),'-00'))]",
+            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-dd-',parameters('Tenant'),'-00'))]"
+        },
+        "TemplateURLs": {
+            "smtpvm": "[concat(parameters('_artifactsLocation'),'SMTPVM/linkedTemplates/smtpvm.json', parameters('_artifactsLocationSasToken'))]",
+            "domainJoinTemplate": "[concat(parameters('_artifactsLocation'),'SMTPVM/linkedTemplates/domainJoin.json', parameters('_artifactsLocationSasToken'))]",
+            "CustomScriptFilePath": "[concat(parameters('_artifactsLocation'),'SMTP/linkedTemplates/customScripts.ps1', parameters('_artifactsLocationSasToken'))]",
+            "CustomScriptFileName": "customScripts.ps1"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "smtpvm",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateurls').smtpvm]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmCount": {
+                        "value": 1
+                    },
+                    "availabilitySetName": {
+                        "value": "[variables('resourceNames').availabilitySet]"
+                    },
+                    "smtpvmILB_IP": {
+                        "value": "[parameters('smtpvmILB_IP')]"
+                    },
+                    "smtpvmSubnet_Name": {
+                        "value": "[parameters('smtpvmSubnet_Name')]"
+                    },
+                    "smtpvm_IP": {
+                        "value": "[parameters('smtpvm_IP')]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('virtualMachineSize')]"
+                    },
+                    "SupportEmail": {
+                        "value": "[parameters('SupportEmail')]"
+                    },
+                    "StorageAccountType": {
+                        "value": "[variables('StorageAccountType')]"
+                    },
+                    "Environment_Category": {
+                        "value": "[parameters('Environment_Category')]"
+                    },
+                    "networkinterfaceName": {
+                        "value": "[variables('resourceNames').networkinterface]"
+                    },
+                    "vnetResourceGroup": {
+                        "value": "[variables('resourceNames').commonResourceGroup]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[variables('resourceNames').virtualNetwork]"
+                    },
+                    "smtpvmILB_Name": {
+                        "value": "[variables('resourceNames').loadbalancer]"
+                    },
+                    "virtualmachineName": {
+                        "value": "[variables('resourceNames').virtualmachine]"
+                    },
+                    "osDiskName": {
+                        "value": "[variables('resourceNames').osDisk]"
+                    },
+                    "uai": {
+                        "value": "[variables('uai')]"
+                    },
+                    "CustomScriptFilePath": {
+                        "value": "[variables('TemplateURLs').CustomScriptFilePath]"
+                    },
+                    "omsWorkspaceResourceGroup": {
+                        "value": "[variables('resourceNames').commonResourceGroup]"
+                    },
+                    "omsWorkspaceName": {
+                        "value": "[variables('resourceNames').loganalyticsWorkspace]"
+                    },
+                    "domainName": {
+                        "value": "[parameters('domainName')]"
+                    },
+                    "DomainAdminUserName": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
+                        }
+                    },
+                    "DomainAdminPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_DomainAdminPassword')]"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
