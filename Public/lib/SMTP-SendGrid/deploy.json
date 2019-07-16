@@ -1,0 +1,133 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. nxt (Next Net), ems"
+            }
+        },
+        "Environment_Category": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  DEV, QA, UAT and PRD"
+            }
+        },
+        "Tenant": {
+            "type": "string",
+            "maxLength": 5,
+            "metadata": {
+                "description": "3 char. E.g.  SRD"
+            }
+        },
+        "shortlocation": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  eastus=eus, eastus2=eu2, southcentralus=scu"
+            }
+        },
+        "plan_name": {
+            "type": "String"
+        },
+        "plan_publisher": {
+            "type": "String"
+        },
+        "plan_product": {
+            "type": "String"
+        },
+        "plan_promotion_code": {
+            "type": "String"
+        },
+        "password": {
+            "type": "SecureString"
+        },
+        "email": {
+            "type": "String"
+        },
+        "firstName": {
+            "type": "String"
+        },
+        "lastName": {
+            "type": "String"
+        },
+        "company": {
+            "type": "String"
+        },
+        "website": {
+            "type": "String"
+        },
+        "acceptMarketingEmails": {
+            "type": "String"
+        },
+        "artifacts_baseUri": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "resourceNames": {
+            "name": "EDSENDGRID06",
+            "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]"
+        },
+        "TemplateURLs": {
+            "sendgrid": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SMTP/linkedTemplates/sendgrid.json')]"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "SendGrid",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateurls').sendgrid]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[variables('resourceNames').name]"
+                    },
+                    "plan_name": {
+                        "value": "[parameters('plan_name')]"
+                    },
+                    "plan_publisher": {
+                        "value": "[parameters('plan_publisher')]"
+                    },
+                    "plan_product": {
+                        "value": "[parameters('plan_product')]"
+                    },
+                    "plan_promotion_code": {
+                        "value": "[parameters('plan_promotion_code')]"
+                    },
+                    "password": {
+                        "value": "[parameters('password')]"
+                    },
+                    "email": {
+                        "value": "[parameters('email')]"
+                    },
+                    "firstName": {
+                        "value": "[parameters('firstName')]"
+                    },
+                    "lastName": {
+                        "value": "[parameters('lastName')]"
+                    },
+                    "company": {
+                        "value": "[parameters('company')]"
+                    },
+                    "website": {
+                        "value": "[parameters('website')]"
+                    },
+                    "acceptMarketingEmails": {
+                        "value": "[parameters('acceptMarketingEmails')]"
+                    }
+                }
+            }
+        }
+    ]
+}
