@@ -33,9 +33,6 @@
         "SupportEmail": {
             "type": "string"
         },
-        "smtpvmILB_IP": {
-            "type": "string"
-        },
         "smtpvmSubnet_Name": {
             "type": "string"
         },
@@ -78,8 +75,6 @@
             "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
             "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-smtp-vm','-00'))]",
             "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-nic-',parameters('Tenant'),'-00'))]",
-            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-av-',parameters('Tenant'),'-00'))]",
-            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-lb-',parameters('Tenant'),'-001'))]",
             "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-osd-',parameters('Tenant'),'-00'))]",
             "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-dd-',parameters('Tenant'),'-00'))]"
         },
@@ -107,12 +102,6 @@
                     "vmCount": {
                         "value": 1
                     },
-                    "availabilitySetName": {
-                        "value": "[variables('resourceNames').availabilitySet]"
-                    },
-                    "smtpvmILB_IP": {
-                        "value": "[parameters('smtpvmILB_IP')]"
-                    },
                     "smtpvmSubnet_Name": {
                         "value": "[parameters('smtpvmSubnet_Name')]"
                     },
@@ -139,9 +128,6 @@
                     },
                     "virtualNetworkName": {
                         "value": "[variables('resourceNames').virtualNetwork]"
-                    },
-                    "smtpvmILB_Name": {
-                        "value": "[variables('resourceNames').loadbalancer]"
                     },
                     "virtualmachineName": {
                         "value": "[variables('resourceNames').virtualmachine]"
