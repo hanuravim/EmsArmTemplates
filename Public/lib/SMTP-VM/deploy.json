@@ -16,6 +16,13 @@
                 "description": "3 char. E.g.  DEV, QA, UAT and PRD"
             }
         },
+        "shortlocation": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  eastus=eus, eastus2=eu2, southcentralus=scu"
+            }
+        },
         "Tenant": {
             "type": "string",
             "maxLength": 5,
@@ -26,13 +33,13 @@
         "SupportEmail": {
             "type": "string"
         },
-        "jumpboxILB_IP": {
+        "smtpvmILB_IP": {
             "type": "string"
         },
-        "jumpboxSubnet_Name": {
+        "smtpvmSubnet_Name": {
             "type": "string"
         },
-        "jumpbox_IP": {
+        "smtpvm_IP": {
             "type": "array"
         },
         "virtualMachineSize": {
@@ -56,23 +63,9 @@
         "artifacts_baseUri": {
             "type": "string"
         },
-        "_artifactsBranch": {
-            "type": "string",
-            "defaultValue": "master",
-            "metadata": {
-                "description": "The branch of EmsArmTemplates to read linked templates from (this only modifies the default _artifactsLocation parameter)."
-            }
-        },
         "_artifactsLocation": {
             "type": "string",
-            "defaultValue": "[concat('https://emsdstgemsarm001.blob.core.windows.net/', parameters('_artifactsBranch'), '/')]"
-        },
-        "_artifactsLocationSasToken": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The sasToken required to access _artifactsLocation."
-            },
-            "defaultValue": ""
+            "defaultValue": "https://raw.githubusercontent.com/hanuravim/EmsArmTemplates/master/Public/lib/SMTP-VM/"
         }
     },
     "variables": {
@@ -80,7 +73,7 @@
         "preserve": true,
         "StorageAccountType": "Standard_LRS",
         "resourceNames": {
-            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
+            "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
             "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('Tenant'),'-01'))]",
             "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
             "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-smtp-vm','-00'))]",
@@ -91,9 +84,9 @@
             "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-smtp-dd-',parameters('Tenant'),'-00'))]"
         },
         "TemplateURLs": {
-            "smtpvm": "[concat(parameters('_artifactsLocation'),'SMTPVM/linkedTemplates/smtpvm.json', parameters('_artifactsLocationSasToken'))]",
-            "domainJoinTemplate": "[concat(parameters('_artifactsLocation'),'SMTPVM/linkedTemplates/domainJoin.json', parameters('_artifactsLocationSasToken'))]",
-            "CustomScriptFilePath": "[concat(parameters('_artifactsLocation'),'SMTP/linkedTemplates/customScripts.ps1', parameters('_artifactsLocationSasToken'))]",
+            "smtpvm": "[concat(parameters('_artifactsLocation'),'linkedTemplates/SMTPVM.json')]",
+            "domainJoinTemplate": "[concat(parameters('_artifactsLocation'),'linkedTemplates/domainJoin.json')]",
+            "CustomScriptFilePath": "[concat(parameters('_artifactsLocation'),'linkedTemplates/customScripts.ps1')]",
             "CustomScriptFileName": "customScripts.ps1"
         }
     },
