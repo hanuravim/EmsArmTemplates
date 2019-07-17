@@ -92,30 +92,6 @@
             }
         },
         {
-            "apiVersion": "2018-10-01",
-            "name": "[concat(parameters('loadbalancer'),'1')]",
-            "type": "Microsoft.Network/loadBalancers",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Basic"
-            },
-            "dependsOn": [],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "LoadBalancerFrontEnd",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('smtpvmSubnet_Name'))]"
-                            },
-                            "privateIPAddress": "[parameters('smtpvmILB_IP')]"
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(parameters('networkinterfaceName'), copyIndex(1))]",
             "apiVersion": "2018-05-01",
