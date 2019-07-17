@@ -20,9 +20,6 @@
         "Environment_Category": {
             "type": "string"
         },
-        "networkinterfaceName": {
-            "type": "string"
-        },
         "vnetResourceGroup": {
             "type": "string"
         },
@@ -30,9 +27,6 @@
             "type": "string"
         },
         "virtualmachineName": {
-            "type": "string"
-        },
-        "osDiskName": {
             "type": "string"
         },
         "StorageAccountType": {
