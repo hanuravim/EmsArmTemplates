@@ -5,12 +5,6 @@
         "vmCount": {
             "type": "int"
         },
-        "availabilitySetName": {
-            "type": "string"
-        },
-        "smtpvmILB_IP": {
-            "type": "string"
-        },
         "smtpvmSubnet_Name": {
             "type": "string"
         },
@@ -35,9 +29,6 @@
         "virtualNetworkName": {
             "type": "string"
         },
-        "smtpvmILB_Name": {
-            "type": "string"
-        },
         "virtualmachineName": {
             "type": "string"
         },
@@ -51,9 +42,6 @@
             "type": "string"
         },
         "CustomScriptFilePath": {
-            "type": "string"
-        },
-        "loadbalancer": {
             "type": "string"
         },
         "omsWorkspaceResourceGroup": {
@@ -72,25 +60,8 @@
             "type": "securestring"
         }
     },
-    "variables": {
-        "availabilitySetId": {
-            "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
-        }
-    },
+    "variables": {},
     "resources": [
-        {
-            "type": "Microsoft.Compute/availabilitySets",
-            "apiVersion": "2017-03-30",
-            "name": "[parameters('availabilitySetName')]",
-            "location": "[resourcegroup().location]",
-            "properties": {
-                "platformFaultDomainCount": 2,
-                "platformUpdateDomainCount": 3
-            },
-            "sku": {
-                "name": "Aligned"
-            }
-        },
         {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(parameters('networkinterfaceName'), copyIndex(1))]",
@@ -118,30 +89,6 @@
             }
         },
         {
-            "apiVersion": "2018-10-01",
-            "name": "[parameters('smtpvmILB_Name')]",
-            "type": "Microsoft.Network/loadBalancers",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Basic"
-            },
-            "dependsOn": [],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "LoadBalancerFrontEnd",
-                        "properties": {
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('smtpvmSubnet_Name'))]"
-                            },
-                            "privateIPAddress": "[parameters('smtpvmILB_IP')]"
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
@@ -154,7 +101,6 @@
                 "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('networkInterfaceName'), copyindex(1)))]"
             ],
             "properties": {
-                "availabilitySet": "[variables('availabilitySetId')]",
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
