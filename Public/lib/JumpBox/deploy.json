@@ -23,6 +23,20 @@
                 "description": "3 char. E.g.  SRD"
             }
         },
+        "Role": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 chars e.g. Front end (WEB), Storage (STR), Messaging (MSG), Network (NET), General (GEN) etc."
+            }
+        },
+        "shortlocation": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g.  eastus=eus, eastus2=eu2, southcentralus=scu"
+            }
+        },
         "SupportEmail": {
             "type": "string"
         },
@@ -59,18 +73,14 @@
     },
     "variables": {
         "uai": "uai2008973",
-        "preserve": true,
         "StorageAccountType": "Standard_LRS",
         "resourceNames": {
-            "commonResourceGroup": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-01'))]",
-            "virtualNetwork": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-net-',parameters('Tenant'),'-01'))]",
-            "loganalyticsWorkspace": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-oms-',parameters('Tenant'),'-01'))]",
-            "virtualmachine": "[toupper(concat(parameters('ApplicationName'),'-adm-vm','-00'))]",
-            "networkinterface": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-nic-',parameters('Tenant'),'-00'))]",
-            "availabilitySet": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-av-',parameters('Tenant'),'-00'))]",
-            "loadbalancer": "[toupper(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-lb-',parameters('Tenant'),'-001'))]",
-            "osDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-osd-',parameters('Tenant'),'-00'))]",
-            "dataDisk": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-adm-dd-',parameters('Tenant'),'-00'))]"
+            "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
+            "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
+            "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]",
+            "loadbalancer": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agi-','04'))]",
+            "virtualmachine": "[toupper(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
+            "availabilitySet": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'-avs-','0'))]"
         },
         "TemplateURLs": {
             "jumpbox": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/JumpBox/linkedTemplates/jumpbox.json')]",
@@ -120,9 +130,6 @@
                     "Environment_Category": {
                         "value": "[parameters('Environment_Category')]"
                     },
-                    "networkinterfaceName": {
-                        "value": "[variables('resourceNames').networkinterface]"
-                    },
                     "vnetResourceGroup": {
                         "value": "[variables('resourceNames').commonResourceGroup]"
                     },
@@ -134,9 +141,6 @@
                     },
                     "virtualmachineName": {
                         "value": "[variables('resourceNames').virtualmachine]"
-                    },
-                    "osDiskName": {
-                        "value": "[variables('resourceNames').osDisk]"
                     },
                     "uai": {
                         "value": "[variables('uai')]"
