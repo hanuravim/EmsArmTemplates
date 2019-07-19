@@ -94,7 +94,7 @@
             "availabilitySet": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'-avs-','0'))]",
             "automationAccount": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),parameters('Tenant'),'-aut-','01'))]",
             "loadbalancer": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-ilb-','01'))]",
-            "virtualmachine": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
+            "virtualmachine": "[toupper(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
             "appGw": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agx-','01'))]",
             "appGW_domainNameLabel": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agx-pip-','01'))]",
             "vpn": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-vpn-','01'))]"
@@ -112,8 +112,8 @@
             "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
             "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
             "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/customScripts.json')]",
-            "appGW": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AppGW-VPN/linkedTemplates/appGW.json')]",
-            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AppGW-VPN/linkedTemplates/vpn.json')]"
+            "appGW": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/appGW.json')]",
+            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vpn.json')]"
         }
     },
     "resources": [
