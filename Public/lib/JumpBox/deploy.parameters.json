@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "value": "EMS"
+        },
+        "Tenant": {
+            "value": "SRD"
+        },
+        "Role": {
+            "value": "jmp"
+        },
+        "Environment_Category": {
+            "value": "d"
+        },
+        "shortlocation": {
+            "value": "eus"
+        },
+        "SupportEmail": {
+            "value": "ravi.mishra@ge.com"
+        },
+        "jumpboxILB_IP": {
+            "value": "172.20.11.5"
+        },
+        "jumpboxSubnet_Name": {
+            "value": "jumpBox"
+        },
+        "jumpbox_IP": {
+            "value": [
+                "172.20.11.6",
+                "172.20.11.7"
+            ]
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "domainName": {
+            "value": "efoqa.local"
+        },
+        "keyVault_Name": {
+            "value": "ems-dev-kvt-srd-eus-001"
+        },
+        "keyVault_ResourceGroup": {
+            "value": "GAV-EMS-DEV-SRD-EUS-01"
+        },
+        "secretName_DomainAdminUserName": {
+            "value": "DomainAdminUser"
+        },
+        "secretName_DomainAdminPassword": {
+            "value": "DomainAdminPassword"
+        },
+        "artifacts_baseUri": {
+            "value": "https://raw.githubusercontent.com/hanuravim"
+        }
+    }
+}
