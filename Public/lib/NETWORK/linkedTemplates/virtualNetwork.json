@@ -48,9 +48,6 @@
                         "name": "[parameters('subnet_Names').vpn]",
                         "properties": {
                             "addressPrefix": "[parameters('vpn')]",
-                            "networkSecurityGroup": {
-                                "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').vpn,'-nsg-','01'))]"
-                            },
                             "serviceEndpoints": [],
                             "delegations": []
                         }
