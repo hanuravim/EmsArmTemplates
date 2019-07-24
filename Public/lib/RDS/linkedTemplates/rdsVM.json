@@ -206,7 +206,8 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependson": [
-                        "[concat(parameters('virtualmachineName'), copyIndex(1))]"
+                        "[concat(parameters('virtualmachineName'), copyIndex(1))]",
+                        "Microsoft.EnterpriseCloud.Monitoring"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
@@ -253,7 +254,8 @@
                     "apiVersion": "2015-06-15",
                     "dependsOn": [
                         "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]",
-                        "Microsoft.EnterpriseCloud.Monitoring"
+                        "Microsoft.EnterpriseCloud.Monitoring",
+                        "domainJoin"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Compute",
