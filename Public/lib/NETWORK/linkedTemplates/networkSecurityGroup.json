@@ -636,7 +636,7 @@
                         "properties": {
                             "protocol": "*",
                             "sourcePortRange": "80",
-                            "destinationPortRange": "",
+                            "destinationPortRange": "1024-65535",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "10.0.2.0/24",
                             "access": "Allow",
