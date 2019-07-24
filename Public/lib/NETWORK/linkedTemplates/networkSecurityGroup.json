@@ -8,38 +8,11 @@
     },
     "variables": {},
     "resources": [
+      
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').vpn,'-nsg-','01')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "RDP",
-                        "properties": {
-                            "description": "Allows RDP traffic",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 100,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').jumpBox,'-nsg-','02')]",
+            "name": "[concat(parameters('subnet_Names').jumpBox,'-nsg-','01')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -77,7 +50,8 @@
                                 "88",
                                 "464",
                                 "135",
-                                "3389"
+                                "3389",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -275,7 +249,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').domain,'-nsg-','03')]",
+            "name": "[concat(parameters('subnet_Names').domain,'-nsg-','02')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -428,7 +402,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -450,7 +425,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -473,7 +449,8 @@
                                 "88",
                                 "464",
                                 "135",
-                                "3389"
+                                "3389",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -495,7 +472,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -517,7 +495,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -539,7 +518,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -551,7 +531,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').sql,'-nsg-','04')]",
+            "name": "[concat(parameters('subnet_Names').sql,'-nsg-','03')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -571,7 +551,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -638,7 +619,7 @@
                         "properties": {
                             "protocol": "*",
                             "sourcePortRange": "1024-65535",
-                            "destinationPortRange": "1024-65535",
+                            "destinationPortRange": "3389",
                             "sourceAddressPrefix": "172.21.11.0/26",
                             "destinationAddressPrefix": "10.0.2.0/24",
                             "access": "Allow",
@@ -655,7 +636,7 @@
                         "properties": {
                             "protocol": "*",
                             "sourcePortRange": "80",
-                            "destinationPortRange": "1024-65535",
+                            "destinationPortRange": "",
                             "sourceAddressPrefix": "*",
                             "destinationAddressPrefix": "10.0.2.0/24",
                             "access": "Allow",
@@ -673,7 +654,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').sftp,'-nsg-','05')]",
+            "name": "[concat(parameters('subnet_Names').sftp,'-nsg-','04')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -701,7 +682,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').wasabi,'-nsg-','06')]",
+            "name": "[concat(parameters('subnet_Names').wasabi,'-nsg-','05')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -729,7 +710,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').tableau,'-nsg-','07')]",
+            "name": "[concat(parameters('subnet_Names').tableau,'-nsg-','06')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -757,7 +738,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').RDP_Gateway,'-nsg-','08')]",
+            "name": "[concat(parameters('subnet_Names').RDP_Gateway,'-nsg-','07')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -777,7 +758,8 @@
                                 "53",
                                 "88",
                                 "464",
-                                "135"
+                                "135",
+                                "1024"
                             ],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
@@ -811,7 +793,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').Shared_File,'-nsg-','09')]",
+            "name": "[concat(parameters('subnet_Names').Shared_File,'-nsg-','08')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -839,7 +821,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').smtp,'-nsg-','10')]",
+            "name": "[concat(parameters('subnet_Names').smtp,'-nsg-','09')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -867,7 +849,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').Tenant_EMS,'-nsg-','11')]",
+            "name": "[concat(parameters('subnet_Names').Tenant_EMS,'-nsg-','10')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -895,7 +877,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').Tenant_Workers,'-nsg-','12')]",
+            "name": "[concat(parameters('subnet_Names').Tenant_Workers,'-nsg-','11')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -923,7 +905,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').Tenant_API,'-nsg-','13')]",
+            "name": "[concat(parameters('subnet_Names').Tenant_API,'-nsg-','12')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
@@ -951,7 +933,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-12-01",
-            "name": "[concat(parameters('subnet_Names').applicationGateway,'-nsg-','14')]",
+            "name": "[concat(parameters('subnet_Names').applicationGateway,'-nsg-','13')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
