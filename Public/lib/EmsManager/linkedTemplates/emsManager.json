@@ -14,9 +14,6 @@
         "SubnetRef": {
             "type": "string"
         },
-        "NetworkInterfaceName": {
-            "type": "string"
-        },
         "IpConfigName": {
             "type": "string"
         },
@@ -109,7 +106,7 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[parameters('NetworkInterfaceName')]",
+            "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
             "apiVersion": "2018-05-01",
             "location": "[resourceGroup().location]",
             "tags": "[parameters('Tags')]",
@@ -135,7 +132,7 @@
             "apiVersion": "2018-10-01",
             "location": "[resourcegroup().location]",
             "dependsOn": [
-                "[parameters('NetworkInterfaceName')]"
+                "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]"
             ],
             "tags": "[parameters('Tags')]",
             "identity": {
@@ -178,7 +175,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('NetworkInterfaceName'))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('virtualmachineName'),'1-nic-0', copyIndex(1)))]"
                         }
                     ]
                 }
