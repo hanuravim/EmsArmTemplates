@@ -135,7 +135,11 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[parameters('VirtualMachineName')]",
+            "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
+            "copy": {
+                "name": "mgrloop",
+                "count": "[parameters('vmCount')]"
+            },
             "apiVersion": "2018-10-01",
             "location": "[resourcegroup().location]",
             "dependsOn": [
@@ -194,7 +198,7 @@
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
-                "[parameters('VirtualMachineName')]"
+                "[concat(parameters('virtualmachineName'), copyIndex(1))]"
             ],
             "properties": {
                 "publisher": "Microsoft.Compute",
