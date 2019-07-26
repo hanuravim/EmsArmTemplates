@@ -5,6 +5,9 @@
         "AvailabilitySetName": {
             "type": "string"
         },
+        "vmCount": {
+            "type": "int"
+        },
         "VirtualMachineName": {
             "type": "string"
         },
@@ -107,6 +110,10 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(parameters('virtualmachineName'), '1-nic-0',copyindex(1))]",
+            "copy": {
+                "name": "nicLoop",
+                "count": "[parameters('vmCount')]"
+            },
             "apiVersion": "2018-05-01",
             "location": "[resourceGroup().location]",
             "tags": "[parameters('Tags')]",
