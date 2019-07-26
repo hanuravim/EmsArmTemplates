@@ -2,23 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vmCount": {
-            "type": "int"
-        },
-        "SupportEmail": {
+        "AvailabilitySetName": {
             "type": "string"
         },
-        "Environment_Category": {
+        "VirtualMachineName": {
             "type": "string"
-        },
-        "availabilitySetName": {
-            "type": "string"
-        },
-        "virtualmachineName": {
-            "type": "string"
-        },
-        "privateIpAddress": {
-            "type": "array"
         },
         "virtualMachineSize": {
             "type": "string"
@@ -26,62 +14,91 @@
         "SubnetRef": {
             "type": "string"
         },
-        "networkInterfaceName": {
+        "NetworkInterfaceName": {
             "type": "string"
         },
-        "StorageAccountType": {
+        "IpConfigName": {
             "type": "string"
         },
-        "numberOfDataDisks": {
+        "NumberOfDataDisks": {
             "type": "int"
         },
-        "osDiskName": {
+        "OsDiskName": {
             "type": "string"
         },
-        "dataDiskName": {
+        "DataDiskNameRoot": {
             "type": "string"
         },
         "DataDiskSize": {
             "type": "int"
         },
-        "adminUsername": {
+        "LocalAdminUser": {
             "type": "string"
         },
-        "adminPassword": {
+        "LocalAdminPassword": {
             "type": "securestring"
         },
-        "omsWorkspaceResourceGroup": {
+        "DomainName": {
             "type": "string"
         },
-        "omsWorkspaceName": {
+        "DomainAdminUser": {
             "type": "string"
         },
-        "StorageAccountName": {
+        "DomainAdminPassword": {
+            "type": "securestring"
+        },
+        "ImageReference": {
+            "type": "object"
+        },
+        "ManagedIdentityResourceId": {
             "type": "string"
         },
-        "AzureFileShareName": {
+        "LogAnalyticsWorkspaceResourceGroup": {
             "type": "string"
         },
-        "CustomScriptExtensionScriptFilePath": {
+        "LogAnalyticsWorkspaceName": {
             "type": "string"
         },
-        "CustomScriptFileName": {
-            "type": "string"
+        "OUPath": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "Tags": {
+            "type": "object"
+        },
+        "_artifactsBranch": {
+            "type": "string",
+            "defaultValue": "master"
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "defaultValue": "[concat('https://emsdstgemsarm001.blob.core.windows.net/', parameters('_artifactsBranch'), '/')]"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "string",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation."
+            },
+            "defaultValue": ""
         }
     },
     "variables": {
-        "AvailabilitySet": "Yes",
         "availabilitySetId": {
             "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
+        },
+        "emsServerConfig": {
+            "url": "[concat(parameters('_artifactsLocation'), 'EmsManager/DSC/ConfigureEmsServer.ps1.zip', parameters('_artifactsLocationSasToken'))]",
+            "script": "ConfigureEmsServer.ps1",
+            "function": "ConfigureEmsServer"
         }
     },
     "resources": [
         {
-            "condition": "[equals(variables('AvailabilitySet'), 'Yes')]",
             "type": "Microsoft.Compute/availabilitySets",
             "apiVersion": "2017-03-30",
-            "name": "[parameters('availabilitySetName')]",
-            "location": "[resourcegroup().location]",
+            "name": "[parameters('AvailabilitySetName')]",
+            "location": "[resourceGroup().location]",
+            "tags": "[parameters('Tags')]",
             "properties": {
                 "platformFaultDomainCount": 2,
                 "platformUpdateDomainCount": 3
@@ -92,82 +109,67 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(parameters('networkInterfaceName'), copyindex(1))]",
+            "name": "[parameters('NetworkInterfaceName')]",
             "apiVersion": "2018-05-01",
-            "location": "[resourcegroup().location]",
-            "copy": {
-                "name": "nicLoop",
-                "count": "[parameters('vmCount')]"
-            },
+            "location": "[resourceGroup().location]",
+            "tags": "[parameters('Tags')]",
             "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
                     {
-                        "name": "ipconfig1",
+                        "name": "[parameters('IpConfigName')]",
                         "properties": {
-                            "privateIpAddress": "[parameters('privateIpAddress')[copyIndex()]]",
-                            "privateIpAddressVersion": "IPv4",
-                            "privateIPAllocationMethod": "Static",
+                            "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
                                 "id": "[parameters('SubnetRef')]"
                             }
                         }
                     }
-                ]
+                ],
+                "enableAcceleratedNetworking": true
             }
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat(parameters('virtualmachineName'), copyIndex(1))]",
+            "name": "[parameters('VirtualMachineName')]",
             "apiVersion": "2018-10-01",
             "location": "[resourcegroup().location]",
-            "copy": {
-                "name": "virtualMachineLoop",
-                "count": "[parameters('vmCount')]"
-            },
             "dependsOn": [
-                "nicLoop"
+                "[parameters('NetworkInterfaceName')]"
             ],
-            "tags": {
-                "ApplicationName": "EMS",
-                "uai": "uai2008973",
-                "SupportEmail": "[parameters('SupportEmail')]",
-                "env": "[parameters('Environment_Category')]"
+            "tags": "[parameters('Tags')]",
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[parameters('ManagedIdentityResourceId')]": {}
+                }
             },
             "properties": {
-                "availabilitySet": "[if(equals(variables('AvailabilitySet'), 'Yes'), variables('availabilitySetId'), json('null'))]",
+                "availabilitySet": "[variables('availabilitySetId')]",
                 "hardwareProfile": {
-                    "vmSize": "[parameters('virtualMachineSize')]"
+                    "vmSize": "[parameters('VirtualMachineSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('virtualmachineName'),copyIndex(1))]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "computerName": "[parameters('VirtualMachineName')]",
+                    "adminUsername": "[parameters('LocalAdminUser')]",
+                    "adminPassword": "[parameters('LocalAdminPassword')]"
                 },
                 "storageProfile": {
-                    "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "2016-Datacenter",
-                        "version": "latest"
-                    },
+                    "imageReference": "[parameters('ImageReference')]",
                     "osDisk": {
-                        "name": "[concat(parameters('osDiskName'), copyIndex(1))]",
+                        "name": "[parameters('OsDiskName')]",
                         "caching": "ReadWrite",
-                        "createOption": "FromImage",
-                        "managedDisk": {
-                            "storageAccountType": "[parameters('StorageAccountType')]"
-                        }
+                        "createOption": "FromImage"
                     },
                     "copy": [
                         {
                             "name": "dataDisks",
-                            "count": "[parameters('numberOfDataDisks')]",
+                            "count": "[parameters('NumberOfDataDisks')]",
                             "input": {
                                 "caching": "ReadWrite",
                                 "diskSizeGB": "[parameters('DataDiskSize')]",
                                 "lun": "[copyIndex('dataDisks')]",
-                                "name": "[concat(parameters('dataDiskName'),copyIndex(1), copyIndex('dataDisks'))]",
+                                "name": "[concat(parameters('DataDiskNameRoot'), padLeft( copyIndex('dataDisks', 1), 3, '0' ))]",
                                 "createOption": "Empty"
                             }
                         }
@@ -176,58 +178,84 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('networkInterfaceName'), copyindex(1)))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('NetworkInterfaceName'))]"
                         }
                     ]
                 }
-            },
-            "resources": [
-                {
-                    "type": "extensions",
-                    "name": "Microsoft.EnterpriseCloud.Monitoring",
-                    "apiVersion": "2015-06-15",
-                    "location": "[resourcegroup().location]",
-                    "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.EnterpriseCloud.Monitoring",
-                        "type": "MicrosoftMonitoringAgent",
-                        "typeHandlerVersion": "1.0",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "workspaceId": "[reference(resourceId(parameters('omsWorkspaceResourceGroup'),'Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName')), '2015-03-20').customerId]"
-                        },
-                        "protectedSettings": {
-                            "workspaceKey": "[listKeys(resourceId(parameters('omsWorkspaceResourceGroup'),'Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName')), '2015-03-20').primarySharedKey]"
-                        }
-                    }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VirtualMachineName'), '/joinDomain')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[parameters('VirtualMachineName')]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "JsonADDomainExtension",
+                "typeHandlerVersion": "1.3",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "Name": "[parameters('DomainName')]",
+                    "OUPath": "[parameters('OUPath')]",
+                    "User": "[concat(parameters('DomainName'), '\\', parameters('DomainAdminUser'))]",
+                    "Restart": "true",
+                    "Options": "3"
                 },
-                {
-                    "type": "extensions",
-                    "name": "AzureFileShare",
-                    "location": "[resourcegroup().location]",
-                    "apiVersion": "2015-06-15",
-                    "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualmachineName'),copyindex(1))]",
-                        "Microsoft.EnterpriseCloud.Monitoring"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Compute",
-                        "type": "CustomScriptExtension",
-                        "typeHandlerVersion": "1.9",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "fileUris": [
-                                "[parameters('CustomScriptExtensionScriptFilePath')]"
-                            ]
-                        },
-                        "protectedSettings": {
-                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File  ',parameters('CustomScriptFileName'),'  -SAName ',parameters('StorageAccountName'),'  -SAKey ', listKeys(resourceId(resourceGroup().name,'Microsoft.Storage/storageAccounts',parameters('StorageAccountName')),'2015-06-15').key1,'  -AzureFileShareName ',parameters('AzureFileShareName'))]"
+                "protectedSettings": {
+                    "Password": "[parameters('DomainAdminPassword')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VirtualMachineName'),  '/omsAgent')]",
+            "apiVersion": "2018-06-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "joinDomain"
+            ],
+            "properties": {
+                "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                "type": "MicrosoftMonitoringAgent",
+                "typeHandlerVersion": "1.0",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "workspaceId": "[reference(resourceId(parameters('LogAnalyticsWorkspaceResourceGroup'), 'Microsoft.OperationalInsights/workspaces/', parameters('LogAnalyticsWorkspaceName')), '2015-03-20').customerId]"
+                },
+                "protectedSettings": {
+                    "workspaceKey": "[listKeys(resourceId(parameters('LogAnalyticsWorkspaceResourceGroup'), 'Microsoft.OperationalInsights/workspaces/', parameters('LogAnalyticsWorkspaceName')), '2015-03-20').primarySharedKey]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VirtualMachineName'), '/configureEmsServer')]",
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "joinDomain"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.76",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "configuration": "[variables('emsServerConfig')]",
+                    "configurationArguments": {}
+                },
+                "protectedSettings": {
+                    "configurationArguments": {
+                        "DomainAdmin": {
+                            "Username": "[concat(parameters('DomainName'), '\\', parameters('DomainAdminUser'))]",
+                            "Password": "[parameters('DomainAdminPassword')]"
                         }
                     }
                 }
-            ]
+            }
         }
     ]
 }
