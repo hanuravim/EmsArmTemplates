@@ -20,6 +20,21 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
+        "vpn": {
+            "type": "string"
+        },
+        "jumpBox": {
+            "type": "string"
+        },
+        "Tenant_EMS": {
+            "type": "string"
+        },
+        "Tenant_Workers": {
+            "type": "string"
+        },
+        "Tenant_API": {
+            "type": "string"
+        },
         "DNSServerAddress": {
             "type": "string"
         }
@@ -46,7 +61,7 @@
                     {
                         "name": "[parameters('subnet_Names').vpn]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').vpn]",
+                            "addressPrefix": "[parameters('vpn')]",
                             "serviceEndpoints": [],
                             "delegations": []
                         }
@@ -54,7 +69,7 @@
                     {
                         "name": "[parameters('subnet_Names').jumpBox]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').jumpBox]",
+                            "addressPrefix": "[parameters('jumpBox')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups', concat(parameters('subnet_Names').jumpBox,'-nsg-','01'))]"
                             },
@@ -146,7 +161,7 @@
                     {
                         "name": "[parameters('subnet_Names').Tenant_EMS]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').Tenant_EMS]",
+                            "addressPrefix": "[parameters('Tenant_EMS')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_EMS,'-nsg-','10'))]"
                             },
@@ -156,7 +171,7 @@
                     {
                         "name": "[parameters('subnet_Names').Tenant_Workers]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').Tenant_Workers]",
+                            "addressPrefix": "[parameters('Tenant_Workers')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_Workers,'-nsg-','11'))]"
                             },
@@ -166,7 +181,7 @@
                     {
                         "name": "[parameters('subnet_Names').Tenant_API]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet_addressPrefixes').Tenant_API]",
+                            "addressPrefix": "[parameters('Tenant_API')]",
                             "networkSecurityGroup": {
                                 "id": "[resourceId(resourcegroup().name, 'Microsoft.Network/networkSecurityGroups',concat(parameters('subnet_Names').Tenant_API,'-nsg-','12'))]"
                             },
