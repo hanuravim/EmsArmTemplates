@@ -65,6 +65,21 @@
         "subnet_addressPrefixes": {
             "type": "object"
         },
+        "vpn_GatewaySubnet_pop": {
+            "type": "string"
+        },
+        "ExternalSubnet_pop": {
+            "type": "string"
+        },
+        "Tenant_EMS": {
+            "type": "string"
+        },
+        "Tenant_Workers": {
+            "type": "string"
+        },
+        "Tenant_API": {
+            "type": "string"
+        },
         "secretname_DomainAdminUserName": {
             "type": "string"
         },
@@ -87,6 +102,11 @@
         "SupportEmail": "ravi.mishra@ge.com",
         "StorageAccountType": "Standard_LRS",
         "appGW_backendIPAddresses": "10.0.0.0",
+        "vpn": "[concat('172.20.',parameters('vpn_GatewaySubnet_pop'),'.64','/','28')]",
+        "jumpBox": "[concat('172.20.',parameters('ExternalSubnet_pop'),'.0','/','26')]",
+        "Tenant_EMS": "[concat('10.',parameters('Tenant_EMS'),'.0.0','/','24')]",
+        "Tenant_Workers": "[concat('10.',parameters('Tenant_Workers'),'.1.0','/','24')]",
+        "Tenant_API": "[concat('10.',parameters('Tenant_API'),'.2.0','/','24')]",
         "resourceNames": {
             "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
             "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
@@ -102,7 +122,7 @@
         "TemplateURLs": {
             "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
             "loganalyticsWorkspace": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/LogAnalyticsWorkspace.json')]",
-            "virtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/virtualNetwork.json')]",
+            "updatevirtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/virtualNetwork.json')]",
             "automationAccount": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AutomationAccount/linkedTemplates/automationAccount.json')]",
             "domainControllers": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/domainControllers.json')]",
             "CreateADForest": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/CreateADForest.json')]",
@@ -255,7 +275,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
-            "name": "virtualNetwork",
+            "name": "updatevirtualNetwork",
             "apiVersion": "2018-05-01",
             "dependsOn": [
                 "ConfigureADForest",
@@ -265,7 +285,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('TemplateURLs').virtualNetwork]",
+                    "uri": "[variables('TemplateURLs').updatevirtualNetwork]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -287,6 +307,21 @@
                     "subnet_addressPrefixes": {
                         "value": "[parameters('subnet_addressPrefixes')]"
                     },
+                    "vpn": {
+                        "value": "[variables('vpn')]"
+                    },
+                    "jumpBox": {
+                        "value": "[variables('jumpBox')]"
+                    },
+                    "Tenant_EMS": {
+                        "value": "[variables('Tenant_EMS')]"
+                    },
+                    "Tenant_Workers": {
+                        "value": "[variables('Tenant_Workers')]"
+                    },
+                    "Tenant_API": {
+                        "value": "[variables('Tenant_API')]"
+                    },
                     "DNSServerAddress": {
                         "value": "[parameters('domainController_IPs')[0]]"
                     }
@@ -299,7 +334,7 @@
             "name": "customScripts",
             "apiVersion": "2018-05-01",
             "dependsOn": [
-                "virtualNetwork"
+                "updatevirtualNetwork"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -320,7 +355,7 @@
             "name": "configureADBDC",
             "apiVersion": "2018-05-01",
             "dependsOn": [
-                "virtualNetwork",
+                "updatevirtualNetwork",
                 "customScripts"
             ],
             "properties": {
