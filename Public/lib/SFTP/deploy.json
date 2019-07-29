@@ -43,17 +43,14 @@
         "sftp_subnetName": {
             "type": "string"
         },
+        "sftpILB_IP": {
+            "type": "string"
+        },
         "privateIpAddress": {
             "type": "string"
         },
         "virtualMachineSize": {
             "type": "string"
-        },
-        "numberOfDataDisks": {
-            "type": "int"
-        },
-        "DataDiskSize": {
-            "type": "int"
         },
         "keyVault_Name": {
             "type": "string"
@@ -82,7 +79,8 @@
             "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
             "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
             "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]",
-            "virtualmachine": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
+            "loadbalancer": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agi-','03'))]",
+            "virtualmachine": "[toupper(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
             "StorageAccount": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('shortlocation'),parameters('Tenant'),'sto','0'))]"
         },
         "TemplateURLs": {
@@ -118,6 +116,12 @@
                     "sftp_SubnetName": {
                         "value": "[parameters('sftp_subnetName')]"
                     },
+                    "sftpILB_Name": {
+                        "value": "[variables('resourceNames').loadbalancer]"
+                    },
+                    "sftpILB_IP": {
+                        "value": "[parameters('sftpILB_IP')]"
+                    },
                     "privateIpAddress": {
                         "value": "[parameters('privateIpAddress')]"
                     },
@@ -130,11 +134,8 @@
                     "StorageAccountType": {
                         "value": "[variables('StorageAccountType')]"
                     },
-                    "numberOfDataDisks": {
-                        "value": "[parameters('numberOfDataDisks')]"
-                    },
-                    "DataDiskSize": {
-                        "value": "[parameters('DataDiskSize')]"
+                    "domainName": {
+                        "value": "[parameters('domainName')]"
                     },
                     "DomainAdminUserName": {
                         "reference": {
@@ -178,49 +179,6 @@
                     },
                     "preserve": {
                         "value": "[variables('preserve')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
-            "name": "domainJoin",
-            "apiVersion": "2018-05-01",
-            "dependsOn": [
-                "SFTPVM"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('templateurls').domainJoinTemplate]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vmCount": {
-                        "value": 1
-                    },
-                    "virtualmachineName": {
-                        "value": "[variables('resourcenames').virtualmachine]"
-                    },
-                    "domainName": {
-                        "value": "[parameters('domainName')]"
-                    },
-                    "DomainAdminUserName": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
-                            },
-                            "secretName": "[parameters('secretname_DomainAdminUserName')]"
-                        }
-                    },
-                    "DomainAdminPassword": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
-                            },
-                            "secretName": "[parameters('secretname_DomainAdminPassword')]"
-                        }
                     }
                 }
             }
