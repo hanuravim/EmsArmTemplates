@@ -36,16 +36,16 @@
         "vpnClientAddressPoolPrefix": {
             "type": "string"
         },
-        "RootCertName": {
+        "vpnRootCertName": {
             "type": "string"
         },
-        "RootCertData": {
+        "vpnRootCertData": {
             "type": "string"
         },
-        "revokedClientCertName": {
+        "vpnrevokedClientCertName": {
             "type": "string"
         },
-        "revokedClientCertThumbprint": {
+        "vpnrevokedClientCertThumbprint": {
             "type": "string"
         }
     },
@@ -102,17 +102,17 @@
                     },
                     "vpnClientRootCertificates": [
                         {
-                            "name": "[parameters('RootCertName')]",
+                            "name": "[parameters('vpnRootCertName')]",
                             "properties": {
-                                "PublicCertData": "[parameters('RootCertData')]"
+                                "PublicCertData": "[parameters('vpnRootCertData')]"
                             }
                         }
                     ],
                     "vpnClientRevokedCertificates": [
                         {
-                            "name": "[parameters('revokedClientCertName')]",
+                            "name": "[parameters('vpnrevokedClientCertName')]",
                             "properties": {
-                                "Thumbprint": "[parameters('revokedClientCertThumbprint')]"
+                                "Thumbprint": "[parameters('vpnrevokedClientCertThumbprint')]"
                             }
                         }
                     ]
