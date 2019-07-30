@@ -32,6 +32,21 @@
         },
         "vpnPublicIpAddressName": {
             "type": "string"
+        },
+        "vpnClientAddressPoolPrefix": {
+            "type": "string"
+        },
+        "RootCertName": {
+            "type": "string"
+        },
+        "RootCertData": {
+            "type": "string"
+        },
+        "revokedClientCertName": {
+            "type": "string"
+        },
+        "revokedClientCertThumbprint": {
+            "type": "string"
         }
     },
     "variables": {
@@ -42,43 +57,66 @@
     "resources": [
         {
             "apiVersion": "2018-08-01",
-            "name": "[parameters('vpnname')]",
-            "type": "Microsoft.Network/virtualNetworkGateways",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/publicIPAddresses/', parameters('vpnPublicIpAddressName'))]"
-            ],
-            "tags": {},
-            "properties": {
-                "gatewayType": "[parameters('vpnConnection')]",
-                "ipConfigurations": [
-                    {
-                        "name": "default",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "subnet": {
-                                "id": "[variables('subnetRef')]"
-                            },
-                            "publicIpAddress": {
-                                "id": "[variables('publicIPRef')]"
-                            }
-                        }
-                    }
-                ],
-                "vpnType": "[parameters('vpnType')]",
-                "sku": {
-                    "name": "[parameters('vpnsku')]",
-                    "tier": "[parameters('vpnsku')]"
-                }
-            }
-        },
-        {
-            "apiVersion": "2018-08-01",
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[parameters('vpnPublicIpAddressName')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "publicIPAllocationMethod": "Dynamic"
+            }
+        },
+        {
+            "apiVersion": "2018-08-01",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "name": "[parameters('vpnname')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', parameters('vpnPublicIpAddressName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('SubnetRef')]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPRef')]"
+                            }
+                        },
+                        "name": "vnetGatewayConfig"
+                    }
+                ],
+                "sku": {
+                    "name": "[parameters('vpnsku')]",
+                    "tier": "[parameters('vpnsku')]"
+                },
+                "gatewayType": "[parameters('vpnConnection')]",
+                "vpnType": "[parameters('vpnType')]",
+                "enableBgp": "false",
+                "vpnClientConfiguration": {
+                    "vpnClientAddressPool": {
+                        "addressPrefixes": [
+                            "[parameters('vpnClientAddressPoolPrefix')]"
+                        ]
+                    },
+                    "vpnClientRootCertificates": [
+                        {
+                            "name": "[parameters('RootCertName')]",
+                            "properties": {
+                                "PublicCertData": "[parameters('RootCertData')]"
+                            }
+                        }
+                    ],
+                    "vpnClientRevokedCertificates": [
+                        {
+                            "name": "[parameters('revokedClientCertName')]",
+                            "properties": {
+                                "Thumbprint": "[parameters('revokedClientCertThumbprint')]"
+                            }
+                        }
+                    ]
+                }
             }
         }
     ]
