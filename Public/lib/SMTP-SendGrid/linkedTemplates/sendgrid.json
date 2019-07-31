@@ -36,7 +36,7 @@
             "type": "String"
         },
         "acceptMarketingEmails": {
-            "type": "String"
+            "type": "int"
         }
     },
     "resources": [
