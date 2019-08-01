@@ -1,0 +1,286 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Environment_Category": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "3 char. E.g. DEV, QA, UAT and PRD"
+            }
+        },
+        "VmName": {
+            "type": "string",
+            "metadata": {
+                "description": "The VM name to use for the file server"
+            }
+        },
+        "OsDiskName": {
+            "type": "string",
+            "metadata": {
+                "description": "The OS disk name to use for the file server"
+            }
+        },
+        "DataDiskName": {
+            "type": "string",
+            "metadata": {
+                "description": "The data disk name to use for the file server"
+            }
+        },
+        "VmNicName": {
+            "type": "string",
+            "metadata": {
+                "description": "The root nic name to use for the file server"
+            }
+        },
+        "Tags": {
+            "type": "object",
+            "metadata": {
+                "description": "The tags to apply to all deployed resources"
+            }
+        },
+        "DomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS domain name for the existing Active Directory domain on the common VNET for this environment, e.g. 'efoqa.com'"
+            }
+        },
+        "DomainAdminUser": {
+            "type": "string",
+            "metadata": {
+                "description": "A domain admin user that can join machines to the domain and set up DFS namespaces on the active directory controllers. This should NOT include the domain name"
+            }
+        },
+        "DomainAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the DomainAdminUser"
+            }
+        },
+        "LocalAdminUser": {
+            "type": "string",
+            "metadata": {
+                "description": "The local admin user name for deployed file server"
+            }
+        },
+        "LocalAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The local admin password for deployed file server"
+            }
+        },
+        "VirtualMachineSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "The SKU for the file server"
+            }
+        },
+        "DataDiskSize": {
+            "type": "int",
+            "minValue": 1,
+            "metadata": {
+                "description": "The data disk size (in GB) for each data disk"
+            },
+            "defaultValue": 1024
+        },
+        "VirtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "The virtual network name to connect the new file server to. This should already exist"
+            }
+        },
+        "SubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "The subnet to connect the new file server to. This subnet should already exist"
+            },
+            "defaultValue": "storage"
+        },
+        "VirtualNetworkResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "The resource group where the virtual network lives"
+            }
+        },
+        "ImageReference": {
+            "type": "object",
+            "metadata": {
+                "description": "The VM image to base the file server on"
+            },
+            "defaultValue": {
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "2019-Datacenter-Core-smalldisk",
+                "version": "latest"
+            }
+        },
+        "EmsImagesStorageAccount": {
+            "type": "string",
+            "metadata": {
+                "description": "The Azure storage account containing EMS install images."
+            }
+        },
+        "EmsImagesContainer": {
+            "type": "string",
+            "metadata": {
+                "description": "The Azure blob container that holds EMS install images."
+            }
+        },
+        "EmsImagesSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "A shared access signature that can read from the emsimages blob container."
+            }
+        },
+        "_artifactsBranch": {
+            "type": "string",
+            "defaultValue": "master",
+            "metadata": {
+                "description": "The branch of EmsArmTemplates to read linked templates from (this only modifies the default _artifactsLocation parameter)."
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "defaultValue": "[concat('https://emsdstgemsarm001.blob.core.windows.net/', parameters('_artifactsBranch'), '/')]"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation."
+            },
+            "defaultValue": ""
+        }
+    },
+    "variables": {
+        "fileServerConfig": {
+            "url": "[concat(parameters('_artifactsLocation'), 'DFS/DSC/ConfigureFileServer.ps1.zip', parameters('_artifactsLocationSasToken'))]",
+            "script": "ConfigureFileServer.ps1",
+            "function": "ConfigureFileServer"
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('VmNicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "tags": "[parameters('Tags')]",
+            "apiVersion": "2016-09-01",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[concat(resourceId(parameters('VirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('VirtualNetworkName')), '/subnets/', parameters('SubnetName'))]"
+                            }
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": true
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "tags": "[parameters('Tags')]",
+            "name": "[parameters('VmName')]",
+            "dependsOn": [
+                "[parameters('VmNicName')]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('VirtualMachineSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('VmName')]",
+                    "adminUsername": "[parameters('LocalAdminUser')]",
+                    "adminPassword": "[parameters('LocalAdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": "[parameters('ImageReference')]",
+                    "osDisk": {
+                        "name": "[parameters('OsDiskName')]",
+                        "caching": "ReadOnly",
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": [
+                        {
+                            "caching": "ReadOnly",
+                            "diskSizeGB": "[parameters('DataDiskSize')]",
+                            "lun": "0",
+                            "name": "[parameters('DataDiskName')]",
+                            "createOption": "Empty"
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('VmNicName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VmName'), '/joinDomain')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[parameters('VmName')]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "JsonADDomainExtension",
+                "typeHandlerVersion": "1.3",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "Name": "[parameters('DomainName')]",
+                    "OUPath": "",
+                    "User": "[concat(parameters('DomainName'), '\\', parameters('DomainAdminUser'))]",
+                    "Restart": "true",
+                    "Options": "3"
+                },
+                "protectedSettings": {
+                    "Password": "[parameters('DomainAdminPassword')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VmName'), '/configureFileServer')]",
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('VmName'), 'joinDomain')]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.76",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "configuration": "[variables('fileServerConfig')]",
+                    "configurationArguments": {
+                        "Environment": "[parameters('Environment_Category')]",
+                        "EmsImagesStorageAccount": "[parameters('EmsImagesStorageAccount')]",
+                        "EmsImagesContainer": "[parameters('EmsImagesContainer')]"
+                    }
+                },
+                "protectedSettings": {
+                    "configurationArguments": {
+                        "EmsImagesSasToken": "[parameters('EmsImagesSasToken')]",
+                        "DomainAdmin": {
+                            "Username": "[concat(parameters('DomainName'), '\\', parameters('DomainAdminUser'))]",
+                            "Password": "[parameters('DomainAdminPassword')]"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
