@@ -15,24 +15,6 @@
                 "description": "The VM name to use for the file server"
             }
         },
-        "OsDiskName": {
-            "type": "string",
-            "metadata": {
-                "description": "The OS disk name to use for the file server"
-            }
-        },
-        "DataDiskName": {
-            "type": "string",
-            "metadata": {
-                "description": "The data disk name to use for the file server"
-            }
-        },
-        "VmNicName": {
-            "type": "string",
-            "metadata": {
-                "description": "The root nic name to use for the file server"
-            }
-        },
         "Tags": {
             "type": "object",
             "metadata": {
@@ -161,7 +143,7 @@
     },
     "resources": [
         {
-            "name": "[parameters('VmNicName')]",
+            "name": "[concat(parameters('VmName'), '1-nic-0',copyindex(1))]",
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[resourceGroup().location]",
             "tags": "[parameters('Tags')]",
@@ -188,7 +170,7 @@
             "tags": "[parameters('Tags')]",
             "name": "[parameters('VmName')]",
             "dependsOn": [
-                "[parameters('VmNicName')]"
+                "[concat(parameters('VmName'), '1-nic-0',copyindex(1))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -202,7 +184,7 @@
                 "storageProfile": {
                     "imageReference": "[parameters('ImageReference')]",
                     "osDisk": {
-                        "name": "[parameters('OsDiskName')]",
+                        "name": "[concat(parameters('VmName'),'1-dsk-0', copyIndex(1))]",
                         "caching": "ReadOnly",
                         "createOption": "FromImage"
                     },
@@ -211,7 +193,7 @@
                             "caching": "ReadOnly",
                             "diskSizeGB": "[parameters('DataDiskSize')]",
                             "lun": "0",
-                            "name": "[parameters('DataDiskName')]",
+                            "name": "[concat(parameters('VmName'),'1-dsk-0',copyIndex(1), copyIndex('dataDisks'))]",
                             "createOption": "Empty"
                         }
                     ]
@@ -219,7 +201,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('VmNicName'))]"
+                            "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourcegroup().name,'/providers/Microsoft.Network/networkInterfaces/',concat(parameters('VmName'),'1-nic-0', copyIndex(1)))]"
                         }
                     ]
                 }
