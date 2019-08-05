@@ -41,12 +41,6 @@
         },
         "vpnRootCertData": {
             "type": "string"
-        },
-        "vpnrevokedClientCertName": {
-            "type": "string"
-        },
-        "vpnrevokedClientCertThumbprint": {
-            "type": "string"
         }
     },
     "variables": {
@@ -105,14 +99,6 @@
                             "name": "[parameters('vpnRootCertName')]",
                             "properties": {
                                 "PublicCertData": "[parameters('vpnRootCertData')]"
-                            }
-                        }
-                    ],
-                    "vpnClientRevokedCertificates": [
-                        {
-                            "name": "[parameters('vpnrevokedClientCertName')]",
-                            "properties": {
-                                "Thumbprint": "[parameters('vpnrevokedClientCertThumbprint')]"
                             }
                         }
                     ]
