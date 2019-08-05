@@ -71,6 +71,12 @@
         "ExternalSubnet_pop": {
             "type": "string"
         },
+        "vpnClientAddressPoolPrefix": {
+            "type": "string"
+        },
+        "vpnRootCertName": {
+            "type": "string"
+        },
         "Tenant_EMS": {
             "type": "string"
         },
@@ -81,22 +87,22 @@
             "type": "string"
         },
         "secretname_DomainAdminUserName": {
-            "type": "string"
+            "type": "securestring"
         },
         "secretname_DomainAdminPassword": {
-            "type": "string"
+            "type": "securestring"
         },
         "secretName_appGW-certData": {
-            "type": "string"
+            "type": "securestring"
         },
-        "secretName_certPassword": {
-            "type": "string"
+        "secretName_appGWcertPassword": {
+            "type": "securestring"
         },
-        "_artifactsLocationSasToken": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The sasToken required to access _artifactsLocation."
-            }
+        "secretname_vpnRootCertData": {
+            "type": "securestring"
+        },
+        "artifacts_baseUri": {
+            "type": "string"
         }
     },
     "variables": {
@@ -119,24 +125,24 @@
             "loadbalancer": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agi-','01'))]",
             "virtualmachine": "[toupper(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
             "appGw": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agx-','01'))]",
-            "appGW_domainNameLabel": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agx-pip-','02'))]",
+            "appGW_domainNameLabel": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agx-pip-','01'))]",
             "vpn": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-vpn-','01'))]"
         },
         "TemplateURLs": {
-            "networkSecurityGroup": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/networkSecurityGroup.json')]",
-            "loganalyticsWorkspace": "[uri(deployment().properties.templateLink.uri,'LogAnalytics/linkedTemplates/LogAnalyticsWorkspace.json')]",
-            "updatevirtualNetwork": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/virtualNetwork.json')]",
-            "automationAccount": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/automationAccount.json')]",
-            "domainControllers": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/domainControllers.json')]",
-            "CreateADForest": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/CreateADForest.json')]",
-            "configureADBDC": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/configureADBDC.json')]",
-            "adPDCModulesURL": "[uri(deployment().properties.templateLink.uri,'DSC/CreateADPDC.ps1.zip')]",
-            "adBDCModulesURL": "[uri(deployment().properties.templateLink.uri,'DSC/ConfigureADBDC.ps1.zip')]",
+            "networkSecurityGroup": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/NETWORK/linkedTemplates/networkSecurityGroup.json')]",
+            "loganalyticsWorkspace": "[concat(parameters('artifacts_baseUri'),'/allResources/master/network/LogAnalyticsWorkspace.json')]",
+            "updatevirtualNetwork": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/virtualNetwork.json')]",
+            "automationAccount": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AutomationAccount/linkedTemplates/automationAccount.json')]",
+            "domainControllers": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/domainControllers.json')]",
+            "CreateADForest": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/CreateADForest.json')]",
+            "configureADBDC": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/configureADBDC.json')]",
+            "adPDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/CreateADPDC.ps1.zip')]",
+            "adBDCModulesURL": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/DSC/ConfigureADBDC.ps1.zip')]",
             "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
             "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
-            "ad_customScriptFilePath": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/customScripts.json')]",
-            "appGW": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/appGW.json')]",
-            "vpn": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/vpn.json')]"
+            "ad_customScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/customScripts.json')]",
+            "appGW": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/appGW.json')]",
+            "vpn": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/AD/linkedTemplates/vpn.json')]"
         }
     },
     "resources": [
@@ -149,7 +155,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('TemplateURLs').domainControllers, parameters('_artifactsLocationSasToken'))]",
+                    "uri": "[variables('TemplateURLs').domainControllers]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -237,7 +243,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('TemplateURLs').CreateADForest, parameters('_artifactsLocationSasToken'))]",
+                    "uri": "[variables('TemplateURLs').CreateADForest]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -267,10 +273,10 @@
                         }
                     },
                     "adPDCModulesURL": {
-                        "value": "[concat(variables('templateURLs').adPDCModulesURL, parameters('_artifactsLocationSasToken'))]"
+                        "value": "[variables('templateURLs').adPDCModulesURL]"
                     },
                     "adPDCConfigurationFunction": {
-                        "value": "[concat(variables('templateURLs').adPDCConfigurationFunction, parameters('_artifactsLocationSasToken'))]"
+                        "value": "[variables('templateURLs').adPDCConfigurationFunction]"
                     }
                 }
             }
@@ -282,12 +288,13 @@
             "apiVersion": "2018-05-01",
             "dependsOn": [
                 "ConfigureADForest",
-                "applicationGateway"
+                "applicationGateway",
+                "VPN"
             ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('TemplateURLs').updatevirtualNetwork, parameters('_artifactsLocationSasToken'))]",
+                    "uri": "[variables('TemplateURLs').updatevirtualNetwork]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -341,7 +348,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('TemplateURLs').ad_customScriptFilePath, parameters('_artifactsLocationSasToken'))]",
+                    "uri": "[variables('TemplateURLs').ad_customScriptFilePath]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -363,7 +370,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('TemplateURLs').configureADBDC, parameters('_artifactsLocationSasToken'))]",
+                    "uri": "[variables('TemplateURLs').configureADBDC]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -404,13 +411,64 @@
         {
             "type": "Microsoft.Resources/deployments",
             "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
+            "name": "VPN",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TemplateURLs').vpn]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vpnName": {
+                        "value": "[variables('resourceNames').vpn]"
+                    },
+                    "vpnSku": {
+                        "value": "VpnGw1"
+                    },
+                    "vpnConnection": {
+                        "value": "Vpn"
+                    },
+                    "vpnType": {
+                        "value": "RouteBased"
+                    },
+                    "VirtualNetworkName": {
+                        "value": "[variables('resourceNames').virtualNetwork]"
+                    },
+                    "vpnSubnetName": {
+                        "value": "[parameters('subnet_Names').vpn]"
+                    },
+                    "vpnPublicIpAddressName": {
+                        "value": "[variables('resourceNames').vpn]"
+                    },
+                    "vpnClientAddressPoolPrefix": {
+                        "value": "[parameters('vpnClientAddressPoolPrefix')]"
+                    },
+                    "vpnRootCertName": {
+                        "value": "[parameters('vpnRootCertName')]"
+                    },
+                    "vpnRootCertData": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
+                            },
+                            "secretName": "[parameters('secretname_vpnRootCertData')]"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "resourcegroup": "[variables('resourceNames').commonResourceGroup]",
             "name": "applicationGateway",
             "apiVersion": "2018-05-01",
             "dependsOn": [],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('TemplateURLs').appGW, parameters('_artifactsLocationSasToken'))]",
+                    "uri": "[variables('TemplateURLs').appGW]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -460,7 +518,7 @@
                             "keyVault": {
                                 "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',parameters('keyVault_ResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('keyVault_Name'))]"
                             },
-                            "secretName": "[parameters('secretName_certPassword')]"
+                            "secretName": "[parameters('secretName_appGWcertPassword')]"
                         }
                     },
                     "ApplicationName": {
