@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ApplicationName": {
+            "value": "EMS"
+        },
+        "Environment_Category": {
+            "value": "d"
+        },
+        "Tenant": {
+            "value": "SRD"
+        },
+        "Role": {
+            "value": "sft"
+        },
+        "SupportEmail": {
+            "value": "ravi.mishra@ge.com"
+        },
+        "shortlocation": {
+            "value": "eus"
+        },
+        "sftp_subnetName": {
+            "value": "sftp"
+        },
+        "sftpILB_IP": {
+            "value": "10.0.3.5"
+        },
+        "privateIpAddress": {
+            "value": "10.0.3.6"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "keyVault_Name": {
+            "value": "ems-dev-kvt-srd-eus-001"
+        },
+        "keyVault_ResourceGroup": {
+            "value": "GAV-EMS-DEV-SRD-EUS-01"
+        },
+        "domainName": {
+            "value": "efoqa.local"
+        },
+        "secretname_DomainAdminUserName": {
+            "value": "DomainAdminUser"
+        },
+        "secretname_DomainAdminPassword": {
+            "value": "DomainAdminPassword"
+        },
+        "_artifactsLocationSasToken": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/5ab998b9-76f4-4e8f-9a05-0145759db801/resourceGroups/GAV-EMS-DEV-SRD-EUS-01/providers/Microsoft.KeyVault/vaults/ems-dev-kvt-srd-eus-001"
+                },
+                "secretName": "MyEmsArmTemplatesSasToken"
+            }
+        }
+    }
+}

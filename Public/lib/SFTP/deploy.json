@@ -25,9 +25,9 @@
         },
         "Tenant": {
             "type": "string",
-            "maxLength": 5,
+            "maxLength": 4,
             "metadata": {
-                "description": "3 char. E.g.  SRD"
+                "description": "4 char. E.g.  SRD"
             }
         },
         "Role": {
@@ -67,7 +67,7 @@
         "secretname_DomainAdminPassword": {
             "type": "string"
         },
-        "artifacts_baseUri": {
+        "_artifactsLocationSasToken": {
             "type": "string"
         }
     },
@@ -78,15 +78,15 @@
         "resourceNames": {
             "commonResourceGroup": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-',parameters('tenant'),'-rgp-','01'))]",
             "virtualNetwork": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-net-','01'))]",
-            "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','01'))]",
+            "loganalyticsWorkspace": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('shortlocation'),'-oms-','03'))]",
             "loadbalancer": "[tolower(concat(parameters('ApplicationName'),'-',parameters('Environment_Category'),'-',parameters('Tenant'),'-agi-','03'))]",
             "virtualmachine": "[toupper(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('Tenant'),parameters('Role'),'0'))]",
             "StorageAccount": "[tolower(concat(first(parameters('ApplicationName')),parameters('Environment_Category'),parameters('shortlocation'),parameters('Tenant'),'sto','0'))]"
         },
         "TemplateURLs": {
-            "SFTPVMTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/sftpVM.json')]",
-            "domainJoinTemplate": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/domainJoin.json')]",
-            "CustomScriptExtensionScriptFilePath": "[concat(parameters('artifacts_baseUri'),'/EmsArmTemplates/master/Public/lib/SFTP/linkedTemplates/customScripts.ps1')]",
+            "SFTPVMTemplate": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/sftpVM.json')]",
+            "domainJoinTemplate": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/domainJoin.json')]",
+            "CustomScriptExtensionScriptFilePath": "[uri(deployment().properties.templateLink.uri,'linkedTemplates/customScripts.ps1')]",
             "CustomScriptFileName": "customScripts.ps1"
         }
     },
@@ -100,7 +100,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('templateurls').SFTPVMTemplate]",
+                    "uri": "[concat(variables('templateurls').SFTPVMTemplate, parameters('_artifactsLocationSasToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -160,10 +160,10 @@
                         "value": "[variables('resourcenames').loganalyticsWorkspace]"
                     },
                     "CustomScriptExtensionScriptFilePath": {
-                        "value": "[variables('templateurls').CustomScriptExtensionScriptFilePath]"
+                        "value": "[concat(variables('templateurls').CustomScriptExtensionScriptFilePath, parameters('_artifactsLocationSasToken'))]"
                     },
                     "CustomScriptFileName": {
-                        "value": "[variables('TemplateURLs').CustomScriptFileName]"
+                        "value": "[concat(variables('TemplateURLs').CustomScriptFileName, parameters('_artifactsLocationSasToken'))]"
                     },
                     "ApplicationName": {
                         "value": "[parameters('ApplicationName')]"
