@@ -1,0 +1,62 @@
+
+variables:
+  servicePrincipal: 114-GAV-EMS-DEV-DEVOPS-SP-001
+  blobStorageAccount: emsdstgemsarm001
+  blobStorageContainer: $(Build.SourceBranchName)
+  artifactsLocation: https://$(blobStorageAccount).blob.core.windows.net/$(blobStorageContainer)/
+
+pool:
+  vmImage: 'vs2017-win2016'
+
+steps:
+
+- task: AzurePowerShell@3
+  displayName: 'Build zip files'
+  inputs:
+    azureSubscription: $(servicePrincipal)
+    scriptType: FilePath
+    scriptPath: ./PipelineBootstrap.ps1
+    scriptArguments: -Task BuildZips -Tags DSC
+    azurePowerShellVersion: latestVersion
+  condition: in(variables['Agent.JobStatus'], 'Succeeded', 'SucceededWithIssues')
+
+  # Note: We have to copy artifacts to the blob before running unit tests, or else validating a template
+  # that references a linked template that has not been copied will fail.
+- task: AzureFileCopy@2
+  displayName: 'Publish ARM templates to blob'
+  inputs:
+    azureSubscription: $(servicePrincipal)
+    SourcePath: '$(Build.SourcesDirectory)/EmsArmTemplates/Public/lib'
+    Destination: AzureBlob
+    containerName: $(Build.SourceBranchName)
+    storage: $(blobStorageAccount)
+  condition: in(variables['Agent.JobStatus'], 'Succeeded', 'SucceededWithIssues')
+
+- task: AzurePowerShell@3
+  displayName: 'Run unit tests'
+  inputs:
+    azureSubscription: $(servicePrincipal)
+    scriptType: FilePath
+    scriptPath: ./PipelineBootstrap.ps1
+    scriptArguments: -Task UnitTest -Tags Test
+    azurePowerShellVersion: latestVersion
+  env:
+    ArtifactsLocation: $(artifactsLocation)
+  condition: in(variables['Agent.JobStatus'], 'Succeeded', 'SucceededWithIssues')
+
+- task: PublishTestResults@2
+  displayName: 'Publish test results'
+  inputs:
+    testRunner: 'NUnit'
+    testResultsFiles: '**/Tests/**TestResults.xml'
+    testRunTitle: 'UnitTest'
+    failTaskOnFailedTests: true
+  condition: in(variables['Agent.JobStatus'], 'Succeeded', 'SucceededWithIssues', 'Failed')
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage results'
+  inputs:
+    codeCoverageTool: 'JaCoCo'
+    summaryFileLocation: '**/Tests/CodeCoverage.xml'
+    failIfCoverageEmpty: true
+  condition: and(in(variables['Agent.JobStatus'], 'Succeeded', 'SucceededWithIssues', 'Failed'), eq(variables['System.PullRequest.IsFork'], false))
